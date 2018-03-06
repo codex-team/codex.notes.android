@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/drawer_home"
+            android:checked="true"
+            android:title="@string/my_notes"/>
+
+        <item
+            android:id="@+id/drawer_favourite"
+            android:title="@string/all_folders"/>
+        <item
+            android:id="@+id/drawer_settings"
+            android:title="@string/settings"/>
+
+    </group>
+</menu>

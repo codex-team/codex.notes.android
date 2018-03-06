@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="drawerArrowStyle">@style/NavigationViewArrow</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">#292B37</item>
+
+    </style>
+
+    <style name="NavigationViewArrow" parent="Base.Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">#DADADA</item>
+    </style>
+
+    <style name="Toolbar" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">#292B37</item>
+        <item name="android:title">@string/app_name</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+    </style>
+
+    <style name="NavigationViewHeaderMainStyle" parent="AppTheme">
+        <item name="android:background">#21222C</item>
+    </style>
+</resources>
