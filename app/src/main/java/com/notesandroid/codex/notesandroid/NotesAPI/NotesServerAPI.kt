@@ -17,8 +17,6 @@ import java.io.*
  */
 
 
-const val GRAPHQL_URL = "https://api.notes.ifmo.su/graphql"
-
 /**
  * Codex.notes.server API queries
  */

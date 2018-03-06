@@ -16,13 +16,10 @@ import javax.security.auth.login.LoginException
 class ApplicationState : Application() {
 
     companion object {
-        const val DEBUG = false
         lateinit var currentUser: User
         lateinit var currentUserContent: Content
         lateinit var exceptionCatcher: HawkExceptionCatcher
-
     }
-    val HAWK_TOKEN = "8e478c91-e278-402a-857d-c4e278afff92"
 
     override fun onCreate() {
         super.onCreate()

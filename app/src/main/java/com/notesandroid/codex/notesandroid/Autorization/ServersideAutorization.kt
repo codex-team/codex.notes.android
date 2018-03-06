@@ -14,6 +14,7 @@ import okhttp3.*
 import okhttp3.HttpUrl
 import java.io.IOException
 import com.auth0.android.jwt.JWT
+import com.notesandroid.codex.notesandroid.AUTHORIZATION_URL
 import com.notesandroid.codex.notesandroid.Activities.SignInActivity
 import com.notesandroid.codex.notesandroid.R
 import com.notesandroid.codex.notesandroid.Utilities.MessageDialog
@@ -28,7 +29,6 @@ import org.jetbrains.anko.runOnUiThread
  * Created by AksCorp on 24.02.2018.
  */
 
-const val url: String = "https://api.notes.ifmo.su/oauth/mobile"
 
 class ServersideAutorization(val context: Context,val snackbarNotification: MessageSnackbar) {
 
@@ -38,7 +38,7 @@ class ServersideAutorization(val context: Context,val snackbarNotification: Mess
 
         val client = OkHttpClient()
 
-        val urlBuilder = HttpUrl.parse(url)!!.newBuilder()
+        val urlBuilder = HttpUrl.parse(AUTHORIZATION_URL)!!.newBuilder()
         urlBuilder.addQueryParameter("token", googleToken);
 
         val request = Request.Builder()

@@ -31,58 +31,26 @@ import kotlinx.android.synthetic.main.navigation_view.*
 
 
 class MainActivity : AppCompatActivity() {
-    val logFile: MyLog = MyLog(this)
-
-    private val context: Context = this;
-
-    private fun transitionToSignInActivity() {
-        val intent = Intent(this, SignInActivity::class.java);
-        startActivity(intent);
+    
+    private val logFile: MyLog = MyLog(this)
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        initUI()
     }
-
-    private fun loadCurrentUser() {
-        val prefs = getSharedPreferences(UserData.NAME, 0)
-        if (!prefs.contains(UserData.FIELDS.LAST_USER_ID))
-            prefs.edit().putString(UserData.FIELDS.LAST_USER_ID, "").apply()
-        val userId = prefs.getString(UserData.FIELDS.LAST_USER_ID, "")
-        val token = prefs.getString(UserData.FIELDS.LAST_USER_TOKEN, "")
-        if (userId == "")
-            throw LoginException("Sign in error. Please, sign in to the app")
-        ApplicationState.currentUser = User(LocalDatabaseAPI(this).getPersonFromDatabase(userId), JWT(token))
-    }
-
-    private fun initUserData(): Boolean {
-        try {
-            loadCurrentUser()
-        } catch (e: Exception) {
-            return when (e) {
-                is LoginException -> {
-                    runOnUiThread {
-                        transitionToSignInActivity()
-
-                    }
-                    false
-                }
-                else -> {
-                    logFile.log(e.toString())
-                    false
-                }
-            }
-        }
-        return true
-    }
-
+    
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onBackPressed() {
         this.finishAffinity()
     }
-
+    
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-         menuInflater.inflate(R.menu.toolbar_menu, menu)
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
         return true
     }
-
-    override fun onOptionsItemSelected(item: MenuItem):Boolean {
+    
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 drawer_layout.openDrawer(GravityCompat.START)
@@ -95,45 +63,34 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    
     override fun onResume() {
         super.onResume()
-        if(!initUserData())
-            return
-
-        val db = LocalDatabaseAPI(this)
-        var cs = LoadDataFromServer(db, context)
-
-        val userId = ApplicationState.currentUser.info?.id
-
-        cs.loadPersonData(userId!!, {message ->
-            MessageSnackbar(this, main_activity_coordinator_layout).show(message)
-        })
-        cs.loadContent(userId!!, { message: String ->
-
-            MessageSnackbar(this, main_activity_coordinator_layout).show(message)
-        })
-
-        refresh.setOnClickListener {
-          throw Exception()
+        try {
+            loadCurrentUser()
+        } catch (e: Exception) {
+            logFile.log(e.toString())
         }
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-
-
+    
+    private fun loadCurrentUser() {
+        val prefs = getSharedPreferences(UserData.NAME, 0)
+       
+        val userId = prefs.getString(UserData.FIELDS.LAST_USER_ID, "")
+        val token = prefs.getString(UserData.FIELDS.LAST_USER_TOKEN, "")
+        if (userId.isEmpty() || token.isEmpty())
+            return
+        ApplicationState.currentUser = User(LocalDatabaseAPI(this).getPersonFromDatabase(userId), JWT(token))
+    }
+    
+    private fun initUI() {
         setSupportActionBar(toolbar)
-
-        //navBar
+        
         val toggle = ActionBarDrawerToggle(
                 this, main_activity_drawer_layout, toolbar, navigation_drawer_open, navigation_drawer_close)
         main_activity_drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-
-
     }
-
-
+    
+    
 }

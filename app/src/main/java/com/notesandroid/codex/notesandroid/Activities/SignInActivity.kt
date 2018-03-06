@@ -9,29 +9,27 @@ import com.notesandroid.codex.notesandroid.R
 import kotlinx.android.synthetic.main.sign_in.*
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.notesandroid.codex.notesandroid.ANDROID_CLIENT_ID
 import com.notesandroid.codex.notesandroid.Autorization.ServersideAutorization
 import com.notesandroid.codex.notesandroid.Utilities.MessageSnackbar
 
 
 class SignInActivity : AppCompatActivity() {
-
-    val androidClientId: String = "1077384071053-megl4qg2i3fpdkmt92inkj3jjea6vpkc.apps.googleusercontent.com"
+    
     val REQUEST_CODE = 200
-
+    
     lateinit var serversideAutorization: ServersideAutorization
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_in)
-
+        
         serversideAutorization = ServersideAutorization(this, MessageSnackbar(this, sign_in_activity_coordinator_layout))
-
-
-
+        
         signInButton.setOnClickListener {
             signInButton.isEnabled = false
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(androidClientId)
+                    .requestIdToken(ANDROID_CLIENT_ID)
                     .requestEmail()
                     .build()
             val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
@@ -40,10 +38,10 @@ class SignInActivity : AppCompatActivity() {
             startActivityForResult(signInIntent, REQUEST_CODE)
         }
     }
-
+    
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
-
+        
         if (requestCode == REQUEST_CODE) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             serversideAutorization.handleSignInResult(task)

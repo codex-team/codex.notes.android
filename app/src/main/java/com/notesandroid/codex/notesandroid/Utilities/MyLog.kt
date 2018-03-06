@@ -2,6 +2,7 @@ package com.notesandroid.codex.notesandroid.Utilities
 
 import android.content.Context
 import com.notesandroid.codex.notesandroid.ApplicationState
+import com.notesandroid.codex.notesandroid.DEBUG
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -45,7 +46,7 @@ class MyLog(val context: Context) {
             buf.newLine()
             buf.close()
 
-            if(ApplicationState.DEBUG)
+            if(DEBUG)
                 context.toast("Exception was logged")
 
         } catch (e: IOException) {
