@@ -13,9 +13,16 @@ import org.jetbrains.anko.db.insertOrThrow
 
 /**
  * Created by AksCorp on 01.02.2018.
+ *
+ * Local database API
+ *
+ * @param context parent context
  */
 public class LocalDatabaseAPI(private val context: Context) {
-
+    
+    /**
+     * Insert essence if it's not exist in database
+     */
     fun insertIfNotExist(el: Any) {
         when (el) {
             is Person ->
@@ -28,9 +35,14 @@ public class LocalDatabaseAPI(private val context: Context) {
                 if (!isFolderExistInDatabase(el))
                     insertFolderInDatabase(el)
         }
-
     }
-
+    
+    /**
+     * Get person essence from database by id
+     *
+     * @param personId person id
+     * @return person essence
+     */
     fun getPersonFromDatabase(personId: String): Person {
         return CodexNotesDatabase.getInstance(context).use {
             val cursor = query(Persons.NAME, null, "${Persons.FIELDS.PERSON_ID} = \"$personId\"", null, null, null, null)
@@ -39,9 +51,9 @@ public class LocalDatabaseAPI(private val context: Context) {
                 throw Exception("Wrong database. ${cursor.count} person with ID = $personId")
             if (cursor.count == 0)
                 throw Exception("Person with ID = $personId doesn't exist")
-
+            
             val person = Person(null, null, null)
-
+            
             var pos = 0;
             for (columnName in cursor.columnNames) {
                 when (columnName) {
@@ -54,7 +66,12 @@ public class LocalDatabaseAPI(private val context: Context) {
             return@use person
         }
     }
-
+    
+    /**
+     * Insert note in database
+     *
+     * @param note note to add to the database
+     */
     fun insertNoteInDatabase(note: Note) {
         CodexNotesDatabase.getInstance(context).use {
             insertOrThrow(Notes.NAME,
@@ -67,9 +84,13 @@ public class LocalDatabaseAPI(private val context: Context) {
                     Notes.FIELDS.AUTHOR_ID to note.author?.id,
                     Notes.FIELDS.IS_REMOVED to note.isRemoved)
         }
-
     }
-
+    
+    /**
+     * Update note in database by note id
+     *
+     * @param note note to update to the database
+     */
     fun updateNoteInDatabase(note: Note) {
         CodexNotesDatabase.getInstance(context).use {
             val noteValues = ContentValues()
@@ -83,14 +104,23 @@ public class LocalDatabaseAPI(private val context: Context) {
             update(Notes.NAME, noteValues, "${Notes.FIELDS.ID} = \"${note.id}\"", null)
         }
     }
-
+    
+    /**
+     * @param note note to check the existence to the database
+     * @return true if exist, or false
+     */
     fun isNoteExistInDatabase(note: Note): Boolean {
         return CodexNotesDatabase.getInstance(context).use {
             val cursor = query(Notes.NAME, arrayOf(Notes.FIELDS.ID), "${Notes.FIELDS.ID} = \"${note.id}\"", null, null, null, null)
             return@use cursor.count > 0
         }
     }
-
+    
+    /**
+     * Insert person in database
+     *
+     * @param person person to add to the database
+     */
     fun insertPersonInDatabase(person: Person) {
         CodexNotesDatabase.getInstance(context).use {
             insertOrThrow(Persons.NAME,
@@ -100,7 +130,12 @@ public class LocalDatabaseAPI(private val context: Context) {
             )
         }
     }
-
+    
+    /**
+     * Update person in database by person id
+     *
+     * @param person person to update to the database
+     */
     fun updatePersonInDatabase(person: Person) {
         CodexNotesDatabase.getInstance(context).use {
             val personValues = ContentValues()
@@ -110,14 +145,23 @@ public class LocalDatabaseAPI(private val context: Context) {
             update(Persons.NAME, personValues, "${Persons.FIELDS.PERSON_ID} = \"${person.id}\"", null)
         }
     }
-
+    
+    /**
+     * @param person person to check the existence to the database
+     * @return true if exist, or false
+     */
     fun isPersonExistInDatabase(person: Person): Boolean {
         return CodexNotesDatabase.getInstance(context).use {
             val cursor = query(Persons.NAME, arrayOf(Persons.FIELDS.PERSON_ID), "${Persons.FIELDS.PERSON_ID} = \"${person.id}\"", null, null, null, null)
             return@use cursor.count > 0
         }
     }
-
+    
+    /**
+     * Insert folder in database
+     *
+     * @param folder folder to add to the database
+     */
     fun insertFolderInDatabase(folder: Folder) {
         CodexNotesDatabase.getInstance(context).use {
             insertOrThrow(Folders.NAME,
@@ -127,7 +171,12 @@ public class LocalDatabaseAPI(private val context: Context) {
             )
         }
     }
-
+    
+    /**
+     * Update folder in database by person id
+     *
+     * @param folder folder to update to the database
+     */
     fun updateFolderInDatabase(folder: Folder) {
         CodexNotesDatabase.getInstance(context).use {
             val folderValue = ContentValues()
@@ -137,7 +186,11 @@ public class LocalDatabaseAPI(private val context: Context) {
             update(Folders.NAME, folderValue, "${Folders.FIELDS.ID} = \"${folder.id}\"", null)
         }
     }
-
+    
+    /**
+     * @param folder folder to check the existence to the database
+     * @return true if exist, or false
+     */
     fun isFolderExistInDatabase(folder: Folder): Boolean {
         return CodexNotesDatabase.getInstance(context).use {
             val cursor = query(Folders.NAME, arrayOf(Folders.FIELDS.ID), "${Folders.FIELDS.ID} = \"${folder.id}\"", null, null, null, null)
