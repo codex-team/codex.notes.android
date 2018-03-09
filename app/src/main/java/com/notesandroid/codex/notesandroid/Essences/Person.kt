@@ -2,7 +2,6 @@ package com.notesandroid.codex.notesandroid.Essences;
 
 import java.io.Serializable
 
-
 /**
  * Created by AksCorp on 31.01.2018.
  */

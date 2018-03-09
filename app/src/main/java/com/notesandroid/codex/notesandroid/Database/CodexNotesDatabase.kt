@@ -10,20 +10,24 @@ import org.jetbrains.anko.db.*
 
 /**
  * Created by AksCorp on 01.02.2018.
+ *
+ * Start database initializations
  */
-
 
 const val DATABASE_NAME = "CodexNotesDatabase"
 const val DATABASE_VERSION = 1
 
+/**
+ * @param context parent activity context
+ */
 class CodexNotesDatabase(context: Context) : ManagedSQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-
-
+    
     companion object {
-
-
         private var instance: CodexNotesDatabase? = null
-
+        
+        /**
+         * Get current database exemplar
+         */
         @Synchronized
         fun getInstance(context: Context): CodexNotesDatabase {
             if (instance == null) {
@@ -32,7 +36,7 @@ class CodexNotesDatabase(context: Context) : ManagedSQLiteOpenHelper(context, DA
             return instance!!
         }
     }
-
+    
     override fun onCreate(db: SQLiteDatabase) {
         db.createTable(Notes.NAME, true,
                 Notes.FIELDS._ID to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
@@ -50,7 +54,7 @@ class CodexNotesDatabase(context: Context) : ManagedSQLiteOpenHelper(context, DA
                 Persons.FIELDS.NAME to TEXT,
                 Persons.FIELDS.EMAIL to TEXT
         )
-
+        
         db.createTable(Folders.NAME, true,
                 Folders.FIELDS._ID to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
                 Folders.FIELDS.ID to TEXT,
@@ -58,12 +62,12 @@ class CodexNotesDatabase(context: Context) : ManagedSQLiteOpenHelper(context, DA
                 Folders.FIELDS.OWNER_ID to TEXT
         )
     }
-
+    
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.dropTable(Notes.NAME, true)
         db.dropTable(Persons.NAME, true)
         db.dropTable(Folders.NAME, true)
-
+        
         onCreate(db)
     }
 }

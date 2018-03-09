@@ -1,35 +1,38 @@
 package com.notesandroid.codex.notesandroid
 
 import android.content.Context
-import android.provider.Settings.Global.getString
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.notesandroid.codex.notesandroid.Database.LocalDatabaseAPI
 import com.notesandroid.codex.notesandroid.Essences.Content
 import com.notesandroid.codex.notesandroid.Essences.Person
-import com.notesandroid.codex.notesandroid.Essences.User
+import com.notesandroid.codex.notesandroid.NotesAPI.NotesAPI
 import com.notesandroid.codex.notesandroid.NotesAPI.Queries
-import com.notesandroid.codex.notesandroid.Utilities.MessageDialog
-import com.notesandroid.codex.notesandroid.Utilities.MessageSnackbar
 import com.notesandroid.codex.notesandroid.Utilities.Utilities
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import android.app.Activity
-import android.support.design.widget.CoordinatorLayout
-import android.view.ViewGroup
-
 
 /**
  * Created by AksCorp on 04.02.2018.
+ *
+ * Load content from server by GRAPHQL_URL URL and save it to database
+ *
+ * @property db current project database
+ * @property context parent activity context
  */
-
 class LoadDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
     
+    /**
+     * Get person content by person ID
+     *
+     * @param personID content on a person's ID
+     * @param callback function which wll be call after content load
+     */
     fun loadContent(personID: String, callback: (String) -> Unit) {
         
-        Queries.executeQuery(GRAPHQL_URL, Queries.buildQuery(Queries.getPersonContent(personID)),
+        NotesAPI.executeQuery(GRAPHQL_URL, NotesAPI.buildQuery(Queries.getPersonContent(personID)),
                 object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         if (!Utilities.isInternetConnected(context))
@@ -85,8 +88,14 @@ class LoadDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
                 })
     }
     
-    fun loadPersonData(personID: String, callback: (String) -> Unit) {
-        Queries.executeQuery(GRAPHQL_URL, Queries.buildQuery(Queries.getPersonInfo(personID)),
+    /**
+     * Get person information by person ID
+     *
+     * @param personID information on a person's ID
+     * @param callback function which wll be call after content load
+     */
+    fun loadPersonInformation(personID: String, callback: (String) -> Unit) {
+        NotesAPI.executeQuery(GRAPHQL_URL, NotesAPI.buildQuery(Queries.getPersonInfo(personID)),
                 object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         if (!Utilities.isInternetConnected(context))
@@ -108,7 +117,6 @@ class LoadDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
                             db.updatePersonInDatabase(person!!)
                         else
                             db.insertPersonInDatabase(person)
-                        
                     }
                     
                     fun parseResult(response: String): Person? {
@@ -121,9 +129,7 @@ class LoadDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
                         val person = gson.fromJson(jsonElement.asJsonObject["Person"], Person::class.java)
                         
                         return person
-                        
                     }
-                    
                 })
     }
 }

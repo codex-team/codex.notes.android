@@ -9,13 +9,12 @@ import com.notesandroid.codex.notesandroid.Essences.Content
 import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
 import java.io.*
 
-
 /**
+ * Created by AksCorp on 31.01.2018.
+ *
  * This class work with Codex.notes.server GraphQL API
  *
- * Created by AksCorp on 31.01.2018.
  */
-
 
 /**
  * Codex.notes.server API queries
@@ -27,10 +26,12 @@ interface QueriesAPI {
     fun getNoteContent(authorId: String, folderId: String, noteId: String): String
 }
 
+/**
+ * Queries describe
+ */
 class Queries {
     companion object : QueriesAPI {
-
-
+        
         /**
          *
          */
@@ -41,8 +42,7 @@ class Queries {
             email
           }
     """.trimIndent().replace("\n", "")
-
-
+        
         override fun getPersonContent(userId: String): String = """
           personContent: user(id: \"$userId\") {
             folders {
@@ -68,7 +68,7 @@ class Queries {
             }
           }
     """.trimIndent().replace("\n", "")
-
+        
         override fun getFolderContent(ownerId: String, folderId: String): String = """
           personContent: user(id: \"$folderId\", ownerId: \"$ownerId\") {
               id
@@ -92,8 +92,7 @@ class Queries {
               }
           }
     """.trimIndent().replace("\n", "")
-
-
+        
         override fun getNoteContent(authorId: String, folderId: String, noteId: String): String = """
           personContent: user(id: \"$noteId\", authorId: \"$authorId\", folderId: \"$folderId\") {
                 id
@@ -109,18 +108,36 @@ class Queries {
                 isRemoved
           }
     """.trimIndent().replace("\n", "")
+    }
+}
 
-
+/**
+ * Control graphql queries
+ */
+class NotesAPI {
+    
+    companion object {
+        
+        /**
+         * Transform [Queries] list to body for POST  query
+         *
+         * @param queries [Queries] list
+         */
         fun buildQuery(vararg queries: String): String = """{ "query":"query { ${queries.joinToString("")} }" }"""
-
+        
+        /**
+         * @param url post url
+         * @param query string for post query Create in [buildQuery]
+         * @param callback
+         */
         fun executeQuery(url: String, query: String, callback: Callback) {
             val client = OkHttpClient()
             val contentType = MediaType.parse("application/json; charset=utf-8");
-
+            
             val body = RequestBody.create(contentType, query)
             val request = Request.Builder()
                     .url(url)
-                    .addHeader("Authorization", "Bearer "+currentUser.jwt.toString())
+                    .addHeader("Authorization", "Bearer " + currentUser.jwt.toString())
                     .post(body)
                     .build()
             client.newCall(request).enqueue(callback);
