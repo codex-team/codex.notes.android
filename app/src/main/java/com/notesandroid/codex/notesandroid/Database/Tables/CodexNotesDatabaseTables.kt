@@ -3,7 +3,7 @@ package com.notesandroid.codex.notesandroid.Database.Tables
 /**
  * Created by AksCorp on 01.02.2018.
  *
- * Database table structure
+ * Database table structure description
  */
 
 object Persons {
@@ -43,5 +43,6 @@ object Folders {
         val ID = "folderId"
         val TITLE = "title"
         val OWNER_ID = "ownerId"
+        val IS_ROOT = "isRoot"
     }
 }

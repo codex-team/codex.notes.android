@@ -32,3 +32,13 @@ const val AUTHORIZATION_URL = "https://api.notes.ifmo.su/oauth/mobile"
  * current app mode
  */
 const val DEBUG = true
+
+/**
+ * Directory to for saved images. Absolute path will de data/data/packagename/Images/
+ */
+const val IMAGES_DIRECTORY = "Images"
+
+/**
+ * Time format for sync label in nav view header
+ */
+const val SYNC_TIME_FORMAT = "HH:mm"

@@ -36,7 +36,7 @@ class NotesAdapter(private val notes: List<Note>,
         : RecyclerView.ViewHolder(view) {
         
         fun bindForecast(note: Note) {
-            itemView.textView.text = note.title + "\n" + note.content
+            itemView.note_title.text = note.title
             itemView.setOnClickListener { itemClick(note) }
         }
     }
