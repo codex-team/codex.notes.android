@@ -10,4 +10,7 @@
     <string name="my_notes">Мои заметки</string>
     <string name="no_internet_connection_available">Отсутствует подключение к интернету</string>
     <string name="autorization_failed">Ошибка авторизации</string>
+    <string name="not_sync_yet">Еще не синхронизировано</string>
+    <string name="last_sync_was_at">Последняя синхронизация была в</string>
+    <string name="default_user_name">Offline user</string>
 </resources>

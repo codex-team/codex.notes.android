@@ -26,4 +26,43 @@
     <style name="NavigationViewHeaderMainStyle" parent="AppTheme">
         <item name="android:background">#21222C</item>
     </style>
+
+    <style name="NavigationViewMenuMainStyle" parent="AppTheme">
+        <item name="android:background">#292B37</item>
+
+    </style>
+
+    <style name="NavigationViewMenuTextStyle">
+        <item name="android:textColor">#DEE6FC</item>
+    </style>
+
+    <style name="NavigationViewMenuTextCounterStyle">
+        <item name="android:textColor">#a9acb4</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/roboto_regular</item>
+    </style>
+
+    <style name="NavigationViewMenuButtonStyle">
+        <item name="android:textColor">#DEE6FC</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/roboto_regular</item>
+    </style>
+
+    <style name="NavigationViewMenuBottomButtonStyle">
+    <item name="android:textColor">#DEE6FC</item>
+    <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/roboto_regular</item>
+</style>
+
+    <style name="NotesTitleStyle">
+        <item name="android:textColor">#333333</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:background">#00ffffff</item>
+    </style>
+
+    <style name="NotesTitleLayout" parent="AppTheme">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:layout_marginBottom">@dimen/main_padding_nav_view_header</item>
+        <item name="android:layout_marginTop">@dimen/main_padding_nav_view_header</item>
+        <item name="android:layout_marginRight">@dimen/main_padding_nav_view_header</item>
+        <item name="android:layout_marginLeft">@dimen/main_padding_nav_view_header_left</item>
+    </style>
 </resources>

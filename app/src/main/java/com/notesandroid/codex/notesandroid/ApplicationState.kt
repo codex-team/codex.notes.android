@@ -16,25 +16,10 @@ import javax.security.auth.login.LoginException
  * Application entire point
  */
 class ApplicationState : Application() {
-    
     /**
-     * Global program data
+     * Hawk catcher
      */
-    companion object {
-        /**
-         * Current user data
-         */
-        lateinit var currentUser: User
-        /**
-         * Current user content
-         */
-        lateinit var currentUserContent: Content
-        
-        /**
-         * Hawk catcher
-         */
-        lateinit var exceptionCatcher: HawkExceptionCatcher
-    }
+    lateinit var exceptionCatcher: HawkExceptionCatcher
     
     override fun onCreate() {
         super.onCreate()

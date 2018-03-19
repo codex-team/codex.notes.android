@@ -59,7 +59,8 @@ class CodexNotesDatabase(context: Context) : ManagedSQLiteOpenHelper(context, DA
                 Folders.FIELDS._ID to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
                 Folders.FIELDS.ID to TEXT,
                 Folders.FIELDS.TITLE to TEXT,
-                Folders.FIELDS.OWNER_ID to TEXT
+                Folders.FIELDS.OWNER_ID to TEXT,
+                Folders.FIELDS.IS_ROOT to TEXT
         )
     }
     

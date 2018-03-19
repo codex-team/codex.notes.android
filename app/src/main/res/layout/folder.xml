@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nav_view_folder"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:layout_toLeftOf="@+id/notes_counter"
+    android:layout_toStartOf="@+id/notes_counter"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:paddingLeft="@dimen/main_padding_nav_view_header_left"
+    android:text="@string/my_notes"
+    android:textSize="16sp"
+    android:theme="@style/NavigationViewMenuButtonStyle" />

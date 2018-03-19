@@ -1,10 +1,10 @@
 package com.notesandroid.codex.notesandroid.NotesAPI
 
 import android.content.Context
+import com.auth0.android.jwt.JWT
 import okhttp3.*
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
-import com.notesandroid.codex.notesandroid.ApplicationState.Companion.currentUser
 import com.notesandroid.codex.notesandroid.Essences.Content
 import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
 import java.io.*
@@ -48,6 +48,7 @@ class Queries {
             folders {
               id
               title
+              isRoot
               owner {
                 name
                 id
@@ -73,6 +74,7 @@ class Queries {
           personContent: user(id: \"$folderId\", ownerId: \"$ownerId\") {
               id
               title
+              isRoot
               owner {
                 name
                 id
@@ -114,33 +116,29 @@ class Queries {
 /**
  * Control graphql queries
  */
-class NotesAPI {
+class NotesAPI(private val jwt: JWT) {
+    /**
+     * Transform [Queries] list to body for POST  query
+     *
+     * @param queries [Queries] list
+     */
+    fun buildQuery(vararg queries: String): String = """{ "query":"query { ${queries.joinToString("")} }" }"""
     
-    companion object {
+    /**
+     * @param url post url
+     * @param query string for post query Create in [buildQuery]
+     * @param callback
+     */
+    fun executeQuery(url: String, query: String, callback: Callback) {
+        val client = OkHttpClient()
+        val contentType = MediaType.parse("application/json; charset=utf-8");
         
-        /**
-         * Transform [Queries] list to body for POST  query
-         *
-         * @param queries [Queries] list
-         */
-        fun buildQuery(vararg queries: String): String = """{ "query":"query { ${queries.joinToString("")} }" }"""
-        
-        /**
-         * @param url post url
-         * @param query string for post query Create in [buildQuery]
-         * @param callback
-         */
-        fun executeQuery(url: String, query: String, callback: Callback) {
-            val client = OkHttpClient()
-            val contentType = MediaType.parse("application/json; charset=utf-8");
-            
-            val body = RequestBody.create(contentType, query)
-            val request = Request.Builder()
-                    .url(url)
-                    .addHeader("Authorization", "Bearer " + currentUser.jwt.toString())
-                    .post(body)
-                    .build()
-            client.newCall(request).enqueue(callback);
-        }
+        val body = RequestBody.create(contentType, query)
+        val request = Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Bearer " + jwt.toString())
+                .post(body)
+                .build()
+        client.newCall(request).enqueue(callback);
     }
 }

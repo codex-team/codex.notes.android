@@ -2,12 +2,15 @@ package com.notesandroid.codex.notesandroid.Database
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
+import android.database.sqlite.SQLiteException
 import com.notesandroid.codex.notesandroid.Database.Tables.Folders
 import com.notesandroid.codex.notesandroid.Database.Tables.Notes
 import com.notesandroid.codex.notesandroid.Database.Tables.Persons
 import com.notesandroid.codex.notesandroid.Essences.Folder
 import com.notesandroid.codex.notesandroid.Essences.Note
 import com.notesandroid.codex.notesandroid.Essences.Person
+import org.jetbrains.anko.db.dropTable
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.insertOrThrow
 
@@ -45,7 +48,12 @@ public class LocalDatabaseAPI(private val context: Context) {
      */
     fun getPersonFromDatabase(personId: String): Person {
         return CodexNotesDatabase.getInstance(context).use {
-            val cursor = query(Persons.NAME, null, "${Persons.FIELDS.PERSON_ID} = \"$personId\"", null, null, null, null)
+            val cursor: Cursor
+            try {
+                cursor = query(Persons.NAME, null, "${Persons.FIELDS.PERSON_ID} = \"$personId\"", null, null, null, null)
+            } catch (e: SQLiteException) {
+                throw Exception("Table ${Persons.NAME} doesn't exist")
+            }
             cursor.moveToFirst()
             if (cursor.count > 1)
                 throw Exception("Wrong database. ${cursor.count} person with ID = $personId")
@@ -64,6 +72,89 @@ public class LocalDatabaseAPI(private val context: Context) {
                 pos++;
             }
             return@use person
+        }
+    }
+    
+    /**
+     * Get all notes essence from database by folder id
+     *
+     * @param folderId folder id
+     * @return list notes essence
+     */
+    fun getNotesFromDatabase(folderId: String): MutableList<Note> {
+        return CodexNotesDatabase.getInstance(context).use {
+            var cursor: Cursor
+            try {
+                
+                cursor = query(Notes.NAME, null, "${Notes.FIELDS.FOLDER_ID} = \"$folderId\"", null, null, null, null)
+            } catch (e: SQLiteException) {
+                return@use mutableListOf<Note>()
+            }
+            cursor.moveToFirst()
+            
+            val notes = mutableListOf<Note>()
+            
+            if (cursor.count == 0)
+                return@use notes
+            
+            do {
+                
+                val note = Note()
+                for ((pos, columnName) in cursor.columnNames.withIndex()) {
+                    when (columnName) {
+                        Notes.FIELDS.ID -> note.id = cursor.getString(pos)
+                        Notes.FIELDS.AUTHOR_ID -> note.author = getPersonFromDatabase(cursor.getString(pos))
+                        Notes.FIELDS.CONTENT -> note.content = cursor.getString(pos)
+                        Notes.FIELDS.DT_CREATE -> note.dtCreate = cursor.getString(pos)
+                        Notes.FIELDS.DT_MODIFY -> note.dtModify = cursor.getString(pos)
+                        Notes.FIELDS.FOLDER_ID -> note.folderId = cursor.getString(pos)
+                        Notes.FIELDS.IS_REMOVED -> note.isRemoved = cursor.getString(pos)
+                        Notes.FIELDS.TITLE -> note.title = cursor.getString(pos)
+                    }
+                }
+                notes.add(note)
+            } while (cursor.moveToNext())
+            
+            return@use notes
+        }
+    }
+    
+    /**
+     * Get all folders essence from database
+     *
+     * @return list folders essence
+     */
+    fun getFoldersFromDatabase(): MutableList<Folder> {
+        return CodexNotesDatabase.getInstance(context).use {
+            var cursor: Cursor
+            try {
+                
+                cursor = query(Folders.NAME, null, null, null, null, null, null)
+            } catch (e: SQLiteException) {
+                return@use mutableListOf<Folder>()
+            }
+            cursor.moveToFirst()
+            
+            val folders = mutableListOf<Folder>()
+            
+            if (cursor.count == 0)
+                return@use folders
+            
+            do {
+                
+                val folder = Folder()
+                for ((pos, columnName) in cursor.columnNames.withIndex()) {
+                    when (columnName) {
+                        Folders.FIELDS.ID -> folder.id = cursor.getString(pos)
+                        Folders.FIELDS.TITLE -> folder.title = cursor.getString(pos)
+                        Folders.FIELDS.OWNER_ID -> folder.owner = getPersonFromDatabase(cursor.getString(pos))
+                        Folders.FIELDS.IS_ROOT -> folder.isRoot = cursor.getString(pos) == "1"
+                    }
+                }
+                folders.add(folder)
+            } while (cursor.moveToNext())
+            
+            return@use folders
         }
     }
     
@@ -111,7 +202,12 @@ public class LocalDatabaseAPI(private val context: Context) {
      */
     fun isNoteExistInDatabase(note: Note): Boolean {
         return CodexNotesDatabase.getInstance(context).use {
-            val cursor = query(Notes.NAME, arrayOf(Notes.FIELDS.ID), "${Notes.FIELDS.ID} = \"${note.id}\"", null, null, null, null)
+            val cursor: Cursor
+            try {
+                cursor = query(Notes.NAME, arrayOf(Notes.FIELDS.ID), "${Notes.FIELDS.ID} = \"${note.id}\"", null, null, null, null)
+            } catch (e: SQLiteException) {
+                throw Exception("Table ${Notes.NAME} doesn't exist")
+            }
             return@use cursor.count > 0
         }
     }
@@ -152,7 +248,13 @@ public class LocalDatabaseAPI(private val context: Context) {
      */
     fun isPersonExistInDatabase(person: Person): Boolean {
         return CodexNotesDatabase.getInstance(context).use {
-            val cursor = query(Persons.NAME, arrayOf(Persons.FIELDS.PERSON_ID), "${Persons.FIELDS.PERSON_ID} = \"${person.id}\"", null, null, null, null)
+            val cursor: Cursor
+            try {
+                
+                cursor = query(Persons.NAME, arrayOf(Persons.FIELDS.PERSON_ID), "${Persons.FIELDS.PERSON_ID} = \"${person.id}\"", null, null, null, null)
+            } catch (e: SQLiteException) {
+                throw Exception("Table ${Persons.NAME} doesn't exist")
+            }
             return@use cursor.count > 0
         }
     }
@@ -167,7 +269,8 @@ public class LocalDatabaseAPI(private val context: Context) {
             insertOrThrow(Folders.NAME,
                     Folders.FIELDS.ID to folder.id,
                     Folders.FIELDS.TITLE to folder.title,
-                    Folders.FIELDS.OWNER_ID to folder.owner?.id
+                    Folders.FIELDS.OWNER_ID to folder.owner?.id,
+                    Folders.FIELDS.IS_ROOT to folder.isRoot
             )
         }
     }
@@ -193,8 +296,20 @@ public class LocalDatabaseAPI(private val context: Context) {
      */
     fun isFolderExistInDatabase(folder: Folder): Boolean {
         return CodexNotesDatabase.getInstance(context).use {
-            val cursor = query(Folders.NAME, arrayOf(Folders.FIELDS.ID), "${Folders.FIELDS.ID} = \"${folder.id}\"", null, null, null, null)
+            val cursor: Cursor
+            try {
+                cursor = query(Folders.NAME, arrayOf(Folders.FIELDS.ID), "${Folders.FIELDS.ID} = \"${folder.id}\"", null, null, null, null)
+            } catch (e: SQLiteException) {
+                throw Exception("Table ${Folders.NAME} doesn't exist")
+            }
             return@use cursor.count > 0
         }
+    }
+    
+    /**
+     * Remove all data from local database
+     */
+    fun deleteDatabase() {
+        context.deleteDatabase(DATABASE_NAME);
     }
 }
