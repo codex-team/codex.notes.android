@@ -56,12 +56,15 @@ class ServerSideAutorization(val context: Context, private val snackbarNotificat
      */
     fun handleSignInResult(completedTask: Task<GoogleSignInAccount>, db: LocalDatabaseAPI) {
         try {
+            Log.i("ACCOUNT", ">>>>")
             val account = completedTask.getResult(ApiException::class.java)
+
+            Log.i("ACCOUNT", account.toString())
             val googleToken = account.idToken
             
             getCustomJWT(googleToken!!, jwtTokenCallback(db))
         } catch (e: ApiException) {
-            Log.e("Auth", ">>>>>>>>>>>>>>>>>>>>>>>>>>>> handleSignInResult", e);
+            Log.e("Auth", ">>>>>>>>>>>>>>>>>>>>>>>>>>>> handleSignInResult", e)
             errorNotification()
         }
     }
@@ -79,7 +82,7 @@ class ServerSideAutorization(val context: Context, private val snackbarNotificat
                     
                     ControlUserData(db, context).initUserInformation(jwt, token)
                 } catch (e: Exception) {
-                    Log.e("Auth", ">>>>>>>>>>>>>>>>>>>>>>>>>>>> JWT parsing error", e);
+                    Log.e("Auth", ">>>>>>>>>>>>>>>>>>>>>>>>>>>> JWT parsing error", e)
                     errorNotification()
                     return
                 }
@@ -91,7 +94,7 @@ class ServerSideAutorization(val context: Context, private val snackbarNotificat
             }
             
             override fun onFailure(call: Call?, e: IOException?) {
-                Log.e("Auth", ">>>>>>>>>>>>>>>>>>>>>>>>>>>> JWT request error", e);
+                Log.e("Auth", ">>>>>>>>>>>>>>>>>>>>>>>>>>>> JWT request error", e)
                 errorNotification()
                 return
             }
