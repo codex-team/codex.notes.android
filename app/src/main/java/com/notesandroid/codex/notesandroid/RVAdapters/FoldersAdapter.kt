@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import com.notesandroid.codex.notesandroid.Essences.Folder
 import com.notesandroid.codex.notesandroid.R
 import kotlinx.android.synthetic.main.folder.view.*
-import kotlinx.android.synthetic.main.note.view.*
 
 /**
  * Created by AksCorp on 01.02.2018.

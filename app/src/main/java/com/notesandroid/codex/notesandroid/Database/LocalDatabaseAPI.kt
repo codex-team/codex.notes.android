@@ -10,8 +10,6 @@ import com.notesandroid.codex.notesandroid.Database.Tables.Persons
 import com.notesandroid.codex.notesandroid.Essences.Folder
 import com.notesandroid.codex.notesandroid.Essences.Note
 import com.notesandroid.codex.notesandroid.Essences.Person
-import org.jetbrains.anko.db.dropTable
-import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.insertOrThrow
 
 /**
@@ -159,9 +157,9 @@ public class LocalDatabaseAPI(private val context: Context) {
     }
     
     /**
-     * Insert note in database
+     * Insert note_list_element in database
      *
-     * @param note note to add to the database
+     * @param note note_list_element to add to the database
      */
     fun insertNoteInDatabase(note: Note) {
         CodexNotesDatabase.getInstance(context).use {
@@ -178,9 +176,9 @@ public class LocalDatabaseAPI(private val context: Context) {
     }
     
     /**
-     * Update note in database by note id
+     * Update note_list_element in database by note_list_element id
      *
-     * @param note note to update to the database
+     * @param note note_list_element to update to the database
      */
     fun updateNoteInDatabase(note: Note) {
         CodexNotesDatabase.getInstance(context).use {
@@ -197,7 +195,7 @@ public class LocalDatabaseAPI(private val context: Context) {
     }
     
     /**
-     * @param note note to check the existence to the database
+     * @param note note_list_element to check the existence to the database
      * @return true if exist, or false
      */
     fun isNoteExistInDatabase(note: Note): Boolean {

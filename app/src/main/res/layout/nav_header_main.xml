@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/header_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/NavigationViewHeaderMainStyle"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/NavigationViewHeaderMainStyle">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,8 +16,7 @@
         android:paddingBottom="@dimen/main_padding_nav_view_header"
         android:paddingLeft="@dimen/main_padding_nav_view_header_left"
         android:paddingRight="@dimen/main_padding_nav_view_header"
-        android:paddingTop="@dimen/main_padding_nav_view_header"
-        >
+        android:paddingTop="@dimen/main_padding_nav_view_header">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,19 +29,7 @@
                 android:layout_height="64dp"
                 android:layout_marginBottom="@dimen/main_padding_nav_view_header"
                 android:adjustViewBounds="false"
-                android:src="@drawable/ic_account_circle" />
-
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/sign_in_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                android:src="@drawable/ic_google__g__logo" />
         </LinearLayout>
 
         <TextView
@@ -52,7 +38,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_medium"
             android:text=""
-            android:textColor="#FFFF"
+            android:textColor="#DEE6FC"
             android:textSize="17sp"
             android:textStyle="bold" />
 

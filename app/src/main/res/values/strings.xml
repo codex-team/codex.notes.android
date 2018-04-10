@@ -18,4 +18,6 @@
     <string name="not_sync_yet">Not sync yet</string>
     <string name="last_sync_was_at">Last sync was at</string>
     <string name="default_user_name">Offline user</string>
+    <string name="intro_login">Enable synchronization and sharing features</string>
+    <string name="login_with_google">Login with Google</string>
 </resources>
