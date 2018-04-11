@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.notesandroid.codex.notesandroid.Essences.Note
 import com.notesandroid.codex.notesandroid.R
-import kotlinx.android.synthetic.main.note.view.*
+import kotlinx.android.synthetic.main.note_list_element.view.*
 
 /**
  * Created by AksCorp on 01.02.2018.
@@ -22,7 +22,8 @@ class NotesAdapter(private val notes: List<Note>,
         RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.note, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.note_list_element, parent, false)
         return ViewHolder(view, itemClick)
     }
     

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/header_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:layout_marginTop="@dimen/status_bar"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/main_padding_nav_view_header"
+    android:paddingLeft="@dimen/main_padding_nav_view_header_left"
+    android:paddingRight="@dimen/main_padding_nav_view_header"
+
+    android:paddingTop="@dimen/main_padding_nav_view_header"
+    android:theme="@style/NavigationViewHeaderMainStyle">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="25dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/relativeLayout"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/relativeLayout"
+            android:layout_marginBottom="15dp"
+            android:text="@string/intro_login"
+            android:textColor="#DEE6FC" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView2">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/circleImageView"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:adjustViewBounds="false"
+                android:src="@drawable/ic_google__g__logo" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/circleImageView"
+                android:layout_toRightOf="@+id/circleImageView"
+                android:paddingLeft="20dp"
+                android:text="@string/login_with_google"
+                android:textColor="#DEE6FC"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

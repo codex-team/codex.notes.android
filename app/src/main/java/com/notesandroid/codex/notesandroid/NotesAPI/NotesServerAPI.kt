@@ -1,13 +1,11 @@
 package com.notesandroid.codex.notesandroid.NotesAPI
 
-import android.content.Context
 import com.auth0.android.jwt.JWT
-import okhttp3.*
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import com.notesandroid.codex.notesandroid.Essences.Content
-import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
-import java.io.*
+import okhttp3.Callback
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 
 /**
  * Created by AksCorp on 31.01.2018.
@@ -24,6 +22,14 @@ interface QueriesAPI {
     fun getPersonContent(userId: String): String
     fun getFolderContent(userId: String, folderId: String): String
     fun getNoteContent(authorId: String, folderId: String, noteId: String): String
+}
+
+/**
+ * Codex.notes.server API mutations
+ */
+interface MutationsAPI
+{
+    fun createFolder(name: String)
 }
 
 /**
@@ -110,6 +116,20 @@ class Queries {
                 isRemoved
           }
     """.trimIndent().replace("\n", "")
+    }
+}
+
+/**
+ * Mutations describe
+ */
+class Mutations
+{
+    companion object : MutationsAPI
+    {
+        override fun createFolder(name: String)
+        {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
     }
 }
 

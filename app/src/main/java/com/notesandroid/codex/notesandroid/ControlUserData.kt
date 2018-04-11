@@ -2,12 +2,12 @@ package com.notesandroid.codex.notesandroid
 
 import android.content.Context
 import com.auth0.android.jwt.JWT
+import com.notesandroid.codex.notesandroid.Authorization.ServerAuthorizationResponse
 import com.notesandroid.codex.notesandroid.Database.LocalDatabaseAPI
+import com.notesandroid.codex.notesandroid.Essences.Content
 import com.notesandroid.codex.notesandroid.Essences.Person
 import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
 import com.notesandroid.codex.notesandroid.Utilities.Utilities.Companion.saveImageByURL
-import android.os.Environment.getExternalStorageDirectory
-import com.notesandroid.codex.notesandroid.Essences.Content
 import java.io.File
 
 /**
@@ -20,28 +20,37 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
     /**
      * Put information from custom jwt token to database and shared preference
      *
-     * @param jwt decoded jwt object
-     * @param token raw jwt token
+     * @param responseJson server JSON response
      */
-    fun initUserInformation(jwt: JWT, token: String) {
+    fun initUserInformation(responseJson: ServerAuthorizationResponse)
+    {
+    
+        val jwt = JWT(responseJson.jwt)
+        val token = responseJson.jwt
+        
         
         val userId = jwt.getClaim("user_id").asString()
-        val photoURL = jwt.getClaim("photo").asString()
-        val name = jwt.getClaim("name").asString()
+        val photoURL = responseJson.photo
+        val name = responseJson.name
         val email = jwt.getClaim("email").asString()
         val person = Person(userId, name, email)
         
         val db = LocalDatabaseAPI(context)
-        
+    
         if (db.isPersonExistInDatabase(person!!))
+        {
             db.updatePersonInDatabase(person!!)
+        }
         else
             db.insertPersonInDatabase(person)
         
         val imageExtension = photoURL!!.substringAfterLast('.')
         val prefs = context.getSharedPreferences(UserData.NAME, 0)
         prefs.edit().putString(UserData.FIELDS.LAST_USER_TOKEN, token).apply()
-        prefs.edit().putString(UserData.FIELDS.PROFILE_ICON, UserData.FIELDS.PROFILE_ICON + "." + imageExtension).apply()
+        prefs.edit().putString(
+            UserData.FIELDS.PROFILE_ICON,
+            UserData.FIELDS.PROFILE_ICON + "." + imageExtension
+        ).apply()
         prefs.edit().putString(UserData.FIELDS.LAST_USER_ID, userId).apply()
         
         saveUserProfileIcon(photoURL!!, imageExtension)
@@ -56,7 +65,8 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
      */
     private fun saveUserProfileIcon(imageURL: String, imageExtension: String) {
         val storagePath = context.applicationInfo.dataDir
-        val filePath = "$storagePath/$IMAGES_DIRECTORY/${UserData.FIELDS.PROFILE_ICON}.$imageExtension"
+        val filePath =
+            "$storagePath/$IMAGES_DIRECTORY/${UserData.FIELDS.PROFILE_ICON}.$imageExtension"
         
         //create Image directory if not exist
         val mediaStorageDir = File(storagePath, IMAGES_DIRECTORY)

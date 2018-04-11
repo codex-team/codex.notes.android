@@ -2,17 +2,17 @@ package com.notesandroid.codex.notesandroid.Fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.ViewGroup
-import android.view.LayoutInflater
-import android.view.View
-import com.notesandroid.codex.notesandroid.R
-import kotlinx.android.synthetic.main.root_fragment.view.*
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.notesandroid.codex.notesandroid.Activities.MainActivity
 import com.notesandroid.codex.notesandroid.Essences.Folder
-import com.notesandroid.codex.notesandroid.Essences.Note
+import com.notesandroid.codex.notesandroid.R
 import com.notesandroid.codex.notesandroid.RVAdapters.NotesAdapter
-import org.jetbrains.anko.toast
+import kotlinx.android.synthetic.main.root_fragment.view.*
+import java.io.Serializable
 
 /**
  * RV with notes by pattern [R.layout.root_fragment]
@@ -21,16 +21,33 @@ import org.jetbrains.anko.toast
  */
 class NotesListFragment : Fragment() {
     
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.root_fragment, container, false)
-        view.root_notes.addItemDecoration(DividerItemDecoration(activity!!,
-                DividerItemDecoration.VERTICAL))
+        view.root_notes.addItemDecoration(
+            DividerItemDecoration(
+                activity!!,
+                DividerItemDecoration.VERTICAL
+            )
+        )
         
         if (arguments != null) {
             val folder = arguments!!["folder"] as Folder
             view.root_notes.layoutManager = LinearLayoutManager(activity)
             if (folder.notes != null)
-                view.root_notes.adapter = NotesAdapter(folder.notes!!, {})
+                view.root_notes.adapter = NotesAdapter(folder.notes!!, { note ->
+                    var fragmentManager = (context as MainActivity).supportFragmentManager
+        
+                    val bundle = Bundle()
+                    bundle.putSerializable("note", note as Serializable)
+                    val fragment = NoteFragment()
+                    fragment.arguments = bundle
+                    fragmentManager.beginTransaction()
+                        .replace(R.id.main_activity_constraint_layout, fragment).commit()
+                })
         }
         
         return view
