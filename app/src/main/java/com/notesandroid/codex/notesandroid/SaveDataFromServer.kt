@@ -28,7 +28,7 @@ import java.util.*
  * @property context parent activity context
  */
 class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
-    
+
     /**
      * Get person content by person ID
      *
@@ -36,68 +36,77 @@ class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
      * @param callback function which wll be call after content load
      */
     fun loadContent(user: User, callback: (String) -> Unit) {
-        
+
         val notesAPI = NotesAPI(user.jwt.toString()!!)
-        notesAPI.executeQuery(GRAPHQL_URL, notesAPI.buildQuery(Queries.getPersonContent(user.info!!.id!!)),
-                object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        if (!Utilities.isInternetConnected(context))
-                            callback(context.getString(R.string.offline_mod))
+        notesAPI.executeQuery(GRAPHQL_URL,
+            notesAPI.buildQuery(Queries.getPersonContent(user.info!!.id!!)),
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    if (!Utilities.isInternetConnected(context))
+                        callback(context.getString(R.string.offline_mod))
+                    else
+                        callback(context.getString(R.string.unexpected_error))
+                }
+
+                @Throws(IOException::class)
+                override fun onResponse(call: Call, response: Response) {
+                    if (!response.isSuccessful) {
+                        onFailure(
+                            call,
+                            IOException(response.code().toString() + response.message())
+                        )
+                        return
+                    }
+                    val resp = response.body()?.string()
+                    val content: Content = parseResult(resp!!)
+
+                    for (folder in content.folders) {
+                        if (db.isFolderExistInDatabase(folder))
+                            db.updateFolderInDatabase(folder)
                         else
-                            callback(context.getString(R.string.unexpected_error))
-                    }
-                    
-                    @Throws(IOException::class)
-                    override fun onResponse(call: Call, response: Response) {
-                        if (!response.isSuccessful) {
-                            onFailure(call, IOException(response.code().toString() + response.message()))
-                            return
-                        }
-                        val resp = response.body()?.string()
-                        val content: Content = parseResult(resp!!)
-                        
-                        for (folder in content.folders) {
-                            if (db.isFolderExistInDatabase(folder))
-                                db.updateFolderInDatabase(folder)
+                            db.insertFolderInDatabase(folder)
+
+
+                        for (note in folder.notes!!) {
+                            note.folderId = folder.id
+                            if (db.isNoteExistInDatabase(note))
+                                db.updateNoteInDatabase(note)
                             else
-                                db.insertFolderInDatabase(folder)
-                            
-                            
-                            for (note in folder.notes!!) {
-                                note.folderId = folder.id
-                                if (db.isNoteExistInDatabase(note))
-                                    db.updateNoteInDatabase(note)
-                                else
-                                    db.insertNoteInDatabase(note)
-                            }
+                                db.insertNoteInDatabase(note)
                         }
-                        
-                        val date = SimpleDateFormat(SYNC_TIME_FORMAT).format(Calendar.getInstance().time)
-                        context.getSharedPreferences(UserData.NAME, 0).edit().putString(UserData.FIELDS.LAST_SYNC, date).apply()
-                        
-                        callback(context.getString(R.string.sync_successful))
                     }
-                    
-                    fun parseResult(response: String): Content {
-                        val builder = GsonBuilder()
-                        val gson = builder.create()
-                        
-                        try {
-                            val writer = JsonParser()
-                            var jsonElement = writer.parse(response)
-                            jsonElement = jsonElement.asJsonObject["data"]
-                            
-                            val content = gson.fromJson(jsonElement.asJsonObject["personContent"], Content::class.java)
-                            content.rootFolder = content.folders.filter {
-                                it.isRoot!!
-                            }.getOrNull(0)
-                            
-                            return content
-                        } catch (e: IOException) {
-                        
-                        }
-                        return Content()
+
+                    val date =
+                        SimpleDateFormat(SYNC_TIME_FORMAT).format(Calendar.getInstance().time)
+                    context.getSharedPreferences(UserData.NAME, 0).edit()
+                        .putString(UserData.FIELDS.LAST_SYNC, date).apply()
+
+                    callback(context.getString(R.string.sync_successful))
+                }
+
+                fun parseResult(response: String): Content {
+                    val builder = GsonBuilder()
+                    val gson = builder.create()
+
+                    try {
+                        val writer = JsonParser()
+                        var jsonElement = writer.parse(response)
+                        jsonElement = jsonElement.asJsonObject["data"]
+
+                        val content = gson.fromJson(
+                            jsonElement.asJsonObject["personContent"],
+                            Content::class.java
+                        )
+                        content.rootFolder = content.folders.filter {
+                            it.isRoot!!
+                        }.getOrNull(0)
+
+                        return content
+                    } catch (e: IOException) {
+
                     }
-                })
+                    return Content()
+                }
+            })
     }
 }

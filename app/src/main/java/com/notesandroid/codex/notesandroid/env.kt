@@ -20,7 +20,6 @@ const val HAWK_TOKEN = "8e478c91-e278-402a-857d-c4e278afff92"
 
 /**
  * Registered android client
- * 1077384071053-9lipptu0ub1en1mneekhs9qpe4u9iu19.apps.googleusercontent.com
  */
 const val ANDROID_CLIENT_ID = "1077384071053-megl4qg2i3fpdkmt92inkj3jjea6vpkc.apps.googleusercontent.com"
 
