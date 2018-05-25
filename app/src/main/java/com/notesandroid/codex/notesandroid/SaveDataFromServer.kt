@@ -37,7 +37,7 @@ class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
      */
     fun loadContent(user: User, callback: (String) -> Unit) {
         
-        val notesAPI = NotesAPI(user.jwt!!)
+        val notesAPI = NotesAPI(user.jwt.toString()!!)
         notesAPI.executeQuery(GRAPHQL_URL, notesAPI.buildQuery(Queries.getPersonContent(user.info!!.id!!)),
                 object : Callback {
                     override fun onFailure(call: Call, e: IOException) {

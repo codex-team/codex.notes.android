@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity() {
             user = User()
             return
         }
-        user = User(db.getPersonFromDatabase(userId), JWT(token), profileIcon)
+        user = User(db.getPersonFromDatabase(userId), token, profileIcon)
     }
     
     /**
@@ -229,7 +229,7 @@ class MainActivity : AppCompatActivity() {
         val fragment = NotesListFragment()
         fragment.arguments = bundle
         fragmentManager.beginTransaction().replace(R.id.main_activity_constraint_layout, fragment)
-            .commit()
+            .commitAllowingStateLoss()
         main_activity_drawer_layout.closeDrawer(GravityCompat.START)
     }
     
@@ -256,7 +256,7 @@ class MainActivity : AppCompatActivity() {
         
         fragmentManager.beginTransaction()
             .replace(R.id.header_layout, fragment)
-            .commit()
+            .commitAllowingStateLoss()
     }
     
     /**

@@ -1,6 +1,5 @@
 package com.notesandroid.codex.notesandroid.NotesAPI
 
-import com.auth0.android.jwt.JWT
 import okhttp3.Callback
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
@@ -136,7 +135,7 @@ class Mutations
 /**
  * Control graphql queries
  */
-class NotesAPI(private val jwt: JWT) {
+class NotesAPI(private val jwt: String) {
     /**
      * Transform [Queries] list to body for POST  query
      *
@@ -156,7 +155,7 @@ class NotesAPI(private val jwt: JWT) {
         val body = RequestBody.create(contentType, query)
         val request = Request.Builder()
                 .url(url)
-                .addHeader("Authorization", "Bearer " + jwt.toString())
+                .addHeader("Authorization", "Bearer " + jwt)
                 .post(body)
                 .build()
         client.newCall(request).enqueue(callback);

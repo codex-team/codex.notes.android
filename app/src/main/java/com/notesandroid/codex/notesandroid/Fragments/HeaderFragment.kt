@@ -28,7 +28,7 @@ class HeaderFragment : Fragment() {
         val view = inflater.inflate(R.layout.nav_header_main, container, false)
         
         val user = arguments!!["user"] as User
-        
+
         val profileIcon =
             Drawable.createFromPath(
                 context?.applicationInfo!!.dataDir + "/" + IMAGES_DIRECTORY +

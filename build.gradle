@@ -4,23 +4,23 @@ buildscript {
     ext.kotlin_version = '1.2.21'
     ext.anko_version='0.10.4'
     ext.dokka_version = '0.9.16'
-    repositories {
-        google()
-        maven { url "https://jitpack.io" }
-        maven {
-            url "https://plugins.gradle.org/m2/"
+        repositories {
+            google()
+            maven { url "https://jitpack.io" }
+            maven {
+                url "https://plugins.gradle.org/m2/"
+            }
+            jcenter()
         }
-        jcenter()
-    }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:${dokka_version}"
         classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:3.1.0"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        classpath 'com.google.gms:google-services:3.1.0'
+        classpath 'com.google.gms:google-services:4.0.1'
     }
 }
 

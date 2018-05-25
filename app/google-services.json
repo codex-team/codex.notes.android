@@ -1,21 +1,45 @@
 {
   "project_info": {
-    "project_number": "237726398159",
-    "firebase_url": "https://notesandroid-80b0e.firebaseio.com",
-    "project_id": "notesandroid-80b0e",
-    "storage_bucket": "notesandroid-80b0e.appspot.com"
+    "project_number": "1077384071053",
+    "firebase_url": "https://codex-notes-test.firebaseio.com",
+    "project_id": "codex-notes-test",
+    "storage_bucket": "codex-notes-test.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:237726398159:android:bdce313dc5c176ff",
+        "mobilesdk_app_id": "1:1077384071053:android:bdce313dc5c176ff",
         "android_client_info": {
           "package_name": "com.notesandroid.codex.notesandroid"
         }
       },
       "oauth_client": [
         {
-          "client_id": "237726398159-5aqt7af44jfbdsp8hbbfsg7vaj3av9vc.apps.googleusercontent.com",
+          "client_id": "1077384071053-9lipptu0ub1en1mneekhs9qpe4u9iu19.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1077384071053-apioq14bfleviggq3hofme0s5mar1usi.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1077384071053-ss8devi8ibofc6jtodtb0djohiffb3ld.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1077384071053-hgm6ed3avgpgblla26vj9rhisctjmfo3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.notesandroid.codex.notesandroid",
+            "certificate_hash": "6d7f0a7a2914d4504f08b23d4b0583892220e90a"
+          }
+        },
+        {
+          "client_id": "1077384071053-megl4qg2i3fpdkmt92inkj3jjea6vpkc.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1077384071053-ghmh1e6u07ev5ses6rs66cc2np76erfh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.notesandroid.codex.notesandroid",
@@ -23,13 +47,13 @@
           }
         },
         {
-          "client_id": "237726398159-povm6mramg294ca7abvlklqbab2gstmq.apps.googleusercontent.com",
+          "client_id": "1077384071053-9lipptu0ub1en1mneekhs9qpe4u9iu19.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDxyWc-fcpv6ws0OV2FVZmM0McP3QND8bc"
+          "current_key": "AIzaSyAueePEey7Fu3LG3Gwvk279qzWQ3AVemIQ"
         }
       ],
       "services": {
@@ -40,7 +64,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "237726398159-povm6mramg294ca7abvlklqbab2gstmq.apps.googleusercontent.com",
+              "client_id": "1077384071053-9lipptu0ub1en1mneekhs9qpe4u9iu19.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
