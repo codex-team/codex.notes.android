@@ -8,6 +8,8 @@ import android.net.NetworkInfo
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
+import com.notesandroid.codex.notesandroid.IMAGES_DIRECTORY
+import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.jetbrains.anko.runOnUiThread
@@ -32,6 +34,7 @@ class Utilities {
         
         fun saveImageByURL(photoURL: String, savePath:String)
         {
+            //val filePath = "$storagePath/${IMAGES_DIRECTORY}/${UserData.FIELDS.PROFILE_ICON}.$imageExtension"
             val url = URL(photoURL)
             val input = url.openStream()
             try {

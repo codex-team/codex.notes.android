@@ -28,7 +28,7 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
         val jwt = JWT(responseJson.jwt)
         val token = responseJson.jwt
         
-        
+
         val userId = jwt.getClaim("user_id").asString()
         val photoURL = responseJson.photo
         val name = responseJson.name
@@ -43,7 +43,7 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
         }
         else
             db.insertPersonInDatabase(person)
-        
+
         val imageExtension = photoURL!!.substringAfterLast('.')
         val prefs = context.getSharedPreferences(UserData.NAME, 0)
         prefs.edit().putString(UserData.FIELDS.LAST_USER_TOKEN, token).apply()

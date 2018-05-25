@@ -50,7 +50,6 @@ class ServerSideAutorization(val context: Context,
         
         val request = Request.Builder()
             .url(urlBuilder.build())
-            //.addHeader("token", googleToken)
             .build()
         client.newCall(request).enqueue(callback)
     }
@@ -66,7 +65,7 @@ class ServerSideAutorization(val context: Context,
         {
             val account = completedTask.getResult(ApiException::class.java)
             val googleToken = account.idToken
-            
+    
             getCustomJWT(googleToken!!, jwtTokenCallback(db))
         } catch (e: ApiException)
         {
