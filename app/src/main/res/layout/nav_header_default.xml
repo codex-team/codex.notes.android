@@ -27,8 +27,9 @@
             android:layout_alignParentTop="true"
             android:layout_alignRight="@+id/relativeLayout"
             android:layout_marginBottom="15dp"
+            android:lineSpacingExtra="5sp"
             android:text="@string/intro_login"
-            android:textColor="#DEE6FC" />
+            android:textColor="#778099" />
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
@@ -40,8 +41,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/circleImageView"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:adjustViewBounds="false"
@@ -54,7 +55,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/circleImageView"
                 android:layout_toRightOf="@+id/circleImageView"
-                android:paddingLeft="20dp"
+                android:paddingLeft="10dp"
                 android:text="@string/login_with_google"
                 android:textColor="#DEE6FC"
                 android:textSize="18sp" />

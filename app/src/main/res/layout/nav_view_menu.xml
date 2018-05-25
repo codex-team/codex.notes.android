@@ -60,8 +60,9 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/main_padding_nav_view_header"
+                android:alpha="0.35"
                 android:text="0"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:theme="@style/NavigationViewMenuTextCounterStyle" />
 
             <View
@@ -71,7 +72,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/nav_view_my_notes"
-                android:background="#a9acb4" />
+                android:alpha="0.11"
+                android:background="#DEE6FC" />
 
         </RelativeLayout>
 
@@ -89,7 +91,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/nav_view_my_notes"
-                android:background="#a9acb4" />
+                android:alpha="0.11"
+                android:background="#DEE6FC" />
 
             <Button
                 android:id="@+id/nav_view_logout"
@@ -109,7 +112,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/nav_view_my_notes"
-                android:background="#a9acb4" />
+                android:alpha="0.11"
+                android:background="#DEE6FC" />
 
             <Button
                 android:id="@+id/nav_view_settings"
@@ -129,7 +133,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/nav_view_my_notes"
-                android:background="#a9acb4" />
+                android:alpha="0.11"
+                android:background="#DEE6FC" />
 
             <Button
                 android:id="@+id/nav_view_help"
