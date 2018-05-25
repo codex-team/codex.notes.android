@@ -49,6 +49,7 @@
 
     <style name="NavigationViewMenuBottomButtonStyle">
         <item name="android:textColor">#a9acb4</item>
+        <item name="android:alpha">0.36</item>
     <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/roboto_regular</item>
 </style>
 
