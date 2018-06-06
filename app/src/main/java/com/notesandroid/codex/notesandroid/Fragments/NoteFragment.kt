@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.notesandroid.codex.notesandroid.Essences.Note
+import com.notesandroid.codex.notesandroid.NoteStructure.NoteBlock
 import com.notesandroid.codex.notesandroid.NoteStructure.TextElement
 import com.notesandroid.codex.notesandroid.R
 import kotlinx.android.synthetic.main.note.view.*
@@ -39,19 +40,11 @@ class NoteFragment : Fragment() {
             var jsonElement = writer.parse(note.content)
             val jsonArray = jsonElement.asJsonArray
             
-            val elements = mutableListOf<TextElement>()
+            val elements = mutableListOf<NoteBlock>()
             
             for (el in jsonArray) {
-                val textElement = gson.fromJson(el.asJsonObject["data"], TextElement::class.java)
-                textElement.type = el.asJsonObject["type"].asString
+                val textElement = gson.fromJson(el.asJsonObject["data"], NoteBlock::class.java)
                 elements.add(textElement)
-                
-                val tv = TextView(context)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    tv.text = Html.fromHtml(textElement.text, Html.FROM_HTML_MODE_LEGACY);
-                } else {
-                    tv.text = Html.fromHtml(textElement.text);
-                }
                 
                 (view.root_note_linear_layout as LinearLayout).addView(tv)
             }
