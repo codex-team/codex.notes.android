@@ -69,6 +69,10 @@ class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
 
                         for (note in folder.notes!!) {
                             note.folderId = folder.id
+
+                            if(note.isRemoved!!)
+                                continue
+
                             if (db.isNoteExistInDatabase(note))
                                 db.updateNoteInDatabase(note)
                             else
