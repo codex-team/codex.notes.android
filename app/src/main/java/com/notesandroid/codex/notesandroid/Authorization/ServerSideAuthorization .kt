@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Task
 import com.google.gson.GsonBuilder
 import com.notesandroid.codex.notesandroid.AUTHORIZATION_URL
 import com.notesandroid.codex.notesandroid.Activities.MainActivity
+import com.notesandroid.codex.notesandroid.ApplicationState
 import com.notesandroid.codex.notesandroid.ControlUserData
 import com.notesandroid.codex.notesandroid.Database.LocalDatabaseAPI
 import com.notesandroid.codex.notesandroid.R
@@ -30,8 +31,8 @@ import java.io.IOException
  * @param context parent activity context
  * @param snackbarNotification snackbar for notification
  */
-class ServerSideAutorization(val context: Context,
-    private val snackbarNotification: MessageSnackbar)
+class ServerSideAuthorization(val context: Context,
+                              private val snackbarNotification: MessageSnackbar)
 {
     
     /**
@@ -42,7 +43,6 @@ class ServerSideAutorization(val context: Context,
      */
     private fun getCustomJWT(googleToken: String, callback: Callback)
     {
-        
         val client = OkHttpClient()
         
         val urlBuilder = HttpUrl.parse(AUTHORIZATION_URL)!!.newBuilder()
@@ -69,6 +69,7 @@ class ServerSideAutorization(val context: Context,
             getCustomJWT(googleToken!!, jwtTokenCallback(db))
         } catch (e: ApiException)
         {
+            ApplicationState.exceptionCatcher.logException(e)
             errorNotification()
         }
     }
@@ -94,6 +95,7 @@ class ServerSideAutorization(val context: Context,
                     ControlUserData(db, context).initUserInformation(responseJson)
                 } catch (e: Exception)
                 {
+                    ApplicationState.exceptionCatcher.logException(e)
                     errorNotification()
                     return
                 }
@@ -105,6 +107,7 @@ class ServerSideAutorization(val context: Context,
             
             override fun onFailure(call: Call?, e: IOException?)
             {
+                ApplicationState.exceptionCatcher.logException(e as Exception)
                 errorNotification()
                 return
             }

@@ -9,11 +9,14 @@ import com.hawkcatcherkotlin.akscorp.hawkcatcherkotlin.HawkExceptionCatcher
  * Application entire point
  */
 class ApplicationState : Application() {
+
+    companion object {
     /**
      * Hawk catcher
      */
     lateinit var exceptionCatcher: HawkExceptionCatcher
-    
+    }
+
     override fun onCreate() {
         super.onCreate()
         

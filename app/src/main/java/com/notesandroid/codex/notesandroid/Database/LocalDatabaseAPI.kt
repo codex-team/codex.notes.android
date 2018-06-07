@@ -106,7 +106,7 @@ public class LocalDatabaseAPI(private val context: Context) {
                         Notes.FIELDS.DT_CREATE -> note.dtCreate = cursor.getString(pos)
                         Notes.FIELDS.DT_MODIFY -> note.dtModify = cursor.getString(pos)
                         Notes.FIELDS.FOLDER_ID -> note.folderId = cursor.getString(pos)
-                        Notes.FIELDS.IS_REMOVED -> note.isRemoved = cursor.getString(pos)
+                        Notes.FIELDS.IS_REMOVED -> note.isRemoved = cursor.getString(pos).toBoolean()
                         Notes.FIELDS.TITLE -> note.title = cursor.getString(pos)
                     }
                 }

@@ -1,18 +1,16 @@
 package com.notesandroid.codex.notesandroid.Fragments
 
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TextView
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.notesandroid.codex.notesandroid.Essences.Note
-import com.notesandroid.codex.notesandroid.NoteStructure.TextElement
+import com.notesandroid.codex.notesandroid.NoteStructure.NoteBlock
+import com.notesandroid.codex.notesandroid.NoteStructure.NoteDescription
 import com.notesandroid.codex.notesandroid.R
 import kotlinx.android.synthetic.main.note.view.*
 
@@ -38,25 +36,40 @@ class NoteFragment : Fragment() {
             val writer = JsonParser()
             var jsonElement = writer.parse(note.content)
             val jsonArray = jsonElement.asJsonArray
-            
-            val elements = mutableListOf<TextElement>()
+
+            addTitleToLayout(view, note.title!!)
             
             for (el in jsonArray) {
-                val textElement = gson.fromJson(el.asJsonObject["data"], TextElement::class.java)
-                textElement.type = el.asJsonObject["type"].asString
-                elements.add(textElement)
+
+
+                val blockType = el.asJsonObject["type"].asString
+                val dataText = el.asJsonObject["data"].asJsonObject["text"].asString
+
+
+                val dataType = el.asJsonObject["data"].asJsonObject["heading-styles"]
+
+                val block = NoteBlock(context!!, blockType, NoteDescription(dataText, dataType?.asString?: ""))
+
+              //  elements.add(textElement)
                 
-                val tv = TextView(context)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    tv.text = Html.fromHtml(textElement.text, Html.FROM_HTML_MODE_LEGACY);
-                } else {
-                    tv.text = Html.fromHtml(textElement.text);
-                }
-                
-                (view.root_note_linear_layout as LinearLayout).addView(tv)
+                (view.root_note_linear_layout as LinearLayout).addView(block.view)
             }
         }
         
         return view
+    }
+
+    fun addTitleToLayout(view:View, title:String)
+    {
+
+        val blockType = "header"
+        val dataText = title
+
+
+        val dataType = "h1"
+
+        val block = NoteBlock(context!!, blockType, NoteDescription(dataText, dataType))
+
+        (view.root_note_linear_layout as LinearLayout).addView(block.view)
     }
 }

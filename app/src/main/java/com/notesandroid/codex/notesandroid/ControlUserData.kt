@@ -37,14 +37,14 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
         
         val db = LocalDatabaseAPI(context)
     
-        if (db.isPersonExistInDatabase(person!!))
+        if (db.isPersonExistInDatabase(person))
         {
-            db.updatePersonInDatabase(person!!)
+            db.updatePersonInDatabase(person)
         }
         else
             db.insertPersonInDatabase(person)
 
-        val imageExtension = photoURL!!.substringAfterLast('.')
+        val imageExtension = photoURL.substringAfterLast('.')
         val prefs = context.getSharedPreferences(UserData.NAME, 0)
         prefs.edit().putString(UserData.FIELDS.LAST_USER_TOKEN, token).apply()
         prefs.edit().putString(
@@ -53,7 +53,7 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
         ).apply()
         prefs.edit().putString(UserData.FIELDS.LAST_USER_ID, userId).apply()
         
-        saveUserProfileIcon(photoURL!!, imageExtension)
+        saveUserProfileIcon(photoURL, imageExtension)
     }
     
     /**
