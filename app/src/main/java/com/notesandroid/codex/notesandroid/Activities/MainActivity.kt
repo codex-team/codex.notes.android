@@ -13,11 +13,10 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-import com.auth0.android.jwt.JWT
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.notesandroid.codex.notesandroid.ANDROID_CLIENT_ID
-import com.notesandroid.codex.notesandroid.Authorization.ServerSideAutorization
+import com.notesandroid.codex.notesandroid.Authorization.ServerSideAuthorization
 import com.notesandroid.codex.notesandroid.ControlUserData
 import com.notesandroid.codex.notesandroid.Database.LocalDatabaseAPI
 import com.notesandroid.codex.notesandroid.Essences.Content
@@ -32,8 +31,6 @@ import com.notesandroid.codex.notesandroid.RVAdapters.FoldersAdapter
 import com.notesandroid.codex.notesandroid.SaveDataFromServer
 import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
 import com.notesandroid.codex.notesandroid.Utilities.MessageSnackbar
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.nav_view_menu.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
@@ -51,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Control auth process
      */
-    private lateinit var serversideAutorization: ServerSideAutorization
+    private lateinit var serversideAuthorization: ServerSideAuthorization
     
     /**
      * Current user content for display
@@ -279,8 +276,8 @@ class MainActivity : AppCompatActivity() {
      */
     private fun appointSignInAction() {
     
-        serversideAutorization =
-            ServerSideAutorization(this, MessageSnackbar(this, main_activity_coordinator_layout))
+        serversideAuthorization =
+            ServerSideAuthorization(this, MessageSnackbar(this, main_activity_coordinator_layout))
     
         header_layout.setOnClickListener {
             header_layout.isClickable = false
@@ -300,7 +297,7 @@ class MainActivity : AppCompatActivity() {
         
         if (requestCode == AUTHORIZATION_ATTEMPT) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            serversideAutorization.handleSignInResult(task, db)
+            serversideAuthorization.handleSignInResult(task, db)
         }
     }
 }

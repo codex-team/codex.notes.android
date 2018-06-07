@@ -31,8 +31,8 @@ import java.io.IOException
  * @param context parent activity context
  * @param snackbarNotification snackbar for notification
  */
-class ServerSideAutorization(val context: Context,
-    private val snackbarNotification: MessageSnackbar)
+class ServerSideAuthorization(val context: Context,
+                              private val snackbarNotification: MessageSnackbar)
 {
     
     /**
