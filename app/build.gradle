@@ -6,7 +6,19 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'org.jetbrains.dokka-android'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+    signingConfigs {
+        debug_key {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.notesandroid.codex.notesandroid"
@@ -15,16 +27,24 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug_key
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            debuggable true
+            signingConfig signingConfigs.debug_key
+            minifyEnabled false
+        }
     }
     sourceSets {
         main.kotlin.srcDirs += 'src/main/java'
         test.kotlin.srcDirs += 'src/test/java '
+    }
+    productFlavors {
     }
 }
 
