@@ -31,6 +31,8 @@ import com.notesandroid.codex.notesandroid.RVAdapters.FoldersAdapter
 import com.notesandroid.codex.notesandroid.SaveDataFromServer
 import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
 import com.notesandroid.codex.notesandroid.Utilities.MessageSnackbar
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.nav_view_menu.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
