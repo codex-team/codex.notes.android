@@ -1,12 +1,10 @@
 package com.notesandroid.codex.notesandroid
 
-import android.app.Activity
 import android.content.Context
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.notesandroid.codex.notesandroid.Database.LocalDatabaseAPI
 import com.notesandroid.codex.notesandroid.Essences.Content
-import com.notesandroid.codex.notesandroid.Essences.Person
 import com.notesandroid.codex.notesandroid.Essences.User
 import com.notesandroid.codex.notesandroid.NotesAPI.NotesAPI
 import com.notesandroid.codex.notesandroid.NotesAPI.Queries
@@ -61,6 +59,11 @@ class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
                     val content: Content = parseResult(resp!!)
 
                     for (folder in content.folders) {
+                        if(folder.owner != user.info)
+                            if(db.isPersonExistInDatabase(folder.owner!!))
+                                db.updatePersonInDatabase(folder.owner!!)
+                            else
+                                db.insertPersonInDatabase(folder.owner!!)
                         if (db.isFolderExistInDatabase(folder))
                             db.updateFolderInDatabase(folder)
                         else

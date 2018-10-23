@@ -14,12 +14,7 @@ import com.notesandroid.codex.notesandroid.R
 import com.notesandroid.codex.notesandroid.Utilities.MessageSnackbar
 import com.notesandroid.codex.notesandroid.Utilities.Utilities
 import kotlinx.android.synthetic.main.nav_view_menu.*
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import org.jetbrains.anko.runOnUiThread
 import java.io.IOException
 
@@ -65,8 +60,8 @@ class ServerSideAuthorization(val context: Context,
         {
             val account = completedTask.getResult(ApiException::class.java)
             val googleToken = account.idToken
-    
             getCustomJWT(googleToken!!, jwtTokenCallback(db))
+            //CodeXNotesApi().authorization(googleToken!!)
         } catch (e: ApiException)
         {
             ApplicationState.exceptionCatcher.logException(e)
