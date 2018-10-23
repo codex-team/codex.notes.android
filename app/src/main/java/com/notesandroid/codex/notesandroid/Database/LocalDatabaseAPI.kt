@@ -163,6 +163,8 @@ public class LocalDatabaseAPI(private val context: Context) {
      */
     fun insertNoteInDatabase(note: Note) {
         CodexNotesDatabase.getInstance(context).use {
+            if(note.author != null && !isPersonExistInDatabase(note.author!!))
+                insertPersonInDatabase(note.author!!)
             insertOrThrow(Notes.NAME,
                     Notes.FIELDS.ID to note.id,
                     Notes.FIELDS.FOLDER_ID to note.folderId,
