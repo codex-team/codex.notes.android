@@ -11,6 +11,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -31,11 +32,11 @@ import com.notesandroid.codex.notesandroid.RVAdapters.FoldersAdapter
 import com.notesandroid.codex.notesandroid.SaveDataFromServer
 import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
 import com.notesandroid.codex.notesandroid.Utilities.MessageSnackbar
+import com.notesandroid.codex.notesandroid.Utilities.Utilities
+import com.notesandroid.codex.notesandroid.retrofit.CodeXNotesApi
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_view_menu.*
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.toast
 import java.io.Serializable
 
@@ -123,12 +124,17 @@ class MainActivity : AppCompatActivity() {
         loadCurrentUser()
         
         initStartUI()
+
+        content = ControlUserData(db, applicationContext).getContentFromDatabase()
+        displayContent()
+
+        Log.i("MainActivityObserver", Thread.currentThread().id.toString() + " " + Thread.currentThread().name)
         
-        currentCoroutine = launch(CommonPool) {
-            content = ControlUserData(db, applicationContext).getContentFromDatabase()
+        /*currentCoroutine = launch(CommonPool) {
+
             
             runOnUiThread {
-                displayContent()
+
             }
             if (user.info != null) {
                 SaveDataFromServer(db, this@MainActivity).loadContent(user, {
@@ -139,7 +145,7 @@ class MainActivity : AppCompatActivity() {
                     
                 })
             }
-        }
+        }*/
     }
     
     /**
@@ -265,7 +271,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * @important [currentCoroutine]
          */
-        currentCoroutine.cancel()
+        //currentCoroutine.cancel()
         sharedPreferences.edit().clear().apply()
         db.deleteDatabase()
         content = Content()
@@ -299,7 +305,27 @@ class MainActivity : AppCompatActivity() {
         
         if (requestCode == AUTHORIZATION_ATTEMPT) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            serversideAuthorization.handleSignInResult(task, db)
+            if(task.result.idToken != null)
+                CodeXNotesApi().authorization(task.result.idToken!!).subscribe({ jwt ->
+                    Log.i("MainActivityObserver", Thread.currentThread().id.toString() + " " + Thread.currentThread().name)
+                    user = ControlUserData(db, this).initUserInformation(jwt)
+                    SaveDataFromServer(db, this).loadContent(user, {
+                        runOnUiThread {
+                            content = ControlUserData(db, applicationContext).getContentFromDatabase()
+                            displayContent()
+                        }
+                    })
+                }, {error ->
+                    run {
+                        val snackbar = MessageSnackbar(this, main_activity_coordinator_layout)
+                        if (!Utilities.isInternetConnected(this))
+                            snackbar.show(getString(R.string.no_internet_connection_available))
+                        else
+                            snackbar.show(getString(R.string.autorization_failed))
+                        header_layout.isClickable = true
+                        Log.i("MainActivity", "error log ${error.message}")
+                    }
+                })
         }
     }
 }

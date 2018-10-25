@@ -6,6 +6,7 @@ import com.notesandroid.codex.notesandroid.Authorization.ServerAuthorizationResp
 import com.notesandroid.codex.notesandroid.Database.LocalDatabaseAPI
 import com.notesandroid.codex.notesandroid.Essences.Content
 import com.notesandroid.codex.notesandroid.Essences.Person
+import com.notesandroid.codex.notesandroid.Essences.User
 import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
 import com.notesandroid.codex.notesandroid.Utilities.Utilities.Companion.saveImageByURL
 import java.io.File
@@ -22,7 +23,7 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
      *
      * @param responseJson server JSON response
      */
-    fun initUserInformation(responseJson: ServerAuthorizationResponse)
+    fun initUserInformation(responseJson: ServerAuthorizationResponse) : User
     {
     
         val jwt = JWT(responseJson.jwt)
@@ -53,7 +54,8 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
         ).apply()
         prefs.edit().putString(UserData.FIELDS.LAST_USER_ID, userId).apply()
         
-        saveUserProfileIcon(photoURL, imageExtension)
+        val path = saveUserProfileIcon(photoURL, imageExtension)
+        return User(person, responseJson.jwt, path)
     }
     
     /**
@@ -63,7 +65,7 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
      *
      * @param imageURL - image URL
      */
-    private fun saveUserProfileIcon(imageURL: String, imageExtension: String) {
+    private fun saveUserProfileIcon(imageURL: String, imageExtension: String):String? {
         val storagePath = context.applicationInfo.dataDir
         val filePath =
             "$storagePath/$IMAGES_DIRECTORY/${UserData.FIELDS.PROFILE_ICON}.$imageExtension"
@@ -73,10 +75,11 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
         
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                return
+                return null
             }
         }
         saveImageByURL(imageURL, filePath)
+        return filePath
     }
     
     /**

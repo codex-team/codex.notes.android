@@ -7,6 +7,7 @@ import com.notesandroid.codex.notesandroid.Authorization.ServerAuthorizationResp
 import com.notesandroid.codex.notesandroid.Essences.Content
 import com.notesandroid.codex.notesandroid.NotesAPI.Queries
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 
@@ -31,14 +32,13 @@ class CodeXNotesApi{
         return api.getPersonContent(jsonElem.asJsonObject, jwt)
     }
 
-    fun authorization(token:String):Observable<ServerAuthorizationResponse>{
-        return Observable.create<ServerAuthorizationResponse> {
+    fun authorization(token:String): Single<ServerAuthorizationResponse> {
+        return Single.create<ServerAuthorizationResponse> {
             api.userAuthorization(token)
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     { next ->
-                        it.onNext(next.body()!!)
-                        it.onComplete()
+                        it.onSuccess(next.body()!!)
                     },
                     { error ->
                         val e = error as HttpException
