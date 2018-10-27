@@ -55,7 +55,7 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
         prefs.edit().putString(UserData.FIELDS.LAST_USER_ID, userId).apply()
         
         val path = saveUserProfileIcon(photoURL, imageExtension)
-        return User(person, responseJson.jwt, path)
+        return User(person, responseJson.jwt, UserData.FIELDS.PROFILE_ICON + "." + imageExtension)
     }
     
     /**
