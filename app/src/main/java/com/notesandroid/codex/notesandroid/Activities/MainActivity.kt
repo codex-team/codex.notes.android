@@ -11,8 +11,10 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.notesandroid.codex.notesandroid.ANDROID_CLIENT_ID
@@ -28,16 +30,20 @@ import com.notesandroid.codex.notesandroid.Fragments.NotesListFragment
 import com.notesandroid.codex.notesandroid.R
 import com.notesandroid.codex.notesandroid.R.string.*
 import com.notesandroid.codex.notesandroid.RVAdapters.FoldersAdapter
-import com.notesandroid.codex.notesandroid.SaveDataFromServer
+import com.notesandroid.codex.notesandroid.SYNC_TIME_FORMAT
 import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
 import com.notesandroid.codex.notesandroid.Utilities.MessageSnackbar
+import com.notesandroid.codex.notesandroid.Utilities.Utilities
+import com.notesandroid.codex.notesandroid.retrofit.CodeXNotesApi
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_view_menu.*
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.toast
+import retrofit2.HttpException
 import java.io.Serializable
+import java.text.SimpleDateFormat
+import java.util.*
 
 const val AUTHORIZATION_ATTEMPT = 1488
 
@@ -71,6 +77,8 @@ class MainActivity : AppCompatActivity() {
      * Local SP api
      */
     lateinit var sharedPreferences: SharedPreferences
+
+    lateinit var snackbar:MessageSnackbar
     
     /**
      * Coroutine with update content logic
@@ -118,17 +126,31 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
     }
-    
+
     internal fun startInit() {
+
+        snackbar = MessageSnackbar(this, main_activity_coordinator_layout)
+
         loadCurrentUser()
         
         initStartUI()
+
+        //content = ControlUserData(db, applicationContext).getContentFromDatabase()
+        content = Content(mutableListOf())
+        displayContent()
+
+        Log.i("MainActivityObserver", Thread.currentThread().id.toString() + " " + Thread.currentThread().name)
+        loadCurrentUser()
+        if(user != User()){
+            loadContent()
+            displayContent()
+        }
         
-        currentCoroutine = launch(CommonPool) {
-            content = ControlUserData(db, applicationContext).getContentFromDatabase()
+        /*currentCoroutine = launch(CommonPool) {
+
             
             runOnUiThread {
-                displayContent()
+
             }
             if (user.info != null) {
                 SaveDataFromServer(db, this@MainActivity).loadContent(user, {
@@ -139,7 +161,7 @@ class MainActivity : AppCompatActivity() {
                     
                 })
             }
-        }
+        }*/
     }
     
     /**
@@ -155,7 +177,44 @@ class MainActivity : AppCompatActivity() {
         }
         user = User(db.getPersonFromDatabase(userId), token, profileIcon)
     }
-    
+
+    /**
+     *
+     *
+     */
+    private fun loadContent(){
+        progress_loader.visibility = View.VISIBLE
+        CodeXNotesApi().getPersonContent(user.info!!.id!!, user.jwt!!).subscribeOn(Schedulers.io()).subscribe({
+            it.folders.forEach {
+                Log.i(MainActivity::class.java.simpleName, it.toString())
+            }
+            it.folders.map {
+                it.notes = it.notes!!.filter { !(it.isRemoved!!) }.toMutableList()
+                it
+            }
+            it.rootFolder = it.folders.filter{it.isRoot!!}.getOrNull(0)
+            runOnUiThread {
+                content = it
+                val date =
+                    SimpleDateFormat(SYNC_TIME_FORMAT).format(Calendar.getInstance().time)
+                getSharedPreferences(UserData.NAME, 0).edit()
+                    .putString(UserData.FIELDS.LAST_SYNC, date).apply()
+                displayContent()
+                progress_loader.visibility = View.GONE
+            }
+        }, {error ->
+            when(error) {
+                is HttpException -> Log.i(MainActivity::class.java.simpleName + "Error", error.code().toString())
+                else -> Log.i(MainActivity::class.java.simpleName + "Error", error.message)
+            }
+            error.printStackTrace()
+            runOnUiThread {
+                progress_loader.visibility = View.GONE
+                snackbar.show(error.message!!)
+            }
+        }, {Log.i(MainActivity::class.java.simpleName, "Complete")})
+    }
+
     /**
      * Initialization main UI component. NavBar, toolbar
      *
@@ -265,7 +324,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * @important [currentCoroutine]
          */
-        currentCoroutine.cancel()
+        //currentCoroutine.cancel()
         sharedPreferences.edit().clear().apply()
         db.deleteDatabase()
         content = Content()
@@ -299,7 +358,29 @@ class MainActivity : AppCompatActivity() {
         
         if (requestCode == AUTHORIZATION_ATTEMPT) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            serversideAuthorization.handleSignInResult(task, db)
+            if(task.result.idToken != null)
+                CodeXNotesApi().authorization(task.result.idToken!!).subscribe({ jwt ->
+                    Log.i("MainActivityObserver", Thread.currentThread().id.toString() + " " + Thread.currentThread().name)
+                    user = ControlUserData(db, this).initUserInformation(jwt)
+                    runOnUiThread {
+                        loadContent()
+                    }
+                    /*SaveDataFromServer(db, this).loadContent(user, {
+
+                            content = ControlUserData(db, applicationContext).getContentFromDatabase()
+                            displayContent()
+                        }
+                    })*/
+                }, {error ->
+                    run {
+                        if (!Utilities.isInternetConnected(this))
+                            snackbar.show(getString(R.string.no_internet_connection_available))
+                        else
+                            snackbar.show(getString(R.string.autorization_failed))
+                        header_layout.isClickable = true
+                        Log.i("MainActivity", "error log ${error.message}")
+                    }
+                })
         }
     }
 }
