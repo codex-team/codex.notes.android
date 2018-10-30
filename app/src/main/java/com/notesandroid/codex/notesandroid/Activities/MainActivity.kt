@@ -18,7 +18,6 @@ import android.view.View
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.notesandroid.codex.notesandroid.ANDROID_CLIENT_ID
-import com.notesandroid.codex.notesandroid.Authorization.ServerSideAuthorization
 import com.notesandroid.codex.notesandroid.ControlUserData
 import com.notesandroid.codex.notesandroid.Database.LocalDatabaseAPI
 import com.notesandroid.codex.notesandroid.Essences.Content
@@ -34,6 +33,7 @@ import com.notesandroid.codex.notesandroid.SYNC_TIME_FORMAT
 import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
 import com.notesandroid.codex.notesandroid.Utilities.MessageSnackbar
 import com.notesandroid.codex.notesandroid.Utilities.Utilities
+import com.notesandroid.codex.notesandroid.interactor.NoteInteractor
 import com.notesandroid.codex.notesandroid.retrofit.CodeXNotesApi
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -42,6 +42,7 @@ import kotlinx.coroutines.experimental.Job
 import org.jetbrains.anko.toast
 import retrofit2.HttpException
 import java.io.Serializable
+import java.net.UnknownHostException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,11 +53,6 @@ const val AUTHORIZATION_ATTEMPT = 1488
  *
  */
 class MainActivity : AppCompatActivity() {
-    
-    /**
-     * Control auth process
-     */
-    private lateinit var serversideAuthorization: ServerSideAuthorization
     
     /**
      * Current user content for display
@@ -72,6 +68,7 @@ class MainActivity : AppCompatActivity() {
      * Local database api
      */
     private val db = LocalDatabaseAPI(this)
+    private val interactor = NoteInteractor()
     
     /**
      * Local SP api
@@ -119,6 +116,11 @@ class MainActivity : AppCompatActivity() {
                 toast("Folder clicked")
                 return true
             }
+            R.id.refresh_toolbar_icon -> {
+                if(user != User()){
+                    loadContent()
+                }
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -130,6 +132,7 @@ class MainActivity : AppCompatActivity() {
     internal fun startInit() {
 
         snackbar = MessageSnackbar(this, main_activity_coordinator_layout)
+        interactor.attachSQL(this)
 
         loadCurrentUser()
         
@@ -140,10 +143,9 @@ class MainActivity : AppCompatActivity() {
         displayContent()
 
         Log.i("MainActivityObserver", Thread.currentThread().id.toString() + " " + Thread.currentThread().name)
-        loadCurrentUser()
+
         if(user != User()){
             loadContent()
-            displayContent()
         }
         
         /*currentCoroutine = launch(CommonPool) {
@@ -184,23 +186,39 @@ class MainActivity : AppCompatActivity() {
      */
     private fun loadContent(){
         progress_loader.visibility = View.VISIBLE
-        CodeXNotesApi().getPersonContent(user.info!!.id!!, user.jwt!!).subscribeOn(Schedulers.io()).subscribe({
-            it.folders.forEach {
-                Log.i(MainActivity::class.java.simpleName, it.toString())
-            }
-            it.folders.map {
-                it.notes = it.notes!!.filter { !(it.isRemoved!!) }.toMutableList()
-                it
-            }
-            it.rootFolder = it.folders.filter{it.isRoot!!}.getOrNull(0)
-            runOnUiThread {
-                content = it
-                val date =
-                    SimpleDateFormat(SYNC_TIME_FORMAT).format(Calendar.getInstance().time)
-                getSharedPreferences(UserData.NAME, 0).edit()
-                    .putString(UserData.FIELDS.LAST_SYNC, date).apply()
-                displayContent()
-                progress_loader.visibility = View.GONE
+        interactor.getPersonContent(user.info!!.id!!, user.jwt!!).subscribeOn(Schedulers.io()).subscribe({
+            if(it.isOnNext) {
+                it.value!!.folders.forEach {
+                    Log.i(MainActivity::class.java.simpleName, it.toString())
+                    it.notes!!.forEach { Log.i(MainActivity::class.java.simpleName, it.title) }
+                }
+                it.value!!.rootFolder = it.value!!.folders.filter { it.isRoot!! }.getOrNull(0)
+                content = it.value!!
+                runOnUiThread {
+                    val date =
+                        SimpleDateFormat(SYNC_TIME_FORMAT).format(Calendar.getInstance().time)
+                    getSharedPreferences(UserData.NAME, 0).edit()
+                        .putString(UserData.FIELDS.LAST_SYNC, date).apply()
+                    displayContent()
+                    progress_loader.visibility = View.GONE
+                }
+            } else if(it.isOnError){
+                val error = it.error!!
+                header_layout.isClickable = true
+                Log.i("MainActivity", "error log ${error.message}")
+                when(error) {
+                    is HttpException -> Log.i(MainActivity::class.java.simpleName + "Error2", error.code().toString())
+                    is UnknownHostException -> {
+                        snackbar.show(getString(R.string.no_internet_connection_available))
+                        content = interactor.loadPersonContentFromSql()
+                        runOnUiThread { displayContent() }
+                    }
+
+                    else -> Log.i(MainActivity::class.java.simpleName + "Error2", error.message)
+                }
+                runOnUiThread {
+                    progress_loader.visibility = View.GONE
+                }
             }
         }, {error ->
             when(error) {
@@ -336,10 +354,6 @@ class MainActivity : AppCompatActivity() {
      * Show signIn dialog after sign in button press
      */
     private fun appointSignInAction() {
-    
-        serversideAuthorization =
-            ServerSideAuthorization(this, MessageSnackbar(this, main_activity_coordinator_layout))
-    
         header_layout.setOnClickListener {
             header_layout.isClickable = false
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -365,12 +379,6 @@ class MainActivity : AppCompatActivity() {
                     runOnUiThread {
                         loadContent()
                     }
-                    /*SaveDataFromServer(db, this).loadContent(user, {
-
-                            content = ControlUserData(db, applicationContext).getContentFromDatabase()
-                            displayContent()
-                        }
-                    })*/
                 }, {error ->
                     run {
                         if (!Utilities.isInternetConnected(this))
