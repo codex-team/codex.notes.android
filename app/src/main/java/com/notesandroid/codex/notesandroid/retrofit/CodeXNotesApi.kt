@@ -6,15 +6,18 @@ import com.google.gson.JsonParser
 import com.notesandroid.codex.notesandroid.Authorization.ServerAuthorizationResponse
 import com.notesandroid.codex.notesandroid.Essences.Content
 import com.notesandroid.codex.notesandroid.NotesAPI.Queries
-import io.reactivex.Observable
+import io.reactivex.Notification
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 
 /**
  * Created by Shiplayer on 23.10.18.
  */
 
 class CodeXNotesApi{
+
+    val obsPersonContent = PublishSubject.create<Notification<Content>>()
 
     companion object {
         private val api by lazy{
@@ -33,21 +36,21 @@ class CodeXNotesApi{
      */
     fun buildQuery(vararg queries: String): String = """{ "query":"query { ${queries.joinToString("")} }" }"""
 
-    fun getPersonContent(userId:String, jwt:String):Observable<Content>{
+    fun getPersonContent(userId:String, jwt:String):PublishSubject<Notification<Content>> {
         val jsonElem = JsonParser().parse(buildQuery(Queries.getPersonContent(userId)))
         Log.i(CodeXNotesApi::class.java.simpleName, jsonElem.toString())
-        val obs = api.getPersonContent(jsonElem.asJsonObject, "Bearer $jwt")
-        obs.subscribeOn(Schedulers.io()).subscribe({next ->
-                Log.i(CodeXNotesApi::class.java.simpleName, "get next: " + next.body()!!.toString())
+        api.getPersonContent(jsonElem.asJsonObject, "Bearer $jwt").subscribeOn(Schedulers.io()).subscribe({ next ->
+            Log.i(CodeXNotesApi::class.java.simpleName, "get next: " + next.body()!!.toString())
+            obsPersonContent.onNext(Notification.createOnNext(gson.fromJson(next.body()!!.asJsonObject["data"].asJsonObject["personContent"], Content::class.java)))
         }, { error ->
-                error.printStackTrace()
-                //Log.i(CodeXNotesApi::class.java.simpleName, error.)
+            error.printStackTrace()
+            //Log.i(CodeXNotesApi::class.java.simpleName, error.)
+            obsPersonContent.onNext(Notification.createOnError(error))
         }, {
             Log.i(CodeXNotesApi::class.java.simpleName, "GetPersonContent is completed")
+            obsPersonContent.onComplete()
         })
-        return obs.map {
-            gson.fromJson(it.body()!!.asJsonObject["data"].asJsonObject["personContent"], Content::class.java)
-        }
+        return obsPersonContent
     }
 
     fun authorization(token:String): Single<ServerAuthorizationResponse> {
