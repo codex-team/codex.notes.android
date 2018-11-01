@@ -29,11 +29,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
-            android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:fadingEdgeLength="0dp"
             android:nestedScrollingEnabled="false"
-            app:layout_constraintBottom_toTopOf="@+id/nav_view_logout"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,11 +45,11 @@
             android:id="@+id/nav_view_my_notes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:text="@string/my_notes"
@@ -69,27 +68,11 @@
             android:text="0"
             android:textSize="14sp"
             android:theme="@style/NavigationViewMenuTextCounterStyle"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/nav_view_my_notes"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/nav_view_my_notes" />
 
-
-        <Button
-            android:id="@+id/nav_view_logout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:paddingLeft="@dimen/main_padding_nav_view_header_left"
-            android:text="@string/logout"
-            android:theme="@style/NavigationViewMenuBottomButtonStyle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/folders_rv" />
 
         <View
             android:id="@+id/delim"
@@ -101,14 +84,67 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nav_view_my_notes" />
 
-        <View
-            android:id="@+id/delim2"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:alpha="0.11"
-            android:background="#DEE6FC"
-            app:layout_constraintBottom_toTopOf="@+id/nav_view_logout"
-            app:layout_constraintStart_toStartOf="parent" />
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/folders_rv">
+
+            <View
+                android:id="@+id/settings_delim"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.11"
+                android:background="#DEE6FC"
+                app:layout_constraintBottom_toTopOf="@+id/nav_view_logout"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/nav_view_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/main_padding_nav_view_header_left"
+                android:text="@string/settings"
+                android:theme="@style/NavigationViewMenuBottomButtonStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/folders_rv" />
+
+            <View
+                android:id="@+id/logout_delim"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:alpha="0.11"
+                android:background="#DEE6FC"
+                app:layout_constraintBottom_toTopOf="@+id/nav_view_logout"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/nav_view_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/main_padding_nav_view_header_left"
+                android:text="@string/logout"
+                android:theme="@style/NavigationViewMenuBottomButtonStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/folders_rv" />
+        </LinearLayout>
 
 
     </android.support.constraint.ConstraintLayout>
