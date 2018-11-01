@@ -18,7 +18,6 @@ import android.view.View
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.notesandroid.codex.notesandroid.ANDROID_CLIENT_ID
-import com.notesandroid.codex.notesandroid.Authorization.ServerSideAuthorization
 import com.notesandroid.codex.notesandroid.ControlUserData
 import com.notesandroid.codex.notesandroid.Database.LocalDatabaseAPI
 import com.notesandroid.codex.notesandroid.Essences.Content
@@ -34,7 +33,9 @@ import com.notesandroid.codex.notesandroid.SYNC_TIME_FORMAT
 import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
 import com.notesandroid.codex.notesandroid.Utilities.MessageSnackbar
 import com.notesandroid.codex.notesandroid.Utilities.Utilities
+import com.notesandroid.codex.notesandroid.interactor.NoteInteractor
 import com.notesandroid.codex.notesandroid.retrofit.CodeXNotesApi
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_view_menu.*
@@ -42,8 +43,13 @@ import kotlinx.coroutines.experimental.Job
 import org.jetbrains.anko.toast
 import retrofit2.HttpException
 import java.io.Serializable
+import java.net.UnknownHostException
 import java.text.SimpleDateFormat
 import java.util.*
+
+/**
+ * Request code after starting google sign-in activity and handling response in method onActivityResult.
+ */
 
 const val AUTHORIZATION_ATTEMPT = 1488
 
@@ -52,63 +58,72 @@ const val AUTHORIZATION_ATTEMPT = 1488
  *
  */
 class MainActivity : AppCompatActivity() {
-    
+
     /**
-     * Control auth process
-     */
-    private lateinit var serversideAuthorization: ServerSideAuthorization
-    
-    /**
-     * Current user content for display
+     * Current user content for display.
      */
     lateinit var content: Content
-    
+
     /**
-     * Current user essence
+     * Current user essence.
      */
     lateinit var user: User
-    
+
     /**
-     * Local database api
+     * Local database api.
      */
     private val db = LocalDatabaseAPI(this)
-    
+
     /**
-     * Local SP api
+     * For dispose operation if the activity is paused.
+     */
+    private lateinit var disposableContent: Disposable
+
+    /**
+     * Interactor for communication with data layer.
+     */
+    private val interactor = NoteInteractor()
+
+    /**
+     * Local SP api.
      */
     lateinit var sharedPreferences: SharedPreferences
 
-    lateinit var snackbar:MessageSnackbar
-    
     /**
-     * Coroutine with update content logic
+     * Snackbar for showing if an error occurred.
+     */
+
+    lateinit var snackbar: MessageSnackbar
+
+    /**
+     * Coroutine with update content logic.
      *
      * @important
      * This coroutine exemplar need to cancel background loading process for certain user.
-     * You must cancel it when user logout [logout]
+     * You must cancel it when user logout [logout].
      */
     private lateinit var currentCoroutine: Job
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        
+
         sharedPreferences = getSharedPreferences(UserData.NAME, 0)
-    
+
         startInit()
     }
-    
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onBackPressed() {
         setResult(Activity.RESULT_CANCELED)
         finishAffinity()
     }
-    
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
         return true
     }
-    
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -119,53 +134,45 @@ class MainActivity : AppCompatActivity() {
                 toast("Folder clicked")
                 return true
             }
+            R.id.refresh_toolbar_icon -> {
+                if (user != User()) {
+                    loadContent()
+                }
+            }
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
-    
+
     override fun onResume() {
         super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposableContent.dispose()
     }
 
     internal fun startInit() {
 
         snackbar = MessageSnackbar(this, main_activity_coordinator_layout)
+        interactor.attachSQL(this)
 
         loadCurrentUser()
-        
+
         initStartUI()
 
-        //content = ControlUserData(db, applicationContext).getContentFromDatabase()
         content = Content(mutableListOf())
         displayContent()
 
         Log.i("MainActivityObserver", Thread.currentThread().id.toString() + " " + Thread.currentThread().name)
-        loadCurrentUser()
-        if(user != User()){
+
+        if (user != User()) {
             loadContent()
-            displayContent()
         }
-        
-        /*currentCoroutine = launch(CommonPool) {
-
-            
-            runOnUiThread {
-
-            }
-            if (user.info != null) {
-                SaveDataFromServer(db, this@MainActivity).loadContent(user, {
-                    runOnUiThread {
-                        content = ControlUserData(db, applicationContext).getContentFromDatabase()
-                        displayContent()
-                    }
-                    
-                })
-            }
-        }*/
     }
-    
+
     /**
-     * Load current user information from database
+     * Load current user information from database.
      */
     private fun loadCurrentUser() {
         val userId = sharedPreferences.getString(UserData.FIELDS.LAST_USER_ID, "")
@@ -179,41 +186,86 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *
-     *
+     * Getting content from [interactor] in Observable using Schedulers.io() for handling it in another
+     * thread.
      */
-    private fun loadContent(){
+    private fun loadContent() {
         progress_loader.visibility = View.VISIBLE
-        CodeXNotesApi().getPersonContent(user.info!!.id!!, user.jwt!!).subscribeOn(Schedulers.io()).subscribe({
-            it.folders.forEach {
-                Log.i(MainActivity::class.java.simpleName, it.toString())
+        disposableContent = interactor.getPersonContent(user.info!!.id!!, user.jwt!!)
+            .doAfterNext{ runOnUiThread{progress_loader.visibility = View.GONE }}
+            .doAfterTerminate{ runOnUiThread{progress_loader.visibility = View.GONE }}
+            .subscribeOn(Schedulers.io()).subscribe({
+            if (it.isOnNext) {
+                handleContent(it.value!!)
+            } else if (it.isOnError) {
+                notificationAboutError(it.error!!)
             }
-            it.folders.map {
-                it.notes = it.notes!!.filter { !(it.isRemoved!!) }.toMutableList()
-                it
-            }
-            it.rootFolder = it.folders.filter{it.isRoot!!}.getOrNull(0)
-            runOnUiThread {
-                content = it
-                val date =
-                    SimpleDateFormat(SYNC_TIME_FORMAT).format(Calendar.getInstance().time)
-                getSharedPreferences(UserData.NAME, 0).edit()
-                    .putString(UserData.FIELDS.LAST_SYNC, date).apply()
-                displayContent()
-                progress_loader.visibility = View.GONE
-            }
-        }, {error ->
-            when(error) {
+        }, { error ->
+            when (error) {
                 is HttpException -> Log.i(MainActivity::class.java.simpleName + "Error", error.code().toString())
                 else -> Log.i(MainActivity::class.java.simpleName + "Error", error.message)
             }
             error.printStackTrace()
             runOnUiThread {
-                progress_loader.visibility = View.GONE
+                //progress_loader.visibility = View.GONE
                 snackbar.show(error.message!!)
             }
-        }, {Log.i(MainActivity::class.java.simpleName, "Complete")})
+        }, { Log.i(MainActivity::class.java.simpleName, "Complete") })
     }
+
+    /**
+     * After getting content from observable, Handle it and put on [content] then update ui.
+     */
+
+    private fun handleContent(cont: Content){
+        cont.folders.forEach {
+            Log.i(MainActivity::class.java.simpleName, it.toString())
+            it.notes!!.forEach { Log.i(MainActivity::class.java.simpleName, it.title) }
+        }
+        cont.rootFolder = cont.folders.filter { it.isRoot!! }.getOrNull(0)
+        content = cont
+        runOnUiThread {
+            updateSynchronization()
+            displayContent()
+        }
+    }
+
+    /**
+     * Show snack bar and load content from database
+     * @param error - An error that occurred during sending request or receiving response.
+     */
+
+    private fun notificationAboutError(error:Throwable){
+        header_layout.isClickable = true
+        Log.i("MainActivity", "error log ${error.message}")
+        when (error) {
+            is HttpException -> {
+                Log.i(MainActivity::class.java.simpleName + "Error2", error.code().toString())
+                snackbar.show(error.message())
+            }
+            is UnknownHostException -> {
+                snackbar.show(getString(R.string.no_internet_connection_available))
+            }
+            else -> {
+                Log.i(MainActivity::class.java.simpleName + "Error2", error.message)
+                snackbar.show(error.message!!)
+            }
+        }
+        content = interactor.loadPersonContentFromSql()
+        runOnUiThread { displayContent() }
+    }
+
+    /**
+     * After successful loading data from server and synchronized time when getting and loading data
+     */
+
+    private fun updateSynchronization(){
+        val date =
+            SimpleDateFormat(SYNC_TIME_FORMAT).format(Calendar.getInstance().time)
+        getSharedPreferences(UserData.NAME, 0).edit()
+            .putString(UserData.FIELDS.LAST_SYNC, date).apply()
+    }
+
 
     /**
      * Initialization main UI component. NavBar, toolbar
@@ -221,7 +273,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initStartUI() {
         setSupportActionBar(toolbar)
-        
+
         val toggle = ActionBarDrawerToggle(
             this,
             main_activity_drawer_layout,
@@ -231,49 +283,48 @@ class MainActivity : AppCompatActivity() {
         )
         main_activity_drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-        
-        //work with auth button if current user is empty
+
+        // work with auth button if current user is empty
         if (user == User())
             appointSignInAction()
-    
-    
+
         nav_view_logout.setOnClickListener {
             logout()
         }
     }
-    
+
     /**
      * Initialization UI component by context information
      *
      * //TODO replace fun name
      */
     private fun displayContent() {
-    
+
         setHeaderFragment()
-        
-        //init nav view folder RV
+
+        // init nav view folder RV
         folders_rv.layoutManager = LinearLayoutManager(this)
-        folders_rv.adapter = FoldersAdapter(content.folders.filter { it.isRoot == false }, {
+        folders_rv.adapter = FoldersAdapter(content.folders.filter { it.isRoot == false }) {
             showNotesFragment(it)
-        })
-        
+        }
+
         // init notes from root folder button
         nav_view_my_notes.setOnClickListener {
             if (content.rootFolder != null)
                 showNotesFragment(content.rootFolder!!)
         }
-        
-        //init start folder fragment. Use root
+
+        // init start folder fragment. Use root
         if (content.rootFolder != null)
             showNotesFragment(content.rootFolder!!)
         else
             showNotesFragment(Folder())
-        
-        //init notes count in root folder
+
+        // init notes count in root folder
         val rootNotesCount = content.rootFolder?.notes?.size
         notes_counter.text = (rootNotesCount ?: 0).toString()
     }
-    
+
     /**
      * Replace current fragment to fragment with folder data
      *
@@ -281,7 +332,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showNotesFragment(folder: Folder) {
         var fragmentManager = supportFragmentManager
-        
+
         val bundle = Bundle()
         bundle.putSerializable("folder", folder as Serializable)
         val fragment = NotesListFragment()
@@ -290,33 +341,31 @@ class MainActivity : AppCompatActivity() {
             .commitAllowingStateLoss()
         main_activity_drawer_layout.closeDrawer(GravityCompat.START)
     }
-    
-    private fun setHeaderFragment()
-    {
-        
+
+    private fun setHeaderFragment() {
+
         fun getFragment(): Fragment
         {
-            return when (user)
-            {
+            return when (user) {
                 User() ->
                     DefaultHeaderFragment()
                 else ->
                     HeaderFragment()
             }
         }
-        
+
         val bundle = Bundle()
         bundle.putSerializable("user", user as Serializable)
         var fragment = getFragment()
         fragment.arguments = bundle
-        
+
         var fragmentManager = supportFragmentManager
-        
+
         fragmentManager.beginTransaction()
             .replace(R.id.header_layout, fragment)
             .commitAllowingStateLoss()
     }
-    
+
     /**
      * Clear all current user data
      */
@@ -324,22 +373,18 @@ class MainActivity : AppCompatActivity() {
         /**
          * @important [currentCoroutine]
          */
-        //currentCoroutine.cancel()
+        // currentCoroutine.cancel()
         sharedPreferences.edit().clear().apply()
         db.deleteDatabase()
         content = Content()
         user = User()
         startInit()
     }
-    
+
     /**
      * Show signIn dialog after sign in button press
      */
     private fun appointSignInAction() {
-    
-        serversideAuthorization =
-            ServerSideAuthorization(this, MessageSnackbar(this, main_activity_coordinator_layout))
-    
         header_layout.setOnClickListener {
             header_layout.isClickable = false
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -352,26 +397,20 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(signInIntent, AUTHORIZATION_ATTEMPT)
         }
     }
-    
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
-        
+
         if (requestCode == AUTHORIZATION_ATTEMPT) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            if(task.result.idToken != null)
+            if (task.result.idToken != null)
                 CodeXNotesApi().authorization(task.result.idToken!!).subscribe({ jwt ->
                     Log.i("MainActivityObserver", Thread.currentThread().id.toString() + " " + Thread.currentThread().name)
                     user = ControlUserData(db, this).initUserInformation(jwt)
                     runOnUiThread {
                         loadContent()
                     }
-                    /*SaveDataFromServer(db, this).loadContent(user, {
-
-                            content = ControlUserData(db, applicationContext).getContentFromDatabase()
-                            displayContent()
-                        }
-                    })*/
-                }, {error ->
+                }, { error ->
                     run {
                         if (!Utilities.isInternetConnected(this))
                             snackbar.show(getString(R.string.no_internet_connection_available))

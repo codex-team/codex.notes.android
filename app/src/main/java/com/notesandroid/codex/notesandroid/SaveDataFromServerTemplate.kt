@@ -1,10 +1,13 @@
 package com.notesandroid.codex.notesandroid
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.notesandroid.codex.notesandroid.Database.LocalDatabaseAPI
 import com.notesandroid.codex.notesandroid.Essences.Content
+import com.notesandroid.codex.notesandroid.Essences.Folder
+import com.notesandroid.codex.notesandroid.Essences.Person
 import com.notesandroid.codex.notesandroid.Essences.User
 import com.notesandroid.codex.notesandroid.NotesAPI.NotesAPI
 import com.notesandroid.codex.notesandroid.NotesAPI.Queries
@@ -17,6 +20,11 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+/*
+
+
+
+ */
 /**
  * Created by AksCorp on 04.02.2018.
  *
@@ -25,7 +33,7 @@ import java.util.*
  * @property db current project database
  * @property context parent activity context
  */
-class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
+class SaveDataFromServerTemplate(val db: LocalDatabaseAPI, val context: Context) {
 
     /**
      * Get person content by person ID
@@ -58,27 +66,32 @@ class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
                     val resp = response.body()?.string()
                     val content: Content = parseResult(resp!!)
 
-                    for (folder in content.folders) {
-                        if (folder.owner != user.info)
-                            if (db.isPersonExistInDatabase(folder.owner!!))
-                                db.updatePersonInDatabase(folder.owner!!)
-                            else
-                                db.insertPersonInDatabase(folder.owner!!)
-                        if (db.isFolderExistInDatabase(folder))
-                            db.updateFolderInDatabase(folder)
-                        else
-                            db.insertFolderInDatabase(folder)
+                    for (folder in content.folders.filter { it.owner == user.info }) {
+                        addOrUpdateDB(folder)
+                    }
 
-                        for (note in folder.notes!!) {
-                            note.folderId = folder.id
+                    for (folder in content.folders.filter { it.owner != user.info }) {
+                        if (folder.owner != user.info) {
+                            notesAPI.executeQuery(GRAPHQL_URL,
+                                notesAPI.buildQuery(Queries.getPersonInfo(folder.owner!!.id!!)), object : Callback {
+                                override fun onFailure(call: Call?, e: IOException?) {
+                                    Throwable(e)
+                                }
 
-                            if (note.isRemoved!!)
-                                continue
-
-                            if (db.isNoteExistInDatabase(note))
-                                db.updateNoteInDatabase(note)
-                            else
-                                db.insertNoteInDatabase(note)
+                                override fun onResponse(call: Call?, response: Response) {
+                                    val gson = GsonBuilder().create()
+                                    Log.i("SaveDataFromServer", response.body()?.string())
+                                    val body = response.body()?.string()
+                                    val writer = JsonParser()
+                                    var jsonElement = writer.parse(body)
+                                    val person = gson.fromJson(jsonElement.asJsonObject["data"], Person::class.java)
+                                    if (db.isPersonExistInDatabase(person))
+                                        db.updatePersonInDatabase(person)
+                                    else
+                                        db.insertPersonInDatabase(person)
+                                    addOrUpdateDB(folder)
+                                }
+                            })
                         }
                     }
 
@@ -90,7 +103,27 @@ class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
                     callback(context.getString(R.string.sync_successful))
                 }
 
+                fun addOrUpdateDB(folder: Folder) {
+                    if (db.isFolderExistInDatabase(folder))
+                        db.updateFolderInDatabase(folder)
+                    else
+                        db.insertFolderInDatabase(folder)
+
+                    for (note in folder.notes!!) {
+                        note.folderId = folder.id
+
+                        if (note.isRemoved!!)
+                            continue
+
+                        if (db.isNoteExistInDatabase(note))
+                            db.updateNoteInDatabase(note)
+                        else
+                            db.insertNoteInDatabase(note)
+                    }
+                }
+
                 fun parseResult(response: String): Content {
+                    Log.i("SaveDataFromServer", response)
                     val builder = GsonBuilder()
                     val gson = builder.create()
 
@@ -103,6 +136,7 @@ class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
                             jsonElement.asJsonObject["personContent"],
                             Content::class.java
                         )
+
                         content.rootFolder = content.folders.filter {
                             it.isRoot!!
                         }.getOrNull(0)

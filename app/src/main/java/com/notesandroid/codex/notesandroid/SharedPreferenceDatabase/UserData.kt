@@ -7,7 +7,7 @@ package com.notesandroid.codex.notesandroid.SharedPreferenceDatabase
  */
 object UserData {
     val NAME = "UserData"
-    
+
     object FIELDS {
         val LAST_USER_ID = "lastUser"
         val LAST_USER_TOKEN = "lastUserToken"

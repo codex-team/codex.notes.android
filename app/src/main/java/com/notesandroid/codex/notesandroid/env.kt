@@ -13,7 +13,7 @@ package com.notesandroid.codex.notesandroid
  */
 const val GRAPHQL_URL = "https://api.notes.ifmo.su/graphql"
 
-val url:String by lazy { "https://api.notes.ifmo.su/" }
+val url: String by lazy { "https://api.notes.ifmo.su/" }
 /**
  * Token for post hawk exception
  */
