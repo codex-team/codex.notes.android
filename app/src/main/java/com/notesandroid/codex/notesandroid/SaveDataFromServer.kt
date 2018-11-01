@@ -59,8 +59,8 @@ class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
                     val content: Content = parseResult(resp!!)
 
                     for (folder in content.folders) {
-                        if(folder.owner != user.info)
-                            if(db.isPersonExistInDatabase(folder.owner!!))
+                        if (folder.owner != user.info)
+                            if (db.isPersonExistInDatabase(folder.owner!!))
                                 db.updatePersonInDatabase(folder.owner!!)
                             else
                                 db.insertPersonInDatabase(folder.owner!!)
@@ -69,11 +69,10 @@ class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
                         else
                             db.insertFolderInDatabase(folder)
 
-
                         for (note in folder.notes!!) {
                             note.folderId = folder.id
 
-                            if(note.isRemoved!!)
+                            if (note.isRemoved!!)
                                 continue
 
                             if (db.isNoteExistInDatabase(note))
@@ -110,7 +109,6 @@ class SaveDataFromServer(val db: LocalDatabaseAPI, val context: Context) {
 
                         return content
                     } catch (e: IOException) {
-
                     }
                     return Content()
                 }

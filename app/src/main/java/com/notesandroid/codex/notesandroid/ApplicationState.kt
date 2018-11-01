@@ -19,7 +19,7 @@ class ApplicationState : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        
+
         exceptionCatcher = HawkExceptionCatcher(this, HAWK_TOKEN)
         try {
             exceptionCatcher.start()

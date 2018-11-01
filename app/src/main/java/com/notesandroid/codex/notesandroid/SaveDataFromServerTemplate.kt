@@ -20,7 +20,6 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 /*
 
 
@@ -71,7 +70,7 @@ class SaveDataFromServerTemplate(val db: LocalDatabaseAPI, val context: Context)
                         addOrUpdateDB(folder)
                     }
 
-                    for (folder in content.folders.filter { it.owner != user.info }){
+                    for (folder in content.folders.filter { it.owner != user.info }) {
                         if (folder.owner != user.info) {
                             notesAPI.executeQuery(GRAPHQL_URL,
                                 notesAPI.buildQuery(Queries.getPersonInfo(folder.owner!!.id!!)), object : Callback {
@@ -86,13 +85,12 @@ class SaveDataFromServerTemplate(val db: LocalDatabaseAPI, val context: Context)
                                     val writer = JsonParser()
                                     var jsonElement = writer.parse(body)
                                     val person = gson.fromJson(jsonElement.asJsonObject["data"], Person::class.java)
-                                    if(db.isPersonExistInDatabase(person))
+                                    if (db.isPersonExistInDatabase(person))
                                         db.updatePersonInDatabase(person)
                                     else
                                         db.insertPersonInDatabase(person)
                                     addOrUpdateDB(folder)
                                 }
-
                             })
                         }
                     }
@@ -105,17 +103,16 @@ class SaveDataFromServerTemplate(val db: LocalDatabaseAPI, val context: Context)
                     callback(context.getString(R.string.sync_successful))
                 }
 
-                fun addOrUpdateDB(folder: Folder){
+                fun addOrUpdateDB(folder: Folder) {
                     if (db.isFolderExistInDatabase(folder))
                         db.updateFolderInDatabase(folder)
                     else
                         db.insertFolderInDatabase(folder)
 
-
                     for (note in folder.notes!!) {
                         note.folderId = folder.id
 
-                        if(note.isRemoved!!)
+                        if (note.isRemoved!!)
                             continue
 
                         if (db.isNoteExistInDatabase(note))
@@ -140,14 +137,12 @@ class SaveDataFromServerTemplate(val db: LocalDatabaseAPI, val context: Context)
                             Content::class.java
                         )
 
-
                         content.rootFolder = content.folders.filter {
                             it.isRoot!!
                         }.getOrNull(0)
 
                         return content
                     } catch (e: IOException) {
-
                     }
                     return Content()
                 }

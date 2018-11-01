@@ -20,51 +20,47 @@ import kotlinx.android.synthetic.main.note.view.*
  * Created by AksCorp on 11.03.2018.
  */
 class NoteFragment : Fragment() {
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.note, container, false)
         if (arguments != null) {
             val note = arguments!!["note"] as Note
-            
+
             val builder = GsonBuilder()
             val gson = builder.create()
-            
+
             val writer = JsonParser()
             var jsonElement = writer.parse(note.content)
             val jsonArray = jsonElement.asJsonArray
 
             addTitleToLayout(view, note.title!!)
-            
-            for (el in jsonArray) {
 
+            for (el in jsonArray) {
 
                 val blockType = el.asJsonObject["type"].asString
                 val dataText = el.asJsonObject["data"].asJsonObject["text"].asString
 
-
                 val dataType = el.asJsonObject["data"].asJsonObject["heading-styles"]
 
-                val block = NoteBlock(context!!, blockType, NoteDescription(dataText, dataType?.asString?: ""))
+                val block = NoteBlock(context!!, blockType, NoteDescription(dataText, dataType?.asString ?: ""))
 
               //  elements.add(textElement)
-                
+
                 (view.root_note_linear_layout as LinearLayout).addView(block.view)
             }
         }
-        
+
         return view
     }
 
-    fun addTitleToLayout(view:View, title:String)
-    {
+    fun addTitleToLayout(view: View, title: String) {
 
         val blockType = "header"
         val dataText = title
-
 
         val dataType = "h1"
 

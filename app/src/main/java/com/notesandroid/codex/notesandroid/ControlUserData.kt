@@ -17,32 +17,29 @@ import java.io.File
  * Control user data (get/put in local database)
  */
 class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
-    
+
     /**
      * Put information from custom jwt token to database and shared preference
      *
      * @param responseJson server JSON response
      */
-    fun initUserInformation(responseJson: ServerAuthorizationResponse) : User
+    fun initUserInformation(responseJson: ServerAuthorizationResponse): User
     {
-    
+
         val jwt = JWT(responseJson.jwt)
         val token = responseJson.jwt
-        
 
         val userId = jwt.getClaim("user_id").asString()
         val photoURL = responseJson.photo
         val name = responseJson.name
         val email = jwt.getClaim("email").asString()
         val person = Person(userId, name, email)
-        
+
         val db = LocalDatabaseAPI(context)
-    
-        if (db.isPersonExistInDatabase(person))
-        {
+
+        if (db.isPersonExistInDatabase(person)) {
             db.updatePersonInDatabase(person)
-        }
-        else
+        } else
             db.insertPersonInDatabase(person)
 
         val imageExtension = photoURL.substringAfterLast('.')
@@ -53,11 +50,11 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
             UserData.FIELDS.PROFILE_ICON + "." + imageExtension
         ).apply()
         prefs.edit().putString(UserData.FIELDS.LAST_USER_ID, userId).apply()
-        
+
         val path = saveUserProfileIcon(photoURL, imageExtension)
         return User(person, responseJson.jwt, UserData.FIELDS.PROFILE_ICON + "." + imageExtension)
     }
-    
+
     /**
      * Save profile image in internal directory.
      *
@@ -65,14 +62,14 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
      *
      * @param imageURL - image URL
      */
-    private fun saveUserProfileIcon(imageURL: String, imageExtension: String):String? {
+    private fun saveUserProfileIcon(imageURL: String, imageExtension: String): String? {
         val storagePath = context.applicationInfo.dataDir
         val filePath =
             "$storagePath/$IMAGES_DIRECTORY/${UserData.FIELDS.PROFILE_ICON}.$imageExtension"
-        
-        //create Image directory if not exist
+
+        // create Image directory if not exist
         val mediaStorageDir = File(storagePath, IMAGES_DIRECTORY)
-        
+
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 return null
@@ -81,7 +78,7 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
         saveImageByURL(imageURL, filePath)
         return filePath
     }
-    
+
     /**
      * @return content with folders, notes from local database
      */
@@ -91,12 +88,12 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
             val notes = db.getNotesFromDatabase(folderId = folder.id!!)
             folder.notes = notes
         }
-        
+
         val content = Content(folders)
         content.rootFolder = content.folders.filter {
             it.isRoot!!
         }.getOrNull(0)
-        
+
         return content
     }
 }

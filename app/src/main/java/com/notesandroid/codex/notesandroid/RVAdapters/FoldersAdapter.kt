@@ -17,24 +17,26 @@ import kotlinx.android.synthetic.main.folder.view.*
  * @param itemClick callback for click RV element
  *
  */
-class FoldersAdapter(private val folders: List<Folder>,
-                     private val itemClick: (Folder) -> Unit) :
+class FoldersAdapter(
+  private val folders: List<Folder>,
+  private val itemClick: (Folder) -> Unit
+) :
         RecyclerView.Adapter<FoldersAdapter.ViewHolder>() {
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.folder, parent, false)
         return ViewHolder(view, itemClick)
     }
-    
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindForecast(folders[position])
     }
-    
+
     override fun getItemCount() = folders.size
-    
+
     class ViewHolder(view: View, private val itemClick: (Folder) -> Unit)
         : RecyclerView.ViewHolder(view) {
-        
+
         fun bindForecast(folder: Folder) {
             itemView.nav_view_folder.text = folder.title
             itemView.setOnClickListener { itemClick(folder) }

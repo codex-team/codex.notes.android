@@ -1,6 +1,5 @@
 package com.notesandroid.codex.notesandroid.Essences
 
-import com.auth0.android.jwt.JWT
 import java.io.Serializable
 
 /**
