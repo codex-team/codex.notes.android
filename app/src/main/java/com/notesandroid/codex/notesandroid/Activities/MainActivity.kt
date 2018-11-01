@@ -222,7 +222,7 @@ class MainActivity : AppCompatActivity() {
             Log.i(MainActivity::class.java.simpleName, it.toString())
             it.notes!!.forEach { Log.i(MainActivity::class.java.simpleName, it.title) }
         }
-        content.rootFolder = cont.folders.filter { it.isRoot!! }.getOrNull(0)
+        cont.rootFolder = cont.folders.filter { it.isRoot!! }.getOrNull(0)
         content = cont
         runOnUiThread {
             updateSynchronization()

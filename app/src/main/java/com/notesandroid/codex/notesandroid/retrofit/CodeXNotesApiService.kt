@@ -2,7 +2,6 @@ package com.notesandroid.codex.notesandroid.retrofit
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.notesandroid.codex.notesandroid.Authorization.ServerAuthorizationResponse
 import com.notesandroid.codex.notesandroid.Essences.Person
 import com.notesandroid.codex.notesandroid.url
 import io.reactivex.Observable

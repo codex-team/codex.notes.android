@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
-import com.notesandroid.codex.notesandroid.Authorization.ServerAuthorizationResponse
 import com.notesandroid.codex.notesandroid.Essences.Content
 import com.notesandroid.codex.notesandroid.NotesAPI.Queries
 import io.reactivex.Notification
@@ -89,3 +88,18 @@ class CodeXNotesApi {
         return api.userAuthorization(token).subscribeOn(Schedulers.io())
     }
 }
+
+/**
+ * @param jwt - custom jwt from codex server
+ * @param photo - profile photo url
+ * @param dtModify - time of creation
+ * @param channel - socket channel name
+ * @param name - user full name
+ */
+data class ServerAuthorizationResponse(
+    var jwt: String,
+    var photo: String,
+    var dtModify: String,
+    var channel: String,
+    var name: String
+)
