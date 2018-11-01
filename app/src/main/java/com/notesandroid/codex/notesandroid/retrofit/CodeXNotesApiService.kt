@@ -16,12 +16,17 @@ import retrofit2.http.*
 /**
  * Created by Shiplayer on 23.10.18.
  */
-
-interface CodeXNotesApiService{
+/**
+ * An interface that declares the methods that are used in requests
+ */
+interface CodeXNotesApiService {
 
     companion object {
-        fun create():CodeXNotesApiService {
-            //val client = OkHttpClient.Builder()
+        /**
+         * For set up setting
+         */
+        fun create(): CodeXNotesApiService {
+            // val client = OkHttpClient.Builder()
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -32,11 +37,25 @@ interface CodeXNotesApiService{
     }
 
     @POST("graphql")
-    fun getPersonInfo(@Body body: JsonObject):Observable<Person>
+    fun getPersonInfo(@Body body: JsonObject): Observable<Person>
+
+    /**
+     * Sending request on [url]gtaphql with body that have information about request person and
+     * set up jwt in header
+     * @param body - JsonObject that have information about current person
+     * @param jwt - JWT token
+     *
+     * @return Observable with Response for processing response as it received
+     */
 
     @POST("graphql")
+    fun getPersonContent(@Body body: JsonObject, @Header("Authorization") jwt: String): Observable<Response<JsonElement>>
 
-    fun getPersonContent(@Body body: JsonObject, @Header("Authorization") jwt:String):Observable<Response<JsonElement>>
+    /**
+     * Sending request on [url]oauth/mobile with token for authorization in system CodeXNotes
+     * @param token - token that getting from Google sign-in
+     * @return Single observable for once processing response as it received
+     */
 
     @GET("oauth/mobile")
     fun userAuthorization(@Query("token") token: String): Single<ServerAuthorizationResponse>
