@@ -39,7 +39,6 @@ import kotlinx.android.synthetic.main.nav_view_menu.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
-import org.jetbrains.anko.toast
 import java.io.Serializable
 
 const val AUTHORIZATION_ATTEMPT = 1488
@@ -119,10 +118,10 @@ class MainActivity : AppCompatActivity() {
                 main_activity_drawer_layout.openDrawer(GravityCompat.START)
                 return true
             }
-            R.id.folder_toolbar_icon -> {
+            /*R.id.folder_toolbar_icon -> {
                 toast("Folder clicked")
                 return true
-            }
+            }*/
         }
         Log.i("MainActivity", item.title.toString() + " " + item.itemId)
         return super.onOptionsItemSelected(item)
@@ -239,6 +238,7 @@ class MainActivity : AppCompatActivity() {
         //init notes count in root folder
         val rootNotesCount = content.rootFolder?.notes?.size
         notes_counter.text = (rootNotesCount ?: 0).toString()
+        notes_counter.visibility = if(rootNotesCount ?: 0 > 0) View.VISIBLE else View.GONE
     }
     
     /**

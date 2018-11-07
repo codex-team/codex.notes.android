@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-    <item
+    <!--<item
         android:orderInCategory="200"
         android:id="@+id/folder_toolbar_icon"
         android:icon="@drawable/folder_icon_24"
         app:showAsAction="ifRoom"
-        android:title="" />
+        android:title="" />-->
 </menu>

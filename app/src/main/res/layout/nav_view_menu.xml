@@ -68,7 +68,7 @@
                 android:text="0"
                 android:textSize="14sp"
                 android:theme="@style/NavigationViewMenuTextCounterStyle"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/nav_view_my_notes"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/nav_view_my_notes" />
@@ -110,6 +110,7 @@
                 android:layout_height="1dp"
                 android:alpha="0.11"
                 android:background="#DEE6FC"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/nav_view_logout"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -122,6 +123,7 @@
                 android:paddingLeft="@dimen/main_padding_nav_view_header_left"
                 android:text="Add folder"
                 android:theme="@style/NavigationViewMenuBottomButtonStyle"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -134,6 +136,7 @@
                 android:layout_height="1dp"
                 android:alpha="0.11"
                 android:background="#DEE6FC"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/nav_view_logout"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -146,6 +149,7 @@
                 android:paddingLeft="@dimen/main_padding_nav_view_header_left"
                 android:text="@string/settings"
                 android:theme="@style/NavigationViewMenuBottomButtonStyle"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
