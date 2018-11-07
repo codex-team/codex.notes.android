@@ -18,9 +18,25 @@
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">#292B37</item>
+        <item name="android:background">@color/mainColorPrimary</item>
         <item name="android:title">@string/app_name</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+    </style>
+
+    <style name="NoteToolbar" parent="Toolbar">
+        <item name="android:background">@color/noteColorPrimary</item>
+        <item name="android:textColorPrimary">@color/noteTextColorPrimary</item>
+    </style>
+
+    <style name="Toolbar.Fonts" parent="Widget.AppCompat.ActionBar">
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/roboto_regular</item>
+        <item name="android:textColor">#292b37</item>
+        <item name="android:textSize">12.5sp</item>
+    </style>
+
+    <style name="Toolbar.Sync" parent="Toolbar.Fonts">
+        <item name="android:textColor">#89000000</item>
+        <item name="android:textSize">11sp</item>
     </style>
 
     <style name="NavigationViewHeaderMainStyle" parent="AppTheme">
