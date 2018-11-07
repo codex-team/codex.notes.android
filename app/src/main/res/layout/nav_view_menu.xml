@@ -8,30 +8,80 @@
     android:isScrollContainer="true"
     android:overScrollMode="always">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:measureWithLargestChild="false"
+        android:orientation="vertical"
         android:theme="@style/NavigationViewMenuMainStyle">
 
         <FrameLayout
             android:id="@+id/header_layout"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+        </FrameLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="44dp">
+
+            <TextView
+                android:id="@+id/nav_view_my_notes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:text="@string/my_notes"
+                android:theme="@style/NavigationViewMenuButtonStyle"
+                app:layout_constraintEnd_toStartOf="@+id/notes_counter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/delim"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:alpha="0.11"
+                android:background="#DEE6FC"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nav_view_my_notes" />
+
+            <TextView
+                android:id="@+id/notes_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:alpha="0.35"
+                android:text="0"
+                android:textSize="14sp"
+                android:theme="@style/NavigationViewMenuTextCounterStyle"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/nav_view_my_notes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/nav_view_my_notes" />
+        </android.support.constraint.ConstraintLayout>
 
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/folders_rv"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             android:layout_marginTop="8dp"
             android:fadingEdgeLength="0dp"
-            android:nestedScrollingEnabled="false"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -41,52 +91,10 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <TextView
-            android:id="@+id/nav_view_my_notes"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:text="@string/my_notes"
-            android:theme="@style/NavigationViewMenuButtonStyle"
-            app:layout_constraintEnd_toStartOf="@+id/notes_counter"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/header_layout" />
-
-        <TextView
-            android:id="@+id/notes_counter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:alpha="0.35"
-            android:text="0"
-            android:textSize="14sp"
-            android:theme="@style/NavigationViewMenuTextCounterStyle"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@+id/nav_view_my_notes"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/nav_view_my_notes" />
-
-
-        <View
-            android:id="@+id/delim"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:alpha="0.11"
-            android:background="#DEE6FC"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nav_view_my_notes" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="vertical"
@@ -95,6 +103,30 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/folders_rv">
+
+            <View
+                android:id="@+id/add_folder_delim"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.11"
+                android:background="#DEE6FC"
+                app:layout_constraintBottom_toTopOf="@+id/nav_view_logout"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/nav_view_add_folder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/main_padding_nav_view_header_left"
+                android:text="Add folder"
+                android:theme="@style/NavigationViewMenuBottomButtonStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/folders_rv" />
 
             <View
                 android:id="@+id/settings_delim"
@@ -147,5 +179,5 @@
         </LinearLayout>
 
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

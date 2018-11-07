@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,18 +39,21 @@ class NotesListFragment : Fragment() {
             val folder = arguments!!["folder"] as Folder
             view.root_notes.layoutManager = LinearLayoutManager(activity)
             if (folder.notes != null)
-                view.root_notes.adapter = NotesAdapter(folder.notes!!, { note ->
-                    var fragmentManager = (context as MainActivity).supportFragmentManager
-        
+                view.root_notes.adapter = NotesAdapter(folder.notes!!) { note ->
+
                     val bundle = Bundle()
                     bundle.putSerializable("note", note as Serializable)
                     val fragment = NoteFragment()
                     fragment.arguments = bundle
-                    fragmentManager.beginTransaction()
-                        .replace(R.id.main_activity_constraint_layout, fragment).commit()
-                })
+                    (activity as MainActivity).navigationToFragment(fragment, R.id.main_activity_constraint_layout)
+                }
         }
         
         return view
+    }
+
+    override fun onDestroy() {
+        Log.i("NoteFragment", "is killed")
+        super.onDestroy()
     }
 }
