@@ -58,7 +58,7 @@ public class LocalDatabaseAPI(private val context: Context) {
             if (cursor.count == 0)
                 throw Exception("Person with ID = $personId doesn't exist")
             
-            val person = Person(null, null, null)
+            val person = Person(null, null, null, null)
             
             var pos = 0;
             for (columnName in cursor.columnNames) {

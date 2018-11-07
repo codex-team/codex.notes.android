@@ -3,16 +3,13 @@ package com.notesandroid.codex.notesandroid.NoteStructure
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Build
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Html
 import android.util.TypedValue
-import android.view.TextureView
 import android.view.View
 import android.widget.TextView
 import com.notesandroid.codex.notesandroid.R
-import com.notesandroid.codex.notesandroid.R.id.textView
 
 
 /**

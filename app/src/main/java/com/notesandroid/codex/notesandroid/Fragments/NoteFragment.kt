@@ -1,13 +1,15 @@
 package com.notesandroid.codex.notesandroid.Fragments
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.LinearLayout
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
+import com.notesandroid.codex.notesandroid.Activities.MainActivity
 import com.notesandroid.codex.notesandroid.Essences.Note
 import com.notesandroid.codex.notesandroid.NoteStructure.NoteBlock
 import com.notesandroid.codex.notesandroid.NoteStructure.NoteDescription
@@ -20,7 +22,39 @@ import kotlinx.android.synthetic.main.note.view.*
  * Created by AksCorp on 11.03.2018.
  */
 class NoteFragment : Fragment() {
-    
+
+    /**
+     * Change background color and set custom toolbar
+     */
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        menu?.clear()
+        val actionBar = (activity as MainActivity).supportActionBar
+        actionBar!!.customView = activity!!.layoutInflater.inflate(R.layout.note_actionbar_layout, null)
+        actionBar.setDisplayShowCustomEnabled(true)
+        actionBar.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+        /*inflater!!.inflate(R.menu.note_menu, menu)
+        if(menu != null){
+            val image = menu.findItem(R.id.circleImageBar).actionView as CircleImageView
+            image.circleBackgroundColor = Color.GREEN
+        }*/
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        Log.i("NoteFragment", item!!.title.toString() + " " + item.itemId)
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).hiddenMenu()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,8 +89,15 @@ class NoteFragment : Fragment() {
                 (view.root_note_linear_layout as LinearLayout).addView(block.view)
             }
         }
-        
+        setHasOptionsMenu(true)
+        val manager = (activity as MainActivity).supportFragmentManager
+
         return view
+    }
+
+    override fun onDestroy() {
+        Log.i("NoteFragment", "is killed")
+        super.onDestroy()
     }
 
     fun addTitleToLayout(view:View, title:String)
@@ -71,5 +112,11 @@ class NoteFragment : Fragment() {
         val block = NoteBlock(context!!, blockType, NoteDescription(dataText, dataType))
 
         (view.root_note_linear_layout as LinearLayout).addView(block.view)
+    }
+
+    override fun onStop() {
+        (activity as MainActivity).showMenu()
+        activity!!.invalidateOptionsMenu()
+        super.onStop()
     }
 }
