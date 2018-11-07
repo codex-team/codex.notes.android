@@ -343,13 +343,13 @@ class MainActivity : AppCompatActivity() {
      */
 
     public fun showMenu(){
-        toggle?.isDrawerIndicatorEnabled = true
         supportActionBar?.setBackgroundDrawable(ColorDrawable(ResourcesCompat.getColor(resources, R.color.mainColorPrimary, null)))
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayShowCustomEnabled(false)
-        //invalidateOptionsMenu()
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setHomeButtonEnabled(false)
+        toggle?.isDrawerIndicatorEnabled = true
+        //invalidateOptionsMenu()
     }
 
     /**
