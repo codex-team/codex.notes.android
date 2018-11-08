@@ -123,7 +123,7 @@ class HeaderBlock(val context: Context, val noteDescription: NoteDescription) : 
         param.setMargins(19, 22, 19, 5)
         textView.layoutParams = param
 
-        textView.setPadding(0, 0, 0, 35)
+        //textView.setPadding(0, 0, 0, 35)
         textView.setTextColor(Color.BLACK)
 
         // set font from resources
@@ -146,11 +146,11 @@ class HeaderBlock(val context: Context, val noteDescription: NoteDescription) : 
                 return textView
             }
             H2 -> {
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26F)
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24F)
                 return textView
             }
             H3 -> {
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22F)
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 21F)
                 return textView
             }
             H4 -> {
@@ -192,15 +192,16 @@ class ParagraphBlock(val context: Context, val noteDescription: NoteDescription)
         textView.setTextColor(Color.BLACK)
 
         val param = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        param.setMargins(19, 12, 19, 5)
+        //param.setMargins(19, 12, 19, 5)
         textView.layoutParams = param
-
+        textView.setPadding(19, 22, 19, 5)
         textView.typeface = getSameFont(context, R.font.roboto_regular)
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14F)
 
         // set line height
         textView.setLineSpacing(
             TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 6f, context.resources.displayMetrics), 1.0f)
+                TypedValue.COMPLEX_UNIT_DIP, 0.5f, context.resources.displayMetrics), 1.5f)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             textView.text = Html.fromHtml(noteDescription.text, Html.FROM_HTML_MODE_LEGACY)
