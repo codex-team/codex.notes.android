@@ -22,8 +22,7 @@ interface QueriesAPI {
 /**
  * Codex.notes.server API mutations
  */
-interface MutationsAPI
-{
+interface MutationsAPI {
     fun createFolder(name: String)
 }
 
@@ -32,7 +31,7 @@ interface MutationsAPI
  */
 class Queries {
     companion object : QueriesAPI {
-        
+
         /**
          *
          */
@@ -43,7 +42,7 @@ class Queries {
             email
           }
     """.trimIndent().replace("\n", "")
-        
+
         override fun getPersonContent(userId: String): String = """
           personContent: user(id: \"$userId\") {
             folders {
@@ -70,7 +69,7 @@ class Queries {
             }
           }
     """.trimIndent().replace("\n", "")
-        
+
         override fun getFolderContent(ownerId: String, folderId: String): String = """
           personContent: user(id: \"$folderId\", ownerId: \"$ownerId\") {
               id
@@ -95,7 +94,7 @@ class Queries {
               }
           }
     """.trimIndent().replace("\n", "")
-        
+
         override fun getNoteContent(authorId: String, folderId: String, noteId: String): String = """
           personContent: user(id: \"$noteId\", authorId: \"$authorId\", folderId: \"$folderId\") {
                 id
@@ -117,13 +116,10 @@ class Queries {
 /**
  * Mutations describe
  */
-class Mutations
-{
-    companion object : MutationsAPI
-    {
-        override fun createFolder(name: String)
-        {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class Mutations {
+    companion object : MutationsAPI {
+        override fun createFolder(name: String) {
+            TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
         }
     }
 }
@@ -138,7 +134,7 @@ class NotesAPI(private val jwt: String) {
      * @param queries [Queries] list
      */
     fun buildQuery(vararg queries: String): String = """{ "query":"query { ${queries.joinToString("")} }" }"""
-    
+
     /**
      * @param url post url
      * @param query string for post query Create in [buildQuery]
@@ -146,14 +142,14 @@ class NotesAPI(private val jwt: String) {
      */
     fun executeQuery(url: String, query: String, callback: Callback) {
         val client = OkHttpClient()
-        val contentType = MediaType.parse("application/json; charset=utf-8");
-        
+        val contentType = MediaType.parse("application/json; charset=utf-8")
+
         val body = RequestBody.create(contentType, query)
         val request = Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "Bearer " + jwt)
                 .post(body)
                 .build()
-        client.newCall(request).enqueue(callback);
+        client.newCall(request).enqueue(callback)
     }
 }

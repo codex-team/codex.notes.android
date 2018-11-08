@@ -28,16 +28,16 @@ class FoldersAdapter :
      * Lambda function for handling item click
      */
     var itemClick: (Folder) -> Unit = {f -> }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.folder, parent, false)
         return ViewHolder(view, itemClick)
     }
-    
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindForecast(folders[position])
     }
-    
+
     override fun getItemCount() = folders.size
 
     /**
@@ -51,10 +51,10 @@ class FoldersAdapter :
         this.itemClick = itemClick
         notifyDataSetChanged()
     }
-    
+
     class ViewHolder(view: View, private val itemClick: (Folder) -> Unit)
         : RecyclerView.ViewHolder(view) {
-        
+
         fun bindForecast(folder: Folder) {
             itemView.nav_view_folder.text = folder.title
             itemView.setOnClickListener { itemClick(folder) }

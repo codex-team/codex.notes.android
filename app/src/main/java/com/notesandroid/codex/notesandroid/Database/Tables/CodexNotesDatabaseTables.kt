@@ -7,9 +7,9 @@ package com.notesandroid.codex.notesandroid.Database.Tables
  */
 
 object Persons {
-    
+
     const val NAME = "Persons"
-    
+
     object FIELDS {
         val PERSON_ID = "personId"
         val NAME = "name"
@@ -18,9 +18,9 @@ object Persons {
 }
 
 object Notes {
-    
+
     const val NAME = "Notes"
-    
+
     object FIELDS {
         val _ID = "_id"
         val ID = "noteId"
@@ -35,9 +35,9 @@ object Notes {
 }
 
 object Folders {
-    
+
     const val NAME = "Folders"
-    
+
     object FIELDS {
         val _ID = "_id"
         val ID = "folderId"

@@ -18,15 +18,15 @@ import kotlinx.android.synthetic.main.nav_header_main.view.*
  * Created by AksCorp on 11.03.2018.
  */
 class HeaderFragment : Fragment() {
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
     ): View? {
-        
+
         val view = inflater.inflate(R.layout.nav_header_main, container, false)
-        
+
         val user = arguments!!["user"] as User
 
         val profileIcon =
@@ -36,19 +36,19 @@ class HeaderFragment : Fragment() {
                     user.profileIconName
             )
         view.profile_image.setImageDrawable(profileIcon)
-        
-        //init last sync label
+
+        // init last sync label
         val lastSyncTime = (context as MainActivity).sharedPreferences.getString(
             UserData.FIELDS.LAST_SYNC,
             ""
         )
         if (!lastSyncTime.isEmpty())
             view.last_sync.text = getString(R.string.last_sync_was_at) + " " + lastSyncTime
-        
-        //init user profile name
+
+        // init user profile name
         if (user.info?.name != null)
             view.user_header_name.text = user.info?.name
-        
+
         return view
     }
 }

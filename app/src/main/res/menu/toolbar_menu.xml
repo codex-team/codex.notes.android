@@ -11,4 +11,11 @@
         android:icon="@drawable/folder_icon_24"
         app:showAsAction="ifRoom"
         android:title="" />-->
+    <item
+        android:orderInCategory="100"
+        android:id="@+id/refresh_toolbar_icon"
+        android:icon="@drawable/ic_refresh_24dp"
+        app:showAsAction="ifRoom"
+        android:title="Refresh" />
+
 </menu>

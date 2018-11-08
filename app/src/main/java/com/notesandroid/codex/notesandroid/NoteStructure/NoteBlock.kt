@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.TextView
 import com.notesandroid.codex.notesandroid.R
 
-
 /**
  * Note block types
  */
@@ -86,7 +85,7 @@ class HeaderBlock(val context: Context, val noteDescription: NoteDescription) {
         textView.setPadding(0, 0, 0, 35)
         textView.setTextColor(Color.BLACK)
 
-        //set font from resources
+        // set font from resources
         val array =
             context.obtainStyledAttributes(R.font.pt_serif_web_bold, R.styleable.TextAppearance)
         if (array.hasValue(R.styleable.TextAppearance_android_fontFamily)) {
@@ -117,7 +116,6 @@ class HeaderBlock(val context: Context, val noteDescription: NoteDescription) {
             }
         }
     }
-
 }
 
 /**
@@ -140,10 +138,10 @@ class ParagraphBlock(val context: Context, val noteDescription: NoteDescription)
         val textView = TextView(context)
         textView.setTextColor(Color.BLACK)
 
-        //set line height
+        // set line height
         textView.setLineSpacing(
             TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 6f, context.resources.displayMetrics), 1.0f);
+                TypedValue.COMPLEX_UNIT_DIP, 6f, context.resources.displayMetrics), 1.0f)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             textView.text = Html.fromHtml(noteDescription.text, Html.FROM_HTML_MODE_LEGACY)
@@ -154,5 +152,3 @@ class ParagraphBlock(val context: Context, val noteDescription: NoteDescription)
         return textView
     }
 }
-
-

@@ -21,11 +21,11 @@ import java.io.Serializable
  * Created by AksCorp on 11.03.2018.
  */
 class NotesListFragment : Fragment() {
-    
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.root_fragment, container, false)
         view.root_notes.addItemDecoration(
@@ -34,21 +34,23 @@ class NotesListFragment : Fragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
-        
+
         if (arguments != null) {
             val folder = arguments!!["folder"] as Folder
             view.root_notes.layoutManager = LinearLayoutManager(activity)
             if (folder.notes != null)
                 view.root_notes.adapter = NotesAdapter(folder.notes!!) { note ->
+                    var fragmentManager = (context as MainActivity).supportFragmentManager
 
                     val bundle = Bundle()
                     bundle.putSerializable("note", note as Serializable)
                     val fragment = NoteFragment()
                     fragment.arguments = bundle
-                    (activity as MainActivity).navigationToFragment(fragment, R.id.main_activity_constraint_layout)
+                    fragmentManager.beginTransaction()
+                        .replace(R.id.main_activity_constraint_layout, fragment).commit()
                 }
         }
-        
+
         return view
     }
 
