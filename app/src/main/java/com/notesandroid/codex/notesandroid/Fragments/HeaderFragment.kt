@@ -3,6 +3,7 @@ package com.notesandroid.codex.notesandroid.Fragments
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,5 +51,10 @@ class HeaderFragment : Fragment() {
             view.user_header_name.text = user.info?.name
 
         return view
+    }
+
+    override fun onDestroy() {
+        Log.i("HeaderFragment", "HeaderFragment is destroyed")
+        super.onDestroy()
     }
 }

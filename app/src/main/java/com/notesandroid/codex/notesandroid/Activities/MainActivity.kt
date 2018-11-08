@@ -1,7 +1,6 @@
 package com.notesandroid.codex.notesandroid.Activities
 
 import android.annotation.TargetApi
-import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
@@ -42,9 +41,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_view_menu.*
 import kotlinx.coroutines.experimental.Job
-import org.jetbrains.anko.toast
 import retrofit2.HttpException
-import kotlinx.coroutines.experimental.launch
 import java.io.Serializable
 import java.net.UnknownHostException
 import java.text.SimpleDateFormat
@@ -326,14 +323,14 @@ class MainActivity : AppCompatActivity() {
         //init nav view folder RV
 
         foldersAdapter.setFolders(content.folders.filter { it.isRoot == false }) {
-            showNotesFragment(it)
+            showNotesFragment(it, true)
         }
         folders_rv.isNestedScrollingEnabled = false
         
         // init notes from root folder button
         nav_view_my_notes.setOnClickListener {
             if (content.rootFolder != null)
-                showNotesFragment(content.rootFolder!!)
+                showNotesFragment(content.rootFolder!!, true)
         }
 
         nav_view_add_folder.setOnClickListener {
@@ -357,12 +354,12 @@ class MainActivity : AppCompatActivity() {
      *
      * @param folder folder essence data for display
      */
-    private fun showNotesFragment(folder: Folder) {
+    private fun showNotesFragment(folder: Folder, backStack:Boolean = false) {
         val bundle = Bundle()
         bundle.putSerializable("folder", folder as Serializable)
         val fragment = NotesListFragment()
         fragment.arguments = bundle
-        navigationToFragment(fragment, R.id.main_activity_constraint_layout)
+        navigationToFragment(fragment, R.id.main_activity_constraint_layout, backStack)
         main_activity_drawer_layout.closeDrawer(GravityCompat.START)
     }
 
@@ -451,11 +448,13 @@ class MainActivity : AppCompatActivity() {
      * Common method for changing all fragments
      */
 
-    public fun navigationToFragment(fragment: Fragment, resource: Int){
-        supportFragmentManager.beginTransaction()
+    public fun navigationToFragment(fragment: Fragment, resource: Int, addToBackStack: Boolean = false){
+        val transaction = supportFragmentManager.beginTransaction()
             .replace(resource, fragment)
-            .addToBackStack(null)
-            .commit()
+        if(addToBackStack){
+            transaction.addToBackStack(null)
+        }
+        transaction.commit()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {

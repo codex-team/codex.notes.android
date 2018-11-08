@@ -40,14 +40,13 @@ class NotesListFragment : Fragment() {
             view.root_notes.layoutManager = LinearLayoutManager(activity)
             if (folder.notes != null)
                 view.root_notes.adapter = NotesAdapter(folder.notes!!) { note ->
-                    var fragmentManager = (context as MainActivity).supportFragmentManager
 
                     val bundle = Bundle()
                     bundle.putSerializable("note", note as Serializable)
                     val fragment = NoteFragment()
                     fragment.arguments = bundle
-                    fragmentManager.beginTransaction()
-                        .replace(R.id.main_activity_constraint_layout, fragment).commit()
+
+                    (context as MainActivity).navigationToFragment(fragment, R.id.main_activity_constraint_layout, true)
                 }
         }
 
@@ -55,7 +54,7 @@ class NotesListFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        Log.i("NoteFragment", "is killed")
+        Log.i("NoteListFragment", "is destroyed")
         super.onDestroy()
     }
 }
