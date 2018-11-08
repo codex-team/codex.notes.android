@@ -10,7 +10,6 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import com.notesandroid.codex.notesandroid.R
-import com.notesandroid.codex.notesandroid.R.id.textView
 
 /**
  * Note block types

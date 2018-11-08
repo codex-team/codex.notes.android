@@ -33,8 +33,8 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
         val photoURL = responseJson.photo
         val name = responseJson.name
         val email = jwt.getClaim("email").asString()
-        val person = Person(userId, name, email)
-
+        val person = Person(userId, name, email, photoURL)
+        
         val db = LocalDatabaseAPI(context)
 
         if (db.isPersonExistInDatabase(person)) {

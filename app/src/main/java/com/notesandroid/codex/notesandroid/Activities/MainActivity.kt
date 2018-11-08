@@ -1,12 +1,13 @@
 package com.notesandroid.codex.notesandroid.Activities
 
 import android.annotation.TargetApi
-import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -40,7 +41,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_view_menu.*
 import kotlinx.coroutines.experimental.Job
-import org.jetbrains.anko.toast
 import retrofit2.HttpException
 import java.io.Serializable
 import java.net.UnknownHostException
@@ -90,6 +90,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
 
     /**
+     * Folders adapter. For changing data set
+     */
+    val foldersAdapter = FoldersAdapter()
+
+    var toggle:ActionBarDrawerToggle? = null
+
+    /**
      * Snackbar for showing if an error occurred.
      */
 
@@ -115,11 +122,13 @@ class MainActivity : AppCompatActivity() {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onBackPressed() {
-        setResult(Activity.RESULT_CANCELED)
-        finishAffinity()
+        super.onBackPressed()
+        /*setResult(Activity.RESULT_CANCELED)
+        finishAffinity()*/
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menu.clear()
         menuInflater.inflate(R.menu.toolbar_menu, menu)
         return true
     }
@@ -130,16 +139,17 @@ class MainActivity : AppCompatActivity() {
                 main_activity_drawer_layout.openDrawer(GravityCompat.START)
                 return true
             }
-            R.id.folder_toolbar_icon -> {
+            /*R.id.folder_toolbar_icon -> {
                 toast("Folder clicked")
                 return true
-            }
+            }*/
             R.id.refresh_toolbar_icon -> {
                 if (user != User()) {
                     loadContent()
                 }
             }
         }
+        Log.i("MainActivity", item.title.toString() + " " + item.itemId)
         return super.onOptionsItemSelected(item)
     }
 
@@ -159,6 +169,8 @@ class MainActivity : AppCompatActivity() {
 
         loadCurrentUser()
 
+        initFields()
+
         initStartUI()
 
         content = Content(mutableListOf())
@@ -169,6 +181,11 @@ class MainActivity : AppCompatActivity() {
         if (user != User()) {
             loadContent()
         }
+    }
+
+    private fun initFields() {
+        folders_rv.layoutManager = LinearLayoutManager(this)
+        folders_rv.adapter = foldersAdapter
     }
 
     /**
@@ -273,18 +290,19 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initStartUI() {
         setSupportActionBar(toolbar)
-
-        val toggle = ActionBarDrawerToggle(
+        
+        toggle = ActionBarDrawerToggle(
             this,
             main_activity_drawer_layout,
             toolbar,
             navigation_drawer_open,
             navigation_drawer_close
         )
-        main_activity_drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
+        main_activity_drawer_layout.addDrawerListener(toggle!!)
+        toggle!!.syncState()
 
-        // work with auth button if current user is empty
+        
+        //work with auth button if current user is empty
         if (user == User())
             appointSignInAction()
 
@@ -302,19 +320,24 @@ class MainActivity : AppCompatActivity() {
 
         setHeaderFragment()
 
-        // init nav view folder RV
-        folders_rv.layoutManager = LinearLayoutManager(this)
-        folders_rv.adapter = FoldersAdapter(content.folders.filter { it.isRoot == false }) {
-            showNotesFragment(it)
-        }
+        //init nav view folder RV
 
+        foldersAdapter.setFolders(content.folders.filter { it.isRoot == false }) {
+            showNotesFragment(it, true)
+        }
+        folders_rv.isNestedScrollingEnabled = false
+        
         // init notes from root folder button
         nav_view_my_notes.setOnClickListener {
             if (content.rootFolder != null)
-                showNotesFragment(content.rootFolder!!)
+                showNotesFragment(content.rootFolder!!, true)
         }
 
-        // init start folder fragment. Use root
+        nav_view_add_folder.setOnClickListener {
+
+        }
+
+        //init start folder fragment. Use root
         if (content.rootFolder != null)
             showNotesFragment(content.rootFolder!!)
         else
@@ -323,6 +346,7 @@ class MainActivity : AppCompatActivity() {
         // init notes count in root folder
         val rootNotesCount = content.rootFolder?.notes?.size
         notes_counter.text = (rootNotesCount ?: 0).toString()
+        notes_counter.visibility = if(rootNotesCount ?: 0 > 0) View.VISIBLE else View.GONE
     }
 
     /**
@@ -330,15 +354,12 @@ class MainActivity : AppCompatActivity() {
      *
      * @param folder folder essence data for display
      */
-    private fun showNotesFragment(folder: Folder) {
-        var fragmentManager = supportFragmentManager
-
+    private fun showNotesFragment(folder: Folder, backStack:Boolean = false) {
         val bundle = Bundle()
         bundle.putSerializable("folder", folder as Serializable)
         val fragment = NotesListFragment()
         fragment.arguments = bundle
-        fragmentManager.beginTransaction().replace(R.id.main_activity_constraint_layout, fragment)
-            .commitAllowingStateLoss()
+        navigationToFragment(fragment, R.id.main_activity_constraint_layout, backStack)
         main_activity_drawer_layout.closeDrawer(GravityCompat.START)
     }
 
@@ -359,11 +380,7 @@ class MainActivity : AppCompatActivity() {
         var fragment = getFragment()
         fragment.arguments = bundle
 
-        var fragmentManager = supportFragmentManager
-
-        fragmentManager.beginTransaction()
-            .replace(R.id.header_layout, fragment)
-            .commitAllowingStateLoss()
+        navigationToFragment(fragment, R.id.header_layout)
     }
 
     /**
@@ -425,5 +442,53 @@ class MainActivity : AppCompatActivity() {
                     Log.i("MainActivity", "error log ${error.message}")
                 })
         }
+    }
+
+    /**
+     * Common method for changing all fragments
+     */
+
+    public fun navigationToFragment(fragment: Fragment, resource: Int, addToBackStack: Boolean = false){
+        val transaction = supportFragmentManager.beginTransaction()
+            .replace(resource, fragment)
+        if(addToBackStack){
+            transaction.addToBackStack(null)
+        }
+        transaction.commit()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        //menu?.clear()
+        return true
+    }
+
+    /**
+     * Method that reset menu on main toolbar
+     */
+
+    public fun showMenu(){
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(ResourcesCompat.getColor(resources, R.color.mainColorPrimary, null)))
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.setDisplayShowCustomEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setHomeButtonEnabled(false)
+        toggle?.isDrawerIndicatorEnabled = true
+        //invalidateOptionsMenu()
+    }
+
+    /**
+     * Method that hidden some elements on toolbar before changing menu
+     */
+
+    public fun hiddenMenu(){
+        activity_main_navigation.visibility = View.GONE
+        toggle?.isDrawerIndicatorEnabled = false
+        //activity_main_navigation.menu.itemsSequence().forEach { it.isVisible = false }
+        toolbar.context.setTheme(R.style.NoteToolbar)
+        //supportActionBar?.set
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        //invalidateOptionsMenu()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
     }
 }

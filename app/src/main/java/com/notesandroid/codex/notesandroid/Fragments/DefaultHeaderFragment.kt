@@ -2,6 +2,7 @@ package com.notesandroid.codex.notesandroid.Fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,5 +20,10 @@ class DefaultHeaderFragment : Fragment() {
       savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.nav_header_default, container, false)
+    }
+
+    override fun onDestroy() {
+        Log.i("DefaultHeaderFragment", "DefaultHeaderFragment is destroyed")
+        super.onDestroy()
     }
 }

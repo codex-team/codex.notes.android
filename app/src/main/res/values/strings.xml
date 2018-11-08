@@ -20,4 +20,6 @@
     <string name="default_user_name">Offline user</string>
     <string name="intro_login">Enable synchronization and sharing features</string>
     <string name="login_with_google">Login with Google</string>
+    <string name="note_person_name_example" translatable="false">Petr Savchenko</string>
+    <string name="note_last_sync_example" translatable="false">Last edit 13:35</string>
 </resources>
