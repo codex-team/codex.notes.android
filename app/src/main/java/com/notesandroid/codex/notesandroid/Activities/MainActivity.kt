@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * For dispose operation if the activity is paused.
      */
-    private lateinit var disposableContent: Disposable
+    private var disposableContent: Disposable? = null
 
     /**
      * Interactor for communication with data layer.
@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        disposableContent.dispose()
+        disposableContent?.dispose()
     }
 
     internal fun startInit() {
@@ -404,21 +404,25 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == AUTHORIZATION_ATTEMPT) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             if (task.result.idToken != null)
-                CodeXNotesApi().authorization(task.result.idToken!!).subscribe({ jwt ->
+                CodeXNotesApi().authorization(task.result.idToken!!).doFinally {
+                    runOnUiThread {
+                        main_activity_drawer_layout.closeDrawer(GravityCompat.START)
+                    }
+                }.subscribe({ jwt ->
                     Log.i("MainActivityObserver", Thread.currentThread().id.toString() + " " + Thread.currentThread().name)
                     user = ControlUserData(db, this).initUserInformation(jwt)
                     runOnUiThread {
                         loadContent()
                     }
                 }, { error ->
-                    run {
-                        if (!Utilities.isInternetConnected(this))
-                            snackbar.show(getString(R.string.no_internet_connection_available))
-                        else
-                            snackbar.show(getString(R.string.autorization_failed))
+                    if (!Utilities.isInternetConnected(this))
+                        snackbar.show(getString(R.string.no_internet_connection_available))
+                    else
+                        snackbar.show(getString(R.string.autorization_failed))
+                    runOnUiThread {
                         header_layout.isClickable = true
-                        Log.i("MainActivity", "error log ${error.message}")
                     }
+                    Log.i("MainActivity", "error log ${error.message}")
                 })
         }
     }
