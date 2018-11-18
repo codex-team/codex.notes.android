@@ -8,11 +8,11 @@ import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.notesandroid.codex.notesandroid.Activities.MainActivity
 import com.notesandroid.codex.notesandroid.Essences.Note
-import com.notesandroid.codex.notesandroid.NoteStructure.NoteBlock
-import com.notesandroid.codex.notesandroid.NoteStructure.NoteDescription
+import com.notesandroid.codex.notesandroid.NoteStructure.NoteBlockFactory
 import com.notesandroid.codex.notesandroid.R
 import kotlinx.android.synthetic.main.note.view.*
 
@@ -80,11 +80,12 @@ class NoteFragment : Fragment() {
 
                 val dataType = el.asJsonObject["data"].asJsonObject["heading-styles"]
 
-                val block = NoteBlock(context!!, blockType, NoteDescription(dataText, dataType?.asString ?: ""))
+                //val block = NoteBlock(context!!, blockType, NoteDescription(dataText, dataType?.asString ?: ""))
+                val block = NoteBlockFactory.createBlock(context!!, el.asJsonObject)
 
               //  elements.add(textElement)
 
-                (view.root_note_linear_layout as LinearLayout).addView(block.view)
+                (view.root_note_linear_layout as LinearLayout).addView(block.getView())
             }
         }
         setHasOptionsMenu(true)
@@ -99,15 +100,20 @@ class NoteFragment : Fragment() {
     }
 
     fun addTitleToLayout(view: View, title: String) {
-
+        val jsonObj = JsonObject()//"{\"type\": header, \"data\": {\"text\": $title, \"level\": 1} }")
+        jsonObj.addProperty("type", "header")
+        val jsonElem = JsonObject()
+        jsonElem.addProperty("text", title)
+        jsonElem.addProperty("level", 1)
+        jsonObj.add("data", jsonElem)
         val blockType = "header"
         val dataText = title
 
         val dataType = "h1"
 
-        val block = NoteBlock(context!!, blockType, NoteDescription(dataText, dataType))
+        val block = NoteBlockFactory.createBlock(context!!, jsonObj)
 
-        (view.root_note_linear_layout as LinearLayout).addView(block.view)
+        (view.root_note_linear_layout as LinearLayout).addView(block.getView())
     }
 
     override fun onStop() {
