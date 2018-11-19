@@ -23,4 +23,6 @@
     <string name="note_last_edit">Last edit</string>
     <string name="note_person_name_example" translatable="false">Petr Savchenko</string>
     <string name="note_last_sync_example" translatable="false">Last edit 13:35</string>
+    <string name="edited_today">today at</string>
+    <string name="edited_yesterday">yesterday at</string>
 </resources>

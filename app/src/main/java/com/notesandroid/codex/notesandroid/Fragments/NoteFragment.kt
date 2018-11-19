@@ -21,14 +21,13 @@ import com.notesandroid.codex.notesandroid.Activities.MainActivity
 import com.notesandroid.codex.notesandroid.Essences.Note
 import com.notesandroid.codex.notesandroid.NoteStructure.NoteBlockFactory
 import com.notesandroid.codex.notesandroid.R
+import com.notesandroid.codex.notesandroid.Utilities.DateFormatter
 import com.notesandroid.codex.notesandroid.Utilities.Utilities
 import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.note.view.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * RV with notes by pattern [R.layout.root_fragment]
@@ -67,10 +66,8 @@ class NoteFragment : Fragment() {
             actionBar.customView.findViewById<TextView>(R.id.note_person_name).text = note!!.author?.name
             val progressBar = actionBar.customView.findViewById<ProgressBar>(R.id.note_progress_bar)
             val imageView = actionBar.customView.findViewById<CircleImageView>(R.id.note_person_logo)
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = note!!.dtModify!!.toLong() * 1000L
             actionBar.customView.findViewById<TextView>(R.id.note_last_sync).text = resources.getText(R.string.note_last_edit).toString() +
-                " " + SimpleDateFormat("MMM dd, yyyy hh:mm").format(calendar.time)
+                " " + DateFormatter.parseDate(note!!.dtModify!!.toLong() * 1000L, resources.getString(R.string.edited_today), resources.getString(R.string.edited_yesterday))
             Single.just(note!!.author!!.photo).doOnSubscribe{
                 progressBar.visibility = View.VISIBLE
                 imageView.visibility = View.GONE

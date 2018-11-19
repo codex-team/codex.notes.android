@@ -15,4 +15,6 @@
     <string name="intro_login">Enable synchronization and sharing features</string>
     <string name="login_with_google">Login with Google</string>
     <string name="note_last_edit">Last edit</string>
+    <string name="edited_today">today at</string>
+    <string name="edited_yesterday">yesterday at</string>
 </resources>
