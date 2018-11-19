@@ -63,6 +63,7 @@ class Queries {
                   id
                   name
                   email
+                  photo
                 }
                 isRemoved
               }
@@ -89,6 +90,7 @@ class Queries {
                   id
                   name
                   email
+                  photo
                 }
                 isRemoved
               }
@@ -106,6 +108,7 @@ class Queries {
                   id
                   name
                   email
+                  photo
                 }
                 isRemoved
           }
