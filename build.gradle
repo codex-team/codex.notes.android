@@ -4,19 +4,20 @@ buildscript {
     ext.kotlin_version = '1.2.51'
     ext.anko_version='0.10.4'
     ext.dokka_version = '0.9.16'
+
         repositories {
             google()
-            maven { url "https://jitpack.io" }
             maven {
                 url "https://plugins.gradle.org/m2/"
             }
+            maven { url "https://jitpack.io" }
             jcenter()
         }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:${dokka_version}"
-//        classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:3.1.0"
+        classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:6.0.0"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -30,45 +31,13 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
 }
 
 
-//apply plugin: "org.jlleitschuh.gradle.ktlint"
+apply plugin: "org.jlleitschuh.gradle.ktlint"
 
-
-apply plugin: "java"
-
-repositories {
-    jcenter()
-}
-
-configurations {
-    ktlint
-}
-
-dependencies {
-    ktlint "com.github.shyiko:ktlint:0.29.0"
-    // additional 3rd party ruleset(s) can be specified here
-    // just add them to the classpath (ktlint 'groupId:artifactId:version') and
-    // ktlint will pick them up
-}
-
-task ktlint(type: JavaExec, group: "verification") {
-    description = "Check Kotlin code style."
-    main = "com.github.shyiko.ktlint.Main"
-    classpath = configurations.ktlint
-    args "src/**/*.kt"
-    // to generate report in checkstyle format prepend following args:
-    // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
-    // see https://github.com/shyiko/ktlint#usage for more
-}
-check.dependsOn ktlint
-
-task ktlintFormat(type: JavaExec, group: "formatting") {
-    description = "Fix Kotlin code style deviations."
-    main = "com.github.shyiko.ktlint.Main"
-    classpath = configurations.ktlint
-    args "-F", "src/**/*.kt"
-}
 

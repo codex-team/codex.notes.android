@@ -16,14 +16,19 @@ import java.io.File
  *
  * Control user data (get/put in local database)
  */
-class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
+class ControlUserData(
+  private val db: LocalDatabaseAPI,
+  val context: Context
+) {
 
     /**
      * Put information from custom jwt token to database and shared preference
      *
      * @param responseJson server JSON response
      */
-    fun initUserInformation(responseJson: ServerAuthorizationResponse): User
+    fun initUserInformation(
+      responseJson: ServerAuthorizationResponse
+    ): User
     {
 
         val jwt = JWT(responseJson.jwt)
@@ -34,7 +39,7 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
         val name = responseJson.name
         val email = jwt.getClaim("email").asString()
         val person = Person(userId, name, email, photoURL)
-        
+
         val db = LocalDatabaseAPI(context)
 
         if (db.isPersonExistInDatabase(person)) {
@@ -62,7 +67,10 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
      *
      * @param imageURL - image URL
      */
-    private fun saveUserProfileIcon(imageURL: String, imageExtension: String): String? {
+    private fun saveUserProfileIcon(
+      imageURL: String,
+      imageExtension: String
+    ): String? {
         val storagePath = context.applicationInfo.dataDir
         val filePath =
             "$storagePath/$IMAGES_DIRECTORY/${UserData.FIELDS.PROFILE_ICON}.$imageExtension"

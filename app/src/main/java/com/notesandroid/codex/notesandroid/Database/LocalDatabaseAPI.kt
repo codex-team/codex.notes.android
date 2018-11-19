@@ -19,12 +19,16 @@ import org.jetbrains.anko.db.insertOrThrow
  *
  * @param context parent context
  */
-public class LocalDatabaseAPI(private val context: Context) {
+public class LocalDatabaseAPI(
+  private val context: Context
+) {
 
     /**
      * Insert essence if it's not exist in database
      */
-    fun insertIfNotExist(el: Any) {
+    fun insertIfNotExist(
+      el: Any
+    ) {
         when (el) {
             is Person ->
                 if (!isPersonExistInDatabase(el))
@@ -44,12 +48,16 @@ public class LocalDatabaseAPI(private val context: Context) {
      * @param personId person id
      * @return person essence
      */
-    fun getPersonFromDatabase(personId: String): Person {
+    fun getPersonFromDatabase(
+      personId: String
+    ): Person {
         return CodexNotesDatabase.getInstance(context).use {
             val cursor: Cursor
             try {
                 cursor = query(Persons.NAME, null, "${Persons.FIELDS.PERSON_ID} = \"$personId\"", null, null, null, null)
-            } catch (e: SQLiteException) {
+            } catch (
+              e: SQLiteException
+            ) {
                 throw Exception("Table ${Persons.NAME} doesn't exist")
             }
             cursor.moveToFirst()
@@ -57,10 +65,10 @@ public class LocalDatabaseAPI(private val context: Context) {
                 throw Exception("Wrong database. ${cursor.count} person with ID = $personId")
             if (cursor.count == 0)
                 throw Exception("Person with ID = $personId doesn't exist")
-            
+
             val person = Person(null, null, null, null)
-            
-            var pos = 0;
+
+            var pos = 0
             for (columnName in cursor.columnNames) {
                 when (columnName) {
                     Persons.FIELDS.PERSON_ID -> person.id = cursor.getString(pos)
@@ -79,13 +87,17 @@ public class LocalDatabaseAPI(private val context: Context) {
      * @param folderId folder id
      * @return list notes essence
      */
-    fun getNotesFromDatabase(folderId: String): MutableList<Note> {
+    fun getNotesFromDatabase(
+      folderId: String
+    ): MutableList<Note> {
         return CodexNotesDatabase.getInstance(context).use {
             var cursor: Cursor
             try {
 
                 cursor = query(Notes.NAME, null, "${Notes.FIELDS.FOLDER_ID} = \"$folderId\"", null, null, null, null)
-            } catch (e: SQLiteException) {
+            } catch (
+              e: SQLiteException
+            ) {
                 return@use mutableListOf<Note>()
             }
             cursor.moveToFirst()
@@ -128,7 +140,9 @@ public class LocalDatabaseAPI(private val context: Context) {
             try {
 
                 cursor = query(Folders.NAME, null, null, null, null, null, null)
-            } catch (e: SQLiteException) {
+            } catch (
+              e: SQLiteException
+            ) {
                 return@use mutableListOf<Folder>()
             }
             cursor.moveToFirst()
@@ -161,7 +175,9 @@ public class LocalDatabaseAPI(private val context: Context) {
      *
      * @param note note_list_element to add to the database
      */
-    fun insertNoteInDatabase(note: Note) {
+    fun insertNoteInDatabase(
+      note: Note
+    ) {
         CodexNotesDatabase.getInstance(context).use {
             if (note.author != null && !isPersonExistInDatabase(note.author!!))
                 insertPersonInDatabase(note.author!!)
@@ -182,7 +198,9 @@ public class LocalDatabaseAPI(private val context: Context) {
      *
      * @param note note_list_element to update to the database
      */
-    fun updateNoteInDatabase(note: Note) {
+    fun updateNoteInDatabase(
+      note: Note
+    ) {
         CodexNotesDatabase.getInstance(context).use {
             val noteValues = ContentValues()
             noteValues.put(Notes.FIELDS.FOLDER_ID, note.folderId)
@@ -200,12 +218,16 @@ public class LocalDatabaseAPI(private val context: Context) {
      * @param note note_list_element to check the existence to the database
      * @return true if exist, or false
      */
-    fun isNoteExistInDatabase(note: Note): Boolean {
+    fun isNoteExistInDatabase(
+      note: Note
+    ): Boolean {
         return CodexNotesDatabase.getInstance(context).use {
             val cursor: Cursor
             try {
                 cursor = query(Notes.NAME, arrayOf(Notes.FIELDS.ID), "${Notes.FIELDS.ID} = \"${note.id}\"", null, null, null, null)
-            } catch (e: SQLiteException) {
+            } catch (
+              e: SQLiteException
+            ) {
                 throw Exception("Table ${Notes.NAME} doesn't exist")
             }
             return@use cursor.count > 0
@@ -217,7 +239,9 @@ public class LocalDatabaseAPI(private val context: Context) {
      *
      * @param person person to add to the database
      */
-    fun insertPersonInDatabase(person: Person) {
+    fun insertPersonInDatabase(
+      person: Person
+    ) {
         CodexNotesDatabase.getInstance(context).use {
             insertOrThrow(Persons.NAME,
                     Persons.FIELDS.PERSON_ID to person.id,
@@ -232,7 +256,9 @@ public class LocalDatabaseAPI(private val context: Context) {
      *
      * @param person person to update to the database
      */
-    fun updatePersonInDatabase(person: Person) {
+    fun updatePersonInDatabase(
+      person: Person
+    ) {
         CodexNotesDatabase.getInstance(context).use {
             val personValues = ContentValues()
             personValues.put(Persons.FIELDS.PERSON_ID, person.id)
@@ -246,13 +272,17 @@ public class LocalDatabaseAPI(private val context: Context) {
      * @param person person to check the existence to the database
      * @return true if exist, or false
      */
-    fun isPersonExistInDatabase(person: Person): Boolean {
+    fun isPersonExistInDatabase(
+      person: Person
+    ): Boolean {
         return CodexNotesDatabase.getInstance(context).use {
             val cursor: Cursor
             try {
 
                 cursor = query(Persons.NAME, arrayOf(Persons.FIELDS.PERSON_ID), "${Persons.FIELDS.PERSON_ID} = \"${person.id}\"", null, null, null, null)
-            } catch (e: SQLiteException) {
+            } catch (
+              e: SQLiteException
+            ) {
                 throw Exception("Table ${Persons.NAME} doesn't exist")
             }
             return@use cursor.count > 0
@@ -264,7 +294,9 @@ public class LocalDatabaseAPI(private val context: Context) {
      *
      * @param folder folder to add to the database
      */
-    fun insertFolderInDatabase(folder: Folder) {
+    fun insertFolderInDatabase(
+      folder: Folder
+    ) {
         CodexNotesDatabase.getInstance(context).use {
             insertOrThrow(Folders.NAME,
                     Folders.FIELDS.ID to folder.id,
@@ -280,7 +312,9 @@ public class LocalDatabaseAPI(private val context: Context) {
      *
      * @param folder folder to update to the database
      */
-    fun updateFolderInDatabase(folder: Folder) {
+    fun updateFolderInDatabase(
+      folder: Folder
+    ) {
         CodexNotesDatabase.getInstance(context).use {
             val folderValue = ContentValues()
             folderValue.put(Folders.FIELDS.ID, folder.id)
@@ -294,12 +328,16 @@ public class LocalDatabaseAPI(private val context: Context) {
      * @param folder folder to check the existence to the database
      * @return true if exist, or false
      */
-    fun isFolderExistInDatabase(folder: Folder): Boolean {
+    fun isFolderExistInDatabase(
+      folder: Folder
+    ): Boolean {
         return CodexNotesDatabase.getInstance(context).use {
             val cursor: Cursor
             try {
                 cursor = query(Folders.NAME, arrayOf(Folders.FIELDS.ID), "${Folders.FIELDS.ID} = \"${folder.id}\"", null, null, null, null)
-            } catch (e: SQLiteException) {
+            } catch (
+              e: SQLiteException
+            ) {
                 throw Exception("Table ${Folders.NAME} doesn't exist")
             }
             return@use cursor.count > 0

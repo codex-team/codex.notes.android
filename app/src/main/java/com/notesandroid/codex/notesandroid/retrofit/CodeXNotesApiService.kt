@@ -10,7 +10,11 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Query
 
 /**
  * Created by Shiplayer on 23.10.18.
@@ -36,7 +40,9 @@ interface CodeXNotesApiService {
     }
 
     @POST("graphql")
-    fun getPersonInfo(@Body body: JsonObject): Observable<Person>
+    fun getPersonInfo(
+      @Body body: JsonObject
+    ): Observable<Person>
 
     /**
      * Sending request on [url]gtaphql with body that have information about request person and
@@ -48,7 +54,10 @@ interface CodeXNotesApiService {
      */
 
     @POST("graphql")
-    fun getPersonContent(@Body body: JsonObject, @Header("Authorization") jwt: String): Observable<Response<JsonElement>>
+    fun getPersonContent(
+      @Body body: JsonObject,
+      @Header("Authorization") jwt: String
+    ): Observable<Response<JsonElement>>
 
     /**
      * Sending request on [url]oauth/mobile with token for authorization in system CodeXNotes
@@ -57,5 +66,7 @@ interface CodeXNotesApiService {
      */
 
     @GET("oauth/mobile")
-    fun userAuthorization(@Query("token") token: String): Single<ServerAuthorizationResponse>
+    fun userAuthorization(
+      @Query("token") token: String
+    ): Single<ServerAuthorizationResponse>
 }

@@ -23,7 +23,9 @@ class ApplicationState : Application() {
         exceptionCatcher = HawkExceptionCatcher(this, HAWK_TOKEN)
         try {
             exceptionCatcher.start()
-        } catch (e: Exception) {
+        } catch (
+          e: Exception
+        ) {
             e.printStackTrace()
         }
     }

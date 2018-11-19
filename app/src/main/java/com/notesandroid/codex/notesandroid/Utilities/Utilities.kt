@@ -1,9 +1,9 @@
 package com.notesandroid.codex.notesandroid.Utilities
 
 import android.content.Context
-import android.content.Context.CONNECTIVITY_SERVICE
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
-import kotlinx.android.synthetic.main.nav_header_main.*
 import java.io.FileOutputStream
 import java.net.URL
 
@@ -13,17 +13,19 @@ import java.net.URL
 class Utilities {
 
     companion object {
-        fun isInternetConnected(context: Context): Boolean {
+        fun isInternetConnected(
+          context: Context
+        ): Boolean {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
             val activeNetwork = cm.activeNetworkInfo
-            if (activeNetwork != null)
-                return activeNetwork.isConnected; // WIFI connected
-            else
-                return false; // no info object implies no connectivity
+            return activeNetwork?.isConnected ?: false // no info object implies no connectivity
         }
 
-        fun saveImageByURL(photoURL: String, savePath: String) {
+        fun saveImageByURL(
+          photoURL: String,
+          savePath: String
+        ) {
             // val filePath = "$storagePath/${IMAGES_DIRECTORY}/${UserData.FIELDS.PROFILE_ICON}.$imageExtension"
             val url = URL(photoURL)
             val input = url.openStream()
@@ -44,6 +46,12 @@ class Utilities {
             } finally {
                 input.close()
             }
+        }
+
+        fun getDrawableByUrl(
+          photoURL: String
+        ): Drawable {
+            return BitmapDrawable.createFromStream(URL(photoURL).openStream(), "logo")
         }
     }
 }
