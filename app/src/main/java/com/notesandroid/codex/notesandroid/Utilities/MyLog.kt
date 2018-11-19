@@ -2,22 +2,26 @@ package com.notesandroid.codex.notesandroid.Utilities
 
 import android.content.Context
 import com.notesandroid.codex.notesandroid.DEBUG
+import org.jetbrains.anko.toast
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
-import org.jetbrains.anko.toast
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 /**
  * Created by AksCorp on 02.02.2018.
  */
-class MyLog(val context: Context) {
+class MyLog(
+  val context: Context
+) {
 
     private fun getSystemDir(): String = "/data/data/com.notesandroid.codex.notesandroid"
 
-    fun log(text: String) {
+    fun log(
+      text: String
+    ) {
         var text = text
         var logFile = File(getSystemDir() + "/Logs")
         logFile.mkdir()
@@ -31,7 +35,9 @@ class MyLog(val context: Context) {
         if (!logFile.exists()) {
             try {
                 logFile.createNewFile()
-            } catch (e: IOException) {
+            } catch (
+              e: IOException
+            ) {
                 // TODO Auto-generated catch block
                 e.printStackTrace()
             }
@@ -45,7 +51,9 @@ class MyLog(val context: Context) {
 
             if (DEBUG)
                 context.toast("Exception was logged")
-        } catch (e: IOException) {
+        } catch (
+          e: IOException
+        ) {
             // TODO Auto-generated catch block
             e.printStackTrace()
         }

@@ -47,7 +47,9 @@ class CodeXNotesApi {
      *
      * @param queries [Queries] list
      */
-    fun buildQuery(vararg queries: String): String = """{ "query":"query { ${queries.joinToString("")} }" }"""
+    fun buildQuery(
+      vararg queries: String
+    ): String = """{ "query":"query { ${queries.joinToString("")} }" }"""
 
     /**
      * Sending request to CodeXNotes server and emits notification about response.
@@ -60,7 +62,10 @@ class CodeXNotesApi {
      */
 
     @SuppressLint("CheckResult")
-    fun getPersonContent(userId: String, jwt: String): PublishSubject<Notification<Content>> {
+    fun getPersonContent(
+      userId: String,
+      jwt: String
+    ): PublishSubject<Notification<Content>> {
         val jsonElem = JsonParser().parse(buildQuery(Queries.getPersonContent(userId)))
         Log.i(CodeXNotesApi::class.java.simpleName, jsonElem.toString())
         api.getPersonContent(jsonElem.asJsonObject, "Bearer $jwt").subscribeOn(Schedulers.io()).subscribe({ next ->
@@ -84,7 +89,9 @@ class CodeXNotesApi {
      * @return Single observable with type [ServerAuthorizationResponse] for handling response in other thread.
      */
 
-    fun authorization(token: String): Single<ServerAuthorizationResponse> {
+    fun authorization(
+      token: String
+    ): Single<ServerAuthorizationResponse> {
         return api.userAuthorization(token).subscribeOn(Schedulers.io())
     }
 }
@@ -97,9 +104,9 @@ class CodeXNotesApi {
  * @param name - user full name
  */
 data class ServerAuthorizationResponse(
-    var jwt: String,
-    var photo: String,
-    var dtModify: String,
-    var channel: String,
-    var name: String
+  var jwt: String,
+  var photo: String,
+  var dtModify: String,
+  var channel: String,
+  var name: String
 )

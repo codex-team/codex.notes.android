@@ -30,7 +30,9 @@ class NoteInteractor {
      * [context] used to initialize local database API
      * @see LocalDatabaseAPI
      */
-    public fun attachSQL(context: Context) {
+    public fun attachSQL(
+      context: Context
+    ) {
         sql = LocalDatabaseAPI(context)
     }
 
@@ -65,7 +67,10 @@ class NoteInteractor {
      * @see LocalDatabaseAPI
      */
 
-    public fun getPersonContent(userId: String, jwt: String): Observable<Notification<Content>> {
+    public fun getPersonContent(
+      userId: String,
+      jwt: String
+    ): Observable<Notification<Content>> {
         val obs = CodeXNotesApi().getPersonContent(userId, jwt)
         obs.forEach { it ->
             if (it.isOnNext) {
@@ -91,7 +96,9 @@ class NoteInteractor {
      * @param folder - folder to be processed.
      */
 
-    private fun handleFolders(folder: Folder) {
+    private fun handleFolders(
+      folder: Folder
+    ) {
         if (folder.notes != null)
             folder.notes!!.removeAll { it.isRemoved!! }
 
@@ -106,7 +113,9 @@ class NoteInteractor {
      * @param folder - folder to be processed.
      */
 
-    private fun handleNote(note: Note) {
+    private fun handleNote(
+      note: Note
+    ) {
         handlePerson(note.author!!)
         if (sql.isNoteExistInDatabase(note)) {
             sql.updateNoteInDatabase(note)
@@ -117,7 +126,9 @@ class NoteInteractor {
      * Exist this person in the database and insert him if this author don't found in the database.
      */
 
-    private fun handlePerson(person: Person) {
+    private fun handlePerson(
+      person: Person
+    ) {
         if (!sql.isPersonExistInDatabase(person))
             sql.insertPersonInDatabase(person)
     }

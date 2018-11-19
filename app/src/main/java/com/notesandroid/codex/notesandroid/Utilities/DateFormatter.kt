@@ -2,7 +2,7 @@ package com.notesandroid.codex.notesandroid.Utilities
 
 import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
 
 /**
  * Created by Shiplayer on 19.11.18.
@@ -30,7 +30,11 @@ class DateFormatter {
          * @return formatted timestamp in already line
          */
 
-        fun parseDate(timestamp: Long, today: String, yesterday: String): String {
+        fun parseDate(
+          timestamp: Long,
+          today: String,
+          yesterday: String
+        ): String {
             val now = Calendar.getInstance()
             val late = Calendar.getInstance()
             late.timeInMillis = timestamp

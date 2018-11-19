@@ -9,7 +9,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBar
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -42,7 +47,10 @@ class NoteFragment : Fragment() {
 
     var note: Note? = null
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(
+      menu: Menu?,
+      inflater: MenuInflater?
+    ) {
         menu?.clear()
         val actionBar = (activity as MainActivity).supportActionBar
         if (actionBar != null)
@@ -55,7 +63,9 @@ class NoteFragment : Fragment() {
      */
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat", "CheckResult")
-    private fun initActionBar(actionBar: ActionBar) {
+    private fun initActionBar(
+      actionBar: ActionBar
+    ) {
         if (actionBar.customView != null) {
             Log.i("NoteFragment", "customView already set")
         }
@@ -76,7 +86,7 @@ class NoteFragment : Fragment() {
             }.observeOn(AndroidSchedulers.mainThread()).doFinally {
                 progressBar.visibility = View.GONE
                 imageView.visibility = View.VISIBLE
-            }.subscribe ({ file ->
+            }.subscribe({ file ->
                 imageView.setImageDrawable(file)
             }, { error ->
                 Log.e("NoteFragmentError", error.message)
@@ -93,7 +103,9 @@ class NoteFragment : Fragment() {
      * @return logo after downloading if occurs error then return default logo image
      */
 
-    private fun loadDrawableOrDefault(url: String): Drawable {
+    private fun loadDrawableOrDefault(
+      url: String
+    ): Drawable {
         return when {
             Utilities.isInternetConnected(context!!) -> Utilities.getDrawableByUrl(url)
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> resources.getDrawable(R.drawable.ic_google__g__logo, null)
@@ -101,7 +113,9 @@ class NoteFragment : Fragment() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(
+      item: MenuItem?
+    ): Boolean {
         Log.i("NoteFragment", item!!.title.toString() + " " + item.itemId)
         return super.onOptionsItemSelected(item)
     }
@@ -111,7 +125,9 @@ class NoteFragment : Fragment() {
         (activity as MainActivity).hiddenMenu()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(
+      savedInstanceState: Bundle?
+    ) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
@@ -141,7 +157,7 @@ class NoteFragment : Fragment() {
 
                 val dataType = el.asJsonObject["data"].asJsonObject["heading-styles"]
 
-                //val block = NoteBlock(context!!, blockType, NoteDescription(dataText, dataType?.asString ?: ""))
+                // val block = NoteBlock(context!!, blockType, NoteDescription(dataText, dataType?.asString ?: ""))
                 val block = NoteBlockFactory.createBlock(context!!, el.asJsonObject)
 
               //  elements.add(textElement)
@@ -166,8 +182,11 @@ class NoteFragment : Fragment() {
      * @param title Text that showing in title
      */
 
-    private fun addTitleToLayout(view: View, title: String) {
-        val jsonObj = JsonObject()//"{\"type\": header, \"data\": {\"text\": $title, \"level\": 1} }")
+    private fun addTitleToLayout(
+      view: View,
+      title: String
+    ) {
+        val jsonObj = JsonObject() // "{\"type\": header, \"data\": {\"text\": $title, \"level\": 1} }")
         jsonObj.addProperty("type", "header")
         val jsonElem = JsonObject()
         jsonElem.addProperty("text", title)

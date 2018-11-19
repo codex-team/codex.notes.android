@@ -27,7 +27,10 @@ val HEADER_BLOCK = "header"
  */
 
 object NoteBlockFactory {
-    fun createBlock(context: Context, obj: JsonObject): NoteBlock {
+    fun createBlock(
+      context: Context,
+      obj: JsonObject
+    ): NoteBlock {
         if (obj.has("type")) {
             var block: NoteBlock? = null
             when (obj["type"].asString.toLowerCase()) {
@@ -44,7 +47,10 @@ object NoteBlockFactory {
     }
 }
 
-open class NoteDescription(var text: String = "", var type: String = "")
+open class NoteDescription(
+  var text: String = "",
+  var type: String = ""
+)
 
 /**
  * This class describe any note block.
@@ -53,7 +59,9 @@ open class NoteDescription(var text: String = "", var type: String = "")
  * @param type - block type. For example [PARAGRAPH_BLOCK]
  * @param data - see [NoteDescription]
  */
-abstract class NoteBlock(val context: Context) {
+abstract class NoteBlock(
+  val context: Context
+) {
     /**
      * abstract method for getting view
      */
@@ -65,7 +73,9 @@ abstract class NoteBlock(val context: Context) {
      *
      * @return type that view can converter in current font
      */
-    protected fun getSameFont(fontResource: Int): Typeface? {
+    protected fun getSameFont(
+      fontResource: Int
+    ): Typeface? {
         val sameFont = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.resources.getFont(fontResource)
         } else {
@@ -77,7 +87,9 @@ abstract class NoteBlock(val context: Context) {
     /**
      * Convert dp to px
      */
-    protected fun dpToPx(dp: Int): Float {
+    protected fun dpToPx(
+      dp: Int
+    ): Float {
         return (dp * Resources.getSystem().displayMetrics.density)
     }
 }
@@ -113,7 +125,10 @@ val H4 = "H4"
  * @param context - parent cotext
  * @param noteDescription - see [NoteDescription]
  */
-class HeaderBlock(context: Context, val noteDescription: NoteDescription) : NoteBlock(context) {
+class HeaderBlock(
+  context: Context,
+  val noteDescription: NoteDescription
+) : NoteBlock(context) {
 
     /**
      * see [NoteBlock.view]
@@ -126,7 +141,9 @@ class HeaderBlock(context: Context, val noteDescription: NoteDescription) : Note
      * @param type - see [NoteDescription.type]
      */
     @SuppressLint("ResourceType")
-    private fun getHeaderByType(type: String): TextView {
+    private fun getHeaderByType(
+      type: String
+    ): TextView {
         val textView = TextView(context)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -137,13 +154,13 @@ class HeaderBlock(context: Context, val noteDescription: NoteDescription) : Note
 
         val param = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
-        //textView.setPadding(0, 0, 0, 35)
+        // textView.setPadding(0, 0, 0, 35)
         textView.setTextColor(Color.BLACK)
 
         // set font from resources
         val typeface = getSameFont(R.font.pt_serif_web_bold)
 
-        //context.obtainStyledAttributes(R.font.pt_serif_web_bold, R.styleable.TextAppearance)
+        // context.obtainStyledAttributes(R.font.pt_serif_web_bold, R.styleable.TextAppearance)
         /*if (array.hasValue(R.styleable.TextAppearance_android_fontFamily)) {
             val fontId = array.getResourceId(R.styleable.TextAppearance_android_fontFamily, -1)
             val typeface = ResourcesCompat.getFont(context, fontId)
@@ -184,7 +201,10 @@ class HeaderBlock(context: Context, val noteDescription: NoteDescription) : Note
  * @param context - parent context
  * @param noteDescription - see [NoteDescription]
  */
-class ParagraphBlock(context: Context, val noteDescription: NoteDescription) : NoteBlock(context) {
+class ParagraphBlock(
+  context: Context,
+  val noteDescription: NoteDescription
+) : NoteBlock(context) {
     override fun getView(): View {
         return view
     }
@@ -203,9 +223,9 @@ class ParagraphBlock(context: Context, val noteDescription: NoteDescription) : N
 
         val param = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         param.setMargins(dpToPx(19).toInt(), dpToPx(5).toInt(), dpToPx(19).toInt(), dpToPx(5).toInt())
-        //param.setMargins(19, 12, 19, 5)
+        // param.setMargins(19, 12, 19, 5)
         textView.layoutParams = param
-        //textView.setPadding(19, 22, 19, 5)
+        // textView.setPadding(19, 22, 19, 5)
         textView.typeface = getSameFont(R.font.roboto_regular)
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14F)
 

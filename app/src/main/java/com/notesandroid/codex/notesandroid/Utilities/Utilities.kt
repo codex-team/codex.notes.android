@@ -13,14 +13,19 @@ import java.net.URL
 class Utilities {
 
     companion object {
-        fun isInternetConnected(context: Context): Boolean {
+        fun isInternetConnected(
+          context: Context
+        ): Boolean {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
             val activeNetwork = cm.activeNetworkInfo
             return activeNetwork?.isConnected ?: false // no info object implies no connectivity
         }
 
-        fun saveImageByURL(photoURL: String, savePath: String) {
+        fun saveImageByURL(
+          photoURL: String,
+          savePath: String
+        ) {
             // val filePath = "$storagePath/${IMAGES_DIRECTORY}/${UserData.FIELDS.PROFILE_ICON}.$imageExtension"
             val url = URL(photoURL)
             val input = url.openStream()
@@ -43,7 +48,9 @@ class Utilities {
             }
         }
 
-        fun getDrawableByUrl(photoURL: String): Drawable {
+        fun getDrawableByUrl(
+          photoURL: String
+        ): Drawable {
             return BitmapDrawable.createFromStream(URL(photoURL).openStream(), "logo")
         }
     }

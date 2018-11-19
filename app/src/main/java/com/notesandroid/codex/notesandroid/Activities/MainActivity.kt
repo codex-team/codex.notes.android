@@ -28,7 +28,9 @@ import com.notesandroid.codex.notesandroid.Fragments.DefaultHeaderFragment
 import com.notesandroid.codex.notesandroid.Fragments.HeaderFragment
 import com.notesandroid.codex.notesandroid.Fragments.NotesListFragment
 import com.notesandroid.codex.notesandroid.R
-import com.notesandroid.codex.notesandroid.R.string.*
+import com.notesandroid.codex.notesandroid.R.string.logout
+import com.notesandroid.codex.notesandroid.R.string.navigation_drawer_close
+import com.notesandroid.codex.notesandroid.R.string.navigation_drawer_open
 import com.notesandroid.codex.notesandroid.RVAdapters.FoldersAdapter
 import com.notesandroid.codex.notesandroid.SYNC_TIME_FORMAT
 import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
@@ -45,7 +47,7 @@ import retrofit2.HttpException
 import java.io.Serializable
 import java.net.UnknownHostException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
 
 /**
  * Request code after starting google sign-in activity and handling response in method onActivityResult.
@@ -111,7 +113,9 @@ class MainActivity : AppCompatActivity() {
      */
     private lateinit var currentCoroutine: Job
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(
+      savedInstanceState: Bundle?
+    ) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -127,13 +131,17 @@ class MainActivity : AppCompatActivity() {
         finishAffinity()*/
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(
+      menu: Menu
+    ): Boolean {
         menu.clear()
         menuInflater.inflate(R.menu.toolbar_menu, menu)
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(
+      item: MenuItem
+    ): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 main_activity_drawer_layout.openDrawer(GravityCompat.START)
@@ -224,7 +232,7 @@ class MainActivity : AppCompatActivity() {
             }
             error.printStackTrace()
             runOnUiThread {
-                //progress_loader.visibility = View.GONE
+                // progress_loader.visibility = View.GONE
                 snackbar.show(error.message!!)
             }
         }, { Log.i(MainActivity::class.java.simpleName, "Complete") })
@@ -234,7 +242,9 @@ class MainActivity : AppCompatActivity() {
      * After getting content from observable, Handle it and put on [content] then update ui.
      */
 
-    private fun handleContent(cont: Content) {
+    private fun handleContent(
+      cont: Content
+    ) {
         cont.folders.forEach {
             Log.i(MainActivity::class.java.simpleName, it.toString())
             it.notes!!.forEach { Log.i(MainActivity::class.java.simpleName, it.title) }
@@ -252,7 +262,9 @@ class MainActivity : AppCompatActivity() {
      * @param error - An error that occurred during sending request or receiving response.
      */
 
-    private fun notificationAboutError(error: Throwable) {
+    private fun notificationAboutError(
+      error: Throwable
+    ) {
         header_layout.isClickable = true
         Log.i("MainActivity", "error log ${error.message}")
         when (error) {
@@ -300,7 +312,7 @@ class MainActivity : AppCompatActivity() {
         main_activity_drawer_layout.addDrawerListener(toggle!!)
         toggle!!.syncState()
 
-        //work with auth button if current user is empty
+        // work with auth button if current user is empty
         if (user == User())
             appointSignInAction()
 
@@ -318,7 +330,7 @@ class MainActivity : AppCompatActivity() {
 
         setHeaderFragment()
 
-        //init nav view folder RV
+        // init nav view folder RV
 
         foldersAdapter.setFolders(content.folders.filter { it.isRoot == false }) {
             showNotesFragment(it, true)
@@ -334,7 +346,7 @@ class MainActivity : AppCompatActivity() {
         nav_view_add_folder.setOnClickListener {
         }
 
-        //init start folder fragment. Use root
+        // init start folder fragment. Use root
         if (content.rootFolder != null)
             showNotesFragment(content.rootFolder!!)
         else showNotesFragment(Folder())
@@ -350,7 +362,10 @@ class MainActivity : AppCompatActivity() {
      *
      * @param folder folder essence data for display
      */
-    private fun showNotesFragment(folder: Folder, backStack: Boolean = false) {
+    private fun showNotesFragment(
+      folder: Folder,
+      backStack: Boolean = false
+    ) {
         val bundle = Bundle()
         bundle.putSerializable("folder", folder as Serializable)
         val fragment = NotesListFragment()
@@ -411,7 +426,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(
+      requestCode: Int,
+      resultCode: Int,
+      data: Intent
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == AUTHORIZATION_ATTEMPT) {
@@ -443,7 +462,11 @@ class MainActivity : AppCompatActivity() {
      * Common method for changing all fragments
      */
 
-    public fun navigationToFragment(fragment: Fragment, resource: Int, addToBackStack: Boolean = false) {
+    public fun navigationToFragment(
+      fragment: Fragment,
+      resource: Int,
+      addToBackStack: Boolean = false
+    ) {
         val transaction = supportFragmentManager.beginTransaction()
             .replace(resource, fragment)
         if (addToBackStack) {
@@ -452,8 +475,10 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        //menu?.clear()
+    override fun onPrepareOptionsMenu(
+      menu: Menu?
+    ): Boolean {
+        // menu?.clear()
         return true
     }
 
@@ -468,7 +493,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setHomeButtonEnabled(false)
         toggle?.isDrawerIndicatorEnabled = true
-        //invalidateOptionsMenu()
+        // invalidateOptionsMenu()
     }
 
     /**
@@ -478,11 +503,11 @@ class MainActivity : AppCompatActivity() {
     public fun hiddenMenu() {
         activity_main_navigation.visibility = View.GONE
         toggle?.isDrawerIndicatorEnabled = false
-        //activity_main_navigation.menu.itemsSequence().forEach { it.isVisible = false }
+        // activity_main_navigation.menu.itemsSequence().forEach { it.isVisible = false }
         toolbar.context.setTheme(R.style.NoteToolbar)
-        //supportActionBar?.set
+        // supportActionBar?.set
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        //invalidateOptionsMenu()
+        // invalidateOptionsMenu()
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setHomeButtonEnabled(false)
     }
