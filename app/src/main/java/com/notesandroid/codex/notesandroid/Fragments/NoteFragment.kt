@@ -1,12 +1,19 @@
 package com.notesandroid.codex.notesandroid.Fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.ActionBar
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -14,7 +21,14 @@ import com.notesandroid.codex.notesandroid.Activities.MainActivity
 import com.notesandroid.codex.notesandroid.Essences.Note
 import com.notesandroid.codex.notesandroid.NoteStructure.NoteBlockFactory
 import com.notesandroid.codex.notesandroid.R
+import com.notesandroid.codex.notesandroid.Utilities.Utilities
+import de.hdodenhof.circleimageview.CircleImageView
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.note.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * RV with notes by pattern [R.layout.root_fragment]
@@ -27,17 +41,67 @@ class NoteFragment : Fragment() {
      * Change background color and set custom toolbar
      */
 
+    var note:Note? = null
+
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         menu?.clear()
         val actionBar = (activity as MainActivity).supportActionBar
-        actionBar!!.customView = activity!!.layoutInflater.inflate(R.layout.note_actionbar_layout, null)
+        if(actionBar != null)
+            initActionBar(actionBar)
+    }
+
+    /**
+     * initializing action bar and set up information about owner this note
+     * @param actionBar action bar that need set up information
+     */
+
+    @SuppressLint("SetTextI18n", "SimpleDateFormat", "CheckResult")
+    private fun initActionBar(actionBar: ActionBar){
+        if(actionBar.customView != null){
+            Log.i("NoteFragment", "customView already set")
+        }
+        actionBar.customView = activity!!.layoutInflater.inflate(R.layout.note_actionbar_layout, null)
         actionBar.setDisplayShowCustomEnabled(true)
         actionBar.setBackgroundDrawable(ColorDrawable(Color.WHITE))
-        /*inflater!!.inflate(R.menu.note_menu, menu)
-        if(menu != null){
-            val image = menu.findItem(R.id.circleImageBar).actionView as CircleImageView
-            image.circleBackgroundColor = Color.GREEN
-        }*/
+        if(note != null){
+            actionBar.customView.findViewById<TextView>(R.id.note_person_name).text = note!!.author?.name
+            val progressBar = actionBar.customView.findViewById<ProgressBar>(R.id.note_progress_bar)
+            val imageView = actionBar.customView.findViewById<CircleImageView>(R.id.note_person_logo)
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = note!!.dtModify!!.toLong() * 1000L
+            actionBar.customView.findViewById<TextView>(R.id.note_last_sync).text = resources.getText(R.string.note_last_edit).toString() +
+                " " + SimpleDateFormat("MMM dd, yyyy hh:mm").format(calendar.time)
+            Single.just(note!!.author!!.photo).doOnSubscribe{
+                progressBar.visibility = View.VISIBLE
+                imageView.visibility = View.GONE
+            }.subscribeOn(Schedulers.io()).map {
+                loadDrawableOrDefault(it)
+            }.observeOn(AndroidSchedulers.mainThread()).doFinally{
+                progressBar.visibility = View.GONE
+                imageView.visibility = View.VISIBLE
+            }.subscribe ({ file ->
+                imageView.setImageDrawable(file)
+            }, {error ->
+                Log.e("NoteFragmentError", error.message)
+            })
+            actionBar.customView.findViewById<ImageView>(R.id.note_back_image).setOnClickListener {
+                (activity as MainActivity).onBackPressed()
+            }
+        }
+    }
+
+    /**
+     * function for downloading logo image
+     * @param url photo url
+     * @return logo after downloading if occurs error then return default logo image
+     */
+
+    private fun loadDrawableOrDefault(url:String): Drawable {
+        return when {
+            Utilities.isInternetConnected(context!!) -> Utilities.getDrawableByUrl(url)
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> resources.getDrawable(R.drawable.ic_google__g__logo, null)
+            else -> resources.getDrawable(R.drawable.ic_google__g__logo)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -62,16 +126,17 @@ class NoteFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.note, container, false)
         if (arguments != null) {
-            val note = arguments!!["note"] as Note
+            note = arguments!!["note"] as Note
+
 
             val builder = GsonBuilder()
             val gson = builder.create()
 
             val writer = JsonParser()
-            var jsonElement = writer.parse(note.content)
+            var jsonElement = writer.parse(note!!.content)
             val jsonArray = jsonElement.asJsonArray
 
-            addTitleToLayout(view, note.title!!)
+            addTitleToLayout(view, note!!.title!!)
 
             for (el in jsonArray) {
 
@@ -99,7 +164,13 @@ class NoteFragment : Fragment() {
         super.onDestroy()
     }
 
-    fun addTitleToLayout(view: View, title: String) {
+    /**
+     * Set up title of current note
+     * @param view layout container that can adding view
+     * @param title Text that showing in title
+     */
+
+    private fun addTitleToLayout(view: View, title: String) {
         val jsonObj = JsonObject()//"{\"type\": header, \"data\": {\"text\": $title, \"level\": 1} }")
         jsonObj.addProperty("type", "header")
         val jsonElem = JsonObject()

@@ -488,7 +488,7 @@ class MainActivity : AppCompatActivity() {
         //supportActionBar?.set
         supportActionBar?.setDisplayShowTitleEnabled(false)
         //invalidateOptionsMenu()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setHomeButtonEnabled(false)
     }
 }
