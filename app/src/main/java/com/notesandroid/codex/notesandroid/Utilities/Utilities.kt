@@ -43,8 +43,8 @@ class Utilities {
             }
         }
 
-        fun getDrawableByUrl(photoURL: String):Drawable{
-            return BitmapDrawable.createFromStream(URL(photoURL).openStream(),"logo")
+        fun getDrawableByUrl(photoURL: String): Drawable {
+            return BitmapDrawable.createFromStream(URL(photoURL).openStream(), "logo")
         }
     }
 }

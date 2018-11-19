@@ -57,10 +57,10 @@ public class LocalDatabaseAPI(private val context: Context) {
                 throw Exception("Wrong database. ${cursor.count} person with ID = $personId")
             if (cursor.count == 0)
                 throw Exception("Person with ID = $personId doesn't exist")
-            
+
             val person = Person(null, null, null, null)
-            
-            var pos = 0;
+
+            var pos = 0
             for (columnName in cursor.columnNames) {
                 when (columnName) {
                     Persons.FIELDS.PERSON_ID -> person.id = cursor.getString(pos)

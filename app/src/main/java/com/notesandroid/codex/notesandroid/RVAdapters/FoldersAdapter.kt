@@ -27,7 +27,7 @@ class FoldersAdapter :
     /**
      * Lambda function for handling item click
      */
-    var itemClick: (Folder) -> Unit = {f -> }
+    var itemClick: (Folder) -> Unit = { f -> }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.folder, parent, false)

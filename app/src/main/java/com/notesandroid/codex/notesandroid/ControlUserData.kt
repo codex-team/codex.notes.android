@@ -34,13 +34,12 @@ class ControlUserData(private val db: LocalDatabaseAPI, val context: Context) {
         val name = responseJson.name
         val email = jwt.getClaim("email").asString()
         val person = Person(userId, name, email, photoURL)
-        
+
         val db = LocalDatabaseAPI(context)
 
         if (db.isPersonExistInDatabase(person)) {
             db.updatePersonInDatabase(person)
-        } else
-            db.insertPersonInDatabase(person)
+        } else db.insertPersonInDatabase(person)
 
         val imageExtension = photoURL.substringAfterLast('.')
         val prefs = context.getSharedPreferences(UserData.NAME, 0)

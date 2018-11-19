@@ -40,12 +40,12 @@ class NoteFragment : Fragment() {
      * Change background color and set custom toolbar
      */
 
-    var note:Note? = null
+    var note: Note? = null
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         menu?.clear()
         val actionBar = (activity as MainActivity).supportActionBar
-        if(actionBar != null)
+        if (actionBar != null)
             initActionBar(actionBar)
     }
 
@@ -55,30 +55,30 @@ class NoteFragment : Fragment() {
      */
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat", "CheckResult")
-    private fun initActionBar(actionBar: ActionBar){
-        if(actionBar.customView != null){
+    private fun initActionBar(actionBar: ActionBar) {
+        if (actionBar.customView != null) {
             Log.i("NoteFragment", "customView already set")
         }
         actionBar.customView = activity!!.layoutInflater.inflate(R.layout.note_actionbar_layout, null)
         actionBar.setDisplayShowCustomEnabled(true)
         actionBar.setBackgroundDrawable(ColorDrawable(Color.WHITE))
-        if(note != null){
+        if (note != null) {
             actionBar.customView.findViewById<TextView>(R.id.note_person_name).text = note!!.author?.name
             val progressBar = actionBar.customView.findViewById<ProgressBar>(R.id.note_progress_bar)
             val imageView = actionBar.customView.findViewById<CircleImageView>(R.id.note_person_logo)
             actionBar.customView.findViewById<TextView>(R.id.note_last_sync).text = resources.getText(R.string.note_last_edit).toString() +
                 " " + DateFormatter.parseDate(note!!.dtModify!!.toLong() * 1000L, resources.getString(R.string.edited_today), resources.getString(R.string.edited_yesterday))
-            Single.just(note!!.author!!.photo).doOnSubscribe{
+            Single.just(note!!.author!!.photo).doOnSubscribe {
                 progressBar.visibility = View.VISIBLE
                 imageView.visibility = View.GONE
             }.subscribeOn(Schedulers.io()).map {
                 loadDrawableOrDefault(it)
-            }.observeOn(AndroidSchedulers.mainThread()).doFinally{
+            }.observeOn(AndroidSchedulers.mainThread()).doFinally {
                 progressBar.visibility = View.GONE
                 imageView.visibility = View.VISIBLE
             }.subscribe ({ file ->
                 imageView.setImageDrawable(file)
-            }, {error ->
+            }, { error ->
                 Log.e("NoteFragmentError", error.message)
             })
             actionBar.customView.findViewById<ImageView>(R.id.note_back_image).setOnClickListener {
@@ -93,7 +93,7 @@ class NoteFragment : Fragment() {
      * @return logo after downloading if occurs error then return default logo image
      */
 
-    private fun loadDrawableOrDefault(url:String): Drawable {
+    private fun loadDrawableOrDefault(url: String): Drawable {
         return when {
             Utilities.isInternetConnected(context!!) -> Utilities.getDrawableByUrl(url)
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> resources.getDrawable(R.drawable.ic_google__g__logo, null)
@@ -124,7 +124,6 @@ class NoteFragment : Fragment() {
         val view = inflater.inflate(R.layout.note, container, false)
         if (arguments != null) {
             note = arguments!!["note"] as Note
-
 
             val builder = GsonBuilder()
             val gson = builder.create()

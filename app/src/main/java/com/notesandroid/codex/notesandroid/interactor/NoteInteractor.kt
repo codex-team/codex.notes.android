@@ -67,7 +67,7 @@ class NoteInteractor {
 
     public fun getPersonContent(userId: String, jwt: String): Observable<Notification<Content>> {
         val obs = CodeXNotesApi().getPersonContent(userId, jwt)
-        obs.forEach {it ->
+        obs.forEach { it ->
             if (it.isOnNext) {
                 Log.i(NoteInteractor::class.java.simpleName, "handle from publishObservable")
                 for (folder in it.value!!.folders) {
@@ -97,8 +97,7 @@ class NoteInteractor {
 
         if (sql.isFolderExistInDatabase(folder)) {
             sql.updateFolderInDatabase(folder)
-        } else
-            sql.insertFolderInDatabase(folder)
+        } else sql.insertFolderInDatabase(folder)
     }
 
     /**
@@ -111,8 +110,7 @@ class NoteInteractor {
         handlePerson(note.author!!)
         if (sql.isNoteExistInDatabase(note)) {
             sql.updateNoteInDatabase(note)
-        } else
-            sql.insertNoteInDatabase(note)
+        } else sql.insertNoteInDatabase(note)
     }
 
     /**

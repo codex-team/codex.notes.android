@@ -26,10 +26,10 @@ val HEADER_BLOCK = "header"
  * @param type - content type. For example it can be [H1] for [HEADER_BLOCK]
  */
 
-object NoteBlockFactory{
-    fun createBlock(context:Context, obj:JsonObject):NoteBlock {
-        if(obj.has("type")) {
-            var block:NoteBlock? = null
+object NoteBlockFactory {
+    fun createBlock(context: Context, obj: JsonObject): NoteBlock {
+        if (obj.has("type")) {
+            var block: NoteBlock? = null
             when (obj["type"].asString.toLowerCase()) {
                 PARAGRAPH_BLOCK -> {
                     block = ParagraphBlock(context, NoteDescription(obj["data"].asJsonObject["text"].asString))
@@ -40,9 +40,7 @@ object NoteBlockFactory{
                 }
             }
             return block!!
-        }
-        else
-            throw Throwable("Json object is not corrected. Don't found a member with name \"type\"")
+        } else throw Throwable("Json object is not corrected. Don't found a member with name \"type\"")
     }
 }
 
@@ -55,11 +53,11 @@ open class NoteDescription(var text: String = "", var type: String = "")
  * @param type - block type. For example [PARAGRAPH_BLOCK]
  * @param data - see [NoteDescription]
  */
-abstract class NoteBlock(val context:Context) {
+abstract class NoteBlock(val context: Context) {
     /**
      * abstract method for getting view
      */
-    abstract fun getView() : View
+    abstract fun getView(): View
 
     /**
      * For getting font from resources
@@ -67,7 +65,7 @@ abstract class NoteBlock(val context:Context) {
      *
      * @return type that view can converter in current font
      */
-    protected fun getSameFont(fontResource:Int): Typeface? {
+    protected fun getSameFont(fontResource: Int): Typeface? {
         val sameFont = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.resources.getFont(fontResource)
         } else {
@@ -79,7 +77,7 @@ abstract class NoteBlock(val context:Context) {
     /**
      * Convert dp to px
      */
-    protected fun dpToPx(dp:Int): Float{
+    protected fun dpToPx(dp: Int): Float {
         return (dp * Resources.getSystem().displayMetrics.density)
     }
 }
@@ -157,7 +155,6 @@ class HeaderBlock(context: Context, val noteDescription: NoteDescription) : Note
             H1 -> {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30F)
                 param.setMargins(dpToPx(19).toInt(), dpToPx(25).toInt(), dpToPx(19).toInt(), dpToPx(12).toInt())
-
             }
             H2 -> {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24F)
@@ -171,7 +168,6 @@ class HeaderBlock(context: Context, val noteDescription: NoteDescription) : Note
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18F)
                 param.setMargins(dpToPx(19).toInt(), dpToPx(25).toInt(), dpToPx(19).toInt(), dpToPx(5).toInt())
             }
-
         }
         textView.layoutParams = param
         return textView
@@ -188,7 +184,7 @@ class HeaderBlock(context: Context, val noteDescription: NoteDescription) : Note
  * @param context - parent context
  * @param noteDescription - see [NoteDescription]
  */
-class ParagraphBlock(context: Context, val noteDescription: NoteDescription) :NoteBlock(context){
+class ParagraphBlock(context: Context, val noteDescription: NoteDescription) : NoteBlock(context) {
     override fun getView(): View {
         return view
     }
@@ -206,7 +202,7 @@ class ParagraphBlock(context: Context, val noteDescription: NoteDescription) :No
         textView.setTextColor(Color.BLACK)
 
         val param = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        param.setMargins(dpToPx(19).toInt(), dpToPx(5).toInt(),dpToPx(19).toInt(),dpToPx(5).toInt())
+        param.setMargins(dpToPx(19).toInt(), dpToPx(5).toInt(), dpToPx(19).toInt(), dpToPx(5).toInt())
         //param.setMargins(19, 12, 19, 5)
         textView.layoutParams = param
         //textView.setPadding(19, 22, 19, 5)
