@@ -5,19 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/note_person_logo"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:adjustViewBounds="false"
-        android:src="@drawable/ic_google__g__logo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
-
     <TextView
         android:id="@+id/note_person_name"
         android:layout_width="wrap_content"
@@ -27,7 +14,7 @@
         android:text="@string/note_person_name_example"
         android:theme="@style/Toolbar.Fonts"
         app:layout_constraintBottom_toTopOf="@+id/note_last_sync"
-        app:layout_constraintStart_toEndOf="@+id/note_person_logo"
+        app:layout_constraintStart_toEndOf="@+id/frame_logo"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
@@ -40,5 +27,45 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/note_person_name"
         app:layout_constraintTop_toBottomOf="@+id/note_person_name" />
+
+    <ImageView
+        android:id="@+id/note_back_image"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="TODO"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+
+    <FrameLayout
+        android:id="@+id/frame_logo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="27dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:adjustViewBounds="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/note_back_image"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/note_person_logo"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <ProgressBar
+            android:id="@+id/note_progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:adjustViewBounds="false"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
