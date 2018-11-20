@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.JsonObject
 import com.notesandroid.codex.notesandroid.R
+import com.notesandroid.codex.notesandroid.Utilities.TextFormatter
 
 /**
  * Note block types
@@ -35,6 +36,7 @@ object NoteBlockFactory {
             var block: NoteBlock? = null
             when (obj["type"].asString.toLowerCase()) {
                 PARAGRAPH_BLOCK -> {
+                    TextFormatter().parse(obj["data"].asJsonObject["text"].asString)
                     block = ParagraphBlock(context, NoteDescription(obj["data"].asJsonObject["text"].asString))
                 }
                 HEADER_BLOCK -> {
