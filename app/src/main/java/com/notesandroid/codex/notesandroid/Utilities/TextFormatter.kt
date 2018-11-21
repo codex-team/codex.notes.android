@@ -22,12 +22,23 @@ import org.jsoup.nodes.TextNode
  * Created by Shiplayer on 08.11.18.
  */
 
+/**
+ * Class that don't have public constructor. First need invoke init with context for initialize map of colors for text style.
+ *
+ */
+
 class TextFormatter private constructor() {
     lateinit var text: String
     val builder = SpannableStringBuilder()
 
     companion object {
         private val mapColor = mutableMapOf<String, Int>()
+
+        /**
+         * Method for initialize map of color
+         * @param context - [Context] used for getting color from resources
+         * @return new instance of [TextFormatter]
+         */
         fun init(
             context: Context
         ): TextFormatter {
@@ -35,6 +46,12 @@ class TextFormatter private constructor() {
             return TextFormatter()
         }
 
+        /**
+         * Method for getting color from resources
+         * @param ctx - [Context] for getting color from resources
+         * @param id - Id of color from resources
+         * @return color as representation in int
+         */
         private fun getColor(
             ctx: Context,
             id: Int
@@ -47,6 +64,12 @@ class TextFormatter private constructor() {
         }
     }
 
+    /**
+     * Parse html text to text with applied styles that understanding TextView
+     * @param text - Text have html code
+     * @return
+     */
+
     fun parse(
         text: String
     ): SpannableString {
@@ -57,6 +80,12 @@ class TextFormatter private constructor() {
         }
         return SpannableString.valueOf(builder)
     }
+
+    /**
+     *
+     * @param node - that may contain or TextNode or Element
+     * @return spanned string that applied style
+     */
 
     private fun parseNode(
         node: Node
@@ -76,6 +105,11 @@ class TextFormatter private constructor() {
         }
         return SpannableString.valueOf(span)
     }
+
+    /**
+     * @param element - Element that contains tag like <b>, <i> and etc.
+     * @return spanned string that applied style for current tag
+     */
 
     private fun parseElement(
         element: Element
@@ -99,6 +133,12 @@ class TextFormatter private constructor() {
         return SpannableString.valueOf(result)
     }
 
+    /**
+     *
+     * @param element - Complex element that contain class
+     * @return spanned string that applied style for current class
+     */
+
     private fun getSpanStyle(
         element: Element
     ): Any? {
@@ -117,11 +157,5 @@ class TextFormatter private constructor() {
             )
         }
         return list
-    }
-
-    private fun hasInnerTag(
-        element: Element
-    ): Boolean {
-        return element.childNodes().size != 0
     }
 }

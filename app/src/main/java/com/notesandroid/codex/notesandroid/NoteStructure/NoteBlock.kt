@@ -36,7 +36,6 @@ object NoteBlockFactory {
             var block: NoteBlock? = null
             when (obj["type"].asString.toLowerCase()) {
                 PARAGRAPH_BLOCK -> {
-                    // TextFormatter().parse("Ea<b>sy to b<i>uild</i></b><i> Plugins</i>. <b>Dozens</b> <a href=\\\"https://google.com\\\">of creat</a>ed.")
                     block = ParagraphBlock(context, NoteDescription(obj["data"].asJsonObject["text"].asString))
                 }
                 HEADER_BLOCK -> {
