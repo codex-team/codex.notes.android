@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.JsonObject
 import com.notesandroid.codex.notesandroid.R
+import com.notesandroid.codex.notesandroid.Utilities.TextFormatter
 
 /**
  * Note block types
@@ -234,12 +235,13 @@ class ParagraphBlock(
             TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 6f, context.resources.displayMetrics), 1f)
 
-        noteDescription.text = noteDescription.text.replace("<p>", "").replace("<\\p>", "<br>")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        // noteDescription.text = noteDescription.text.replace("<p>", "").replace("<\\p>", "<br>")
+        textView.text = TextFormatter.init(context).parse(noteDescription.text)
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             textView.text = Html.fromHtml(noteDescription.text, Html.FROM_HTML_MODE_LEGACY)
         } else {
             textView.text = Html.fromHtml(noteDescription.text)
-        }
+        }*/
 
         return textView
     }
