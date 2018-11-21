@@ -36,7 +36,7 @@ object NoteBlockFactory {
             var block: NoteBlock? = null
             when (obj["type"].asString.toLowerCase()) {
                 PARAGRAPH_BLOCK -> {
-                    TextFormatter().parse(obj["data"].asJsonObject["text"].asString)
+                    // TextFormatter().parse("Ea<b>sy to b<i>uild</i></b><i> Plugins</i>. <b>Dozens</b> <a href=\\\"https://google.com\\\">of creat</a>ed.")
                     block = ParagraphBlock(context, NoteDescription(obj["data"].asJsonObject["text"].asString))
                 }
                 HEADER_BLOCK -> {
@@ -236,12 +236,13 @@ class ParagraphBlock(
             TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 6f, context.resources.displayMetrics), 1f)
 
-        noteDescription.text = noteDescription.text.replace("<p>", "").replace("<\\p>", "<br>")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        // noteDescription.text = noteDescription.text.replace("<p>", "").replace("<\\p>", "<br>")
+        textView.text = TextFormatter.init(context).parse(noteDescription.text)
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             textView.text = Html.fromHtml(noteDescription.text, Html.FROM_HTML_MODE_LEGACY)
         } else {
             textView.text = Html.fromHtml(noteDescription.text)
-        }
+        }*/
 
         return textView
     }

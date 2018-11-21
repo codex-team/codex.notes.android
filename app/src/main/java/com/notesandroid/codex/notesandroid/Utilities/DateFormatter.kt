@@ -1,6 +1,7 @@
 package com.notesandroid.codex.notesandroid.Utilities
 
 import android.annotation.SuppressLint
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -20,7 +21,7 @@ class DateFormatter {
         val month = SimpleDateFormat("dd MMMM")
 
         @SuppressLint("SimpleDateFormat")
-        val time = SimpleDateFormat("hh:mm")
+        val time = SimpleDateFormat("HH:mm")
 
         /**
          * Method for parsing timestamp to finish string
@@ -37,12 +38,15 @@ class DateFormatter {
         ): String {
             val now = Calendar.getInstance()
             val late = Calendar.getInstance()
+            Log.i("DateFormatter", late.timeZone.displayName)
             late.timeInMillis = timestamp
             return if (late.get(Calendar.YEAR) == now.get(Calendar.YEAR))
                 if (late.get(Calendar.MONTH) == now.get(Calendar.MONTH)) {
                     when {
                         late.get(Calendar.DAY_OF_MONTH) == now.get(Calendar.DAY_OF_MONTH) -> today + " " + time.format(late.time)
-                        late.get(Calendar.DAY_OF_MONTH) - now.get(Calendar.DAY_OF_MONTH) == 1 -> yesterday + " " + time.format(time)
+                        now.get(Calendar.DAY_OF_MONTH) - late.get(Calendar.DAY_OF_MONTH) == 1 -> yesterday + " " + time.format(
+                            late.time
+                        )
                         else -> month.format(late.time)
                     }
                 } else month.format(late.time)

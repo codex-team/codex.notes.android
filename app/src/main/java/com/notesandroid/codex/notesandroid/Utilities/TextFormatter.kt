@@ -1,7 +1,18 @@
 package com.notesandroid.codex.notesandroid.Utilities
 
+import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
+import android.os.Build
+import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.style.BackgroundColorSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
+import android.text.style.TypefaceSpan
+import com.notesandroid.codex.notesandroid.R
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
@@ -11,31 +22,52 @@ import org.jsoup.nodes.TextNode
  * Created by Shiplayer on 08.11.18.
  */
 
-class TextFormatter {
+class TextFormatter private constructor() {
     lateinit var text: String
-    private var position: Int = 0
-    private var deepLevel: Int = 0
     val builder = SpannableStringBuilder()
-    private val list = listOf<SpannableString>()
 
-    fun parse(text: String): SpannableString {
-        this.text = text
-        var elem = Jsoup.parse(text)
-        var obj = elem.body()
+    companion object {
+        private val mapColor = mutableMapOf<String, Int>()
+        fun init(
+            context: Context
+        ): TextFormatter {
+            mapColor["inlineCode"] = getColor(context, R.color.inlineCodeColor)
+            return TextFormatter()
+        }
+
+        private fun getColor(
+            ctx: Context,
+            id: Int
+        ): Int {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ctx.getColor(id)
+            } else {
+                ctx.resources.getColor(id)
+            }
+        }
+    }
+
+    fun parse(
+        text: String
+    ): SpannableString {
+        val elem = Jsoup.parse(text)
+        val obj = elem.body()
         for (node in obj.childNodes()) {
-            parseNode(node)
+            builder.append(parseNode(node))
         }
         return SpannableString.valueOf(builder)
     }
 
-    private fun parseNode(node: Node): SpannableString {
+    private fun parseNode(
+        node: Node
+    ): SpannableString {
         val span = SpannableStringBuilder()
         when (node) {
             is TextNode -> {
                 span.append(node.text())
             }
             is Element -> {
-                if (node.childNodes().size != 0) {
+                if (node.childNodes().size > 1 && node.childNodes()[0] is Element) {
                     span.append(parse(node.html()))
                 } else {
                     span.append(parseElement(node))
@@ -45,47 +77,51 @@ class TextFormatter {
         return SpannableString.valueOf(span)
     }
 
-    private fun parseElement(element: Element): SpannableString {
+    private fun parseElement(
+        element: Element
+    ): SpannableString {
+        val tagName = element.tagName()
+        val style = when (tagName) {
+            "b" -> StyleSpan(Typeface.BOLD)
+            "i" -> StyleSpan(Typeface.ITALIC)
+            "span" -> getSpanStyle(element)
+            else -> listOf(StyleSpan(Typeface.NORMAL), ForegroundColorSpan(Color.BLUE))
+        }
+        val result = SpannableStringBuilder()
 
-        return SpannableString("text")
+        if (style is List<Any?>) {
+            result.append(element.text())
+            for (spanStyle in style) {
+                result.setSpan(spanStyle, 0, element.text().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+        } else
+            result.append(element.text()).setSpan(style, 0, element.text().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return SpannableString.valueOf(result)
     }
 
-    private fun hasInnerTag(element: Element): Boolean {
+    private fun getSpanStyle(
+        element: Element
+    ): Any? {
+        val list = mutableListOf<Any?>()
+        for (className in element.classNames()) {
+            list.addAll(
+                when (className) {
+                    "inline-code" -> listOf(
+                        BackgroundColorSpan(mapColor["inlineCode"]!!),
+                        ForegroundColorSpan(Color.parseColor("#c44545")),
+                        TypefaceSpan("monospace"),
+                        RelativeSizeSpan(0.9f)
+                    )
+                    else -> listOf(null)
+                }
+            )
+        }
+        return list
+    }
+
+    private fun hasInnerTag(
+        element: Element
+    ): Boolean {
         return element.childNodes().size != 0
-    }
-
-    fun getText() {
-    }
-
-    private fun getNextTag(element: Element): Tag {
-
-        return Tag("test")
-    }
-
-    interface TextSpannable {
-        fun getText(): SpannableString
-    }
-
-    private class Tag(val text: String) : TextSpannable {
-        lateinit var tag: String
-        lateinit var data: SpannableString
-        var attributes: List<Attribute> = listOf()
-
-        init {
-
-        }
-
-        override fun getText(): SpannableString {
-            return data
-        }
-    }
-
-    private class Text(val text: String) : TextSpannable {
-        override fun getText(): SpannableString = SpannableString(text)
-    }
-
-    private class Attribute(val text: String) {
-        lateinit var name: String
-        lateinit var value: String
     }
 }
