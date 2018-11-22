@@ -8,6 +8,7 @@ import android.graphics.Typeface
 import android.os.Build
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Html
+import android.text.Spannable
 import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
@@ -15,6 +16,7 @@ import android.widget.TextView
 import com.google.gson.JsonObject
 import com.notesandroid.codex.notesandroid.R
 import com.notesandroid.codex.notesandroid.Utilities.TextFormatter
+import com.notesandroid.codex.notesandroid.spans.HeightSpan
 
 /**
  * Note block types
@@ -231,12 +233,11 @@ class ParagraphBlock(
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14F)
 
         // set line height
-        textView.setLineSpacing(
-            TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 6f, context.resources.displayMetrics), 1f)
+        val block = TextFormatter.init(context).parse(noteDescription.text)
+        block.setSpan(HeightSpan(25), 0, block.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         // noteDescription.text = noteDescription.text.replace("<p>", "").replace("<\\p>", "<br>")
-        textView.text = TextFormatter.init(context).parse(noteDescription.text)
+        textView.text = block
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             textView.text = Html.fromHtml(noteDescription.text, Html.FROM_HTML_MODE_LEGACY)
         } else {
