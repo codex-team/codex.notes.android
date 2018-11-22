@@ -69,7 +69,6 @@ class TextFormatter private constructor() {
      * @param text - Text have html code
      * @return
      */
-
     fun parse(
         text: String
     ): SpannableStringBuilder {
@@ -87,9 +86,8 @@ class TextFormatter private constructor() {
     }
 
     /**
-     *
+     * Return String representation for span style id
      */
-
     private fun getIntToSpanStyle(
         id: Int
     ): String {
@@ -108,7 +106,6 @@ class TextFormatter private constructor() {
      * @param node - that may contain or TextNode or Element
      * @return spanned string that applied style
      */
-
     private fun parseNode(
         node: Node
     ): SpannableString {
@@ -133,7 +130,6 @@ class TextFormatter private constructor() {
      * @param element - Element that contains tag like <b>, <i> and etc.
      * @return spanned string that applied style for current tag
      */
-
     private fun parseElement(
         element: Element
     ): SpannableString {
@@ -154,7 +150,6 @@ class TextFormatter private constructor() {
      * @param element - The tag for which need to get the style
      * @return SpanStyle or list of spanStyles which need to get the style, but represented as Any?
      */
-
     fun getSpanStyleByTag(
         element: Element
     ): Any? {
@@ -172,7 +167,6 @@ class TextFormatter private constructor() {
      * @param element - Complex element that contain class
      * @return spanned string that applied style for current class
      */
-
     private fun getSpanStyle(
         element: Element
     ): Any? {
