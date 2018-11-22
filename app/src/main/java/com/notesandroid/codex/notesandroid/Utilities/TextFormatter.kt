@@ -7,13 +7,10 @@ import android.os.Build
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
-import android.text.style.TypefaceSpan
-import android.util.Log
 import com.notesandroid.codex.notesandroid.R
+import com.notesandroid.codex.notesandroid.spans.InlineStyleSpan
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
@@ -42,7 +39,8 @@ class TextFormatter private constructor() {
         fun init(
             context: Context
         ): TextFormatter {
-            mapColor["inlineCode"] = getColor(context, R.color.inlineCodeColor)
+            mapColor["inlineCode"] = getColor(context, R.color.inlineCodeColorBackground)
+            mapColor["inlineCodeForeground"] = getColor(context, R.color.inlineCodeColorForeground)
             return TextFormatter()
         }
 
@@ -79,9 +77,9 @@ class TextFormatter private constructor() {
             builder.append(parseNode(node))
         }
         val arraySpan = builder.getSpans(0, builder.length, StyleSpan::class.java)
-        Log.i("TextFormatter", "Text $builder")
+        /*Log.i("TextFormatter", "Text $builder")
         for (span in arraySpan)
-            Log.i("TextFormatter", getIntToSpanStyle(span.style))
+            Log.i("TextFormatter", getIntToSpanStyle(span.style))*/
         return builder
     }
 
@@ -171,14 +169,15 @@ class TextFormatter private constructor() {
         element: Element
     ): Any? {
         val list = mutableListOf<Any?>()
+
         for (className in element.classNames()) {
             list.addAll(
                 when (className) {
                     "inline-code" -> listOf(
-                        BackgroundColorSpan(mapColor["inlineCode"]!!),
-                        ForegroundColorSpan(Color.parseColor("#c44545")),
-                        TypefaceSpan("monospace"),
-                        RelativeSizeSpan(0.9f)
+                        InlineStyleSpan(
+                            mapColor["inlineCode"]!!,
+                            mapColor["inlineCodeForeground"]!!
+                        )
                     )
                     else -> listOf(null)
                 }

@@ -7,5 +7,6 @@
     <color name="noteColorPrimary">#FFFFFF</color>
     <color name="mainColorPrimary">#292B37</color>
     <color name="noteTextColorPrimary">#000000</color>
-    <color name="inlineCodeColor">#c7fbf1f1</color>
+    <color name="inlineCodeColorBackground">#c7fbf1f1</color>
+    <color name="inlineCodeColorForeground">#c44545</color>
 </resources>
