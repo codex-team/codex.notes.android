@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.text.style.TypefaceSpan
+import android.util.Log
 import com.notesandroid.codex.notesandroid.R
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -29,7 +30,6 @@ import org.jsoup.nodes.TextNode
 
 class TextFormatter private constructor() {
     lateinit var text: String
-    val builder = SpannableStringBuilder()
 
     companion object {
         private val mapColor = mutableMapOf<String, Int>()
@@ -69,16 +69,36 @@ class TextFormatter private constructor() {
      * @param text - Text have html code
      * @return
      */
-
     fun parse(
         text: String
-    ): SpannableString {
+    ): SpannableStringBuilder {
+        val builder = SpannableStringBuilder()
         val elem = Jsoup.parse(text)
         val obj = elem.body()
         for (node in obj.childNodes()) {
             builder.append(parseNode(node))
         }
-        return SpannableString.valueOf(builder)
+        val arraySpan = builder.getSpans(0, builder.length, StyleSpan::class.java)
+        Log.i("TextFormatter", "Text $builder")
+        for (span in arraySpan)
+            Log.i("TextFormatter", getIntToSpanStyle(span.style))
+        return builder
+    }
+
+    /**
+     * Return String representation for span style id
+     */
+    private fun getIntToSpanStyle(
+        id: Int
+    ): String {
+        return when (id) {
+            Typeface.BOLD ->
+                "BOLD"
+            Typeface.ITALIC ->
+                "ITALIC"
+            else ->
+                "UNKNOWN"
+        }
     }
 
     /**
@@ -86,7 +106,6 @@ class TextFormatter private constructor() {
      * @param node - that may contain or TextNode or Element
      * @return spanned string that applied style
      */
-
     private fun parseNode(
         node: Node
     ): SpannableString {
@@ -96,8 +115,9 @@ class TextFormatter private constructor() {
                 span.append(node.text())
             }
             is Element -> {
-                if (node.childNodes().size > 1 && node.childNodes()[0] is Element) {
+                if (node.childNodes().size > 1 && (node.childNodes()[0] is Element || node.childNodes()[1] is Element)) {
                     span.append(parse(node.html()))
+                    span.setSpan(getSpanStyleByTag(node), 0, span.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 } else {
                     span.append(parseElement(node))
                 }
@@ -110,27 +130,36 @@ class TextFormatter private constructor() {
      * @param element - Element that contains tag like <b>, <i> and etc.
      * @return spanned string that applied style for current tag
      */
-
     private fun parseElement(
         element: Element
     ): SpannableString {
+        val style = getSpanStyleByTag(element)
+        val result = parse(element.html())
+
+        if (style is List<Any?>) {
+            // result.append(element.text())
+            for (spanStyle in style) {
+                result.setSpan(spanStyle, 0, element.text().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+        } else
+            result.setSpan(style, 0, element.text().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return SpannableString.valueOf(result)
+    }
+
+    /**
+     * @param element - The tag for which need to get the style
+     * @return SpanStyle or list of spanStyles which need to get the style, but represented as Any?
+     */
+    fun getSpanStyleByTag(
+        element: Element
+    ): Any? {
         val tagName = element.tagName()
-        val style = when (tagName) {
+        return when (tagName) {
             "b" -> StyleSpan(Typeface.BOLD)
             "i" -> StyleSpan(Typeface.ITALIC)
             "span" -> getSpanStyle(element)
             else -> listOf(StyleSpan(Typeface.NORMAL), ForegroundColorSpan(Color.BLUE))
         }
-        val result = SpannableStringBuilder()
-
-        if (style is List<Any?>) {
-            result.append(element.text())
-            for (spanStyle in style) {
-                result.setSpan(spanStyle, 0, element.text().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-        } else
-            result.append(element.text()).setSpan(style, 0, element.text().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        return SpannableString.valueOf(result)
     }
 
     /**
@@ -138,7 +167,6 @@ class TextFormatter private constructor() {
      * @param element - Complex element that contain class
      * @return spanned string that applied style for current class
      */
-
     private fun getSpanStyle(
         element: Element
     ): Any? {
