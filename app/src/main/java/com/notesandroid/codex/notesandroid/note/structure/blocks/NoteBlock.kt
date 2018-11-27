@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.Typeface
 import android.os.Build
 import android.support.v4.content.res.ResourcesCompat
+import android.util.DisplayMetrics
 import android.view.View
 
 /**
@@ -42,9 +43,11 @@ abstract class NoteBlock(
     /**
      * Convert dp to px
      */
-    protected fun dpToPx(
-        dp: Int
-    ): Float {
-        return (dp * Resources.getSystem().displayMetrics.density)
+    companion object {
+        public fun dpToPx(
+            dp: Int
+        ): Float {
+            return (dp * (Resources.getSystem().displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT).toFloat())
+        }
     }
 }

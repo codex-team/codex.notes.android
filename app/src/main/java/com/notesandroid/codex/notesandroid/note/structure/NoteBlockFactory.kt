@@ -1,6 +1,8 @@
 package com.notesandroid.codex.notesandroid.note.structure
 
 import android.content.Context
+import android.view.View
+import android.widget.TextView
 import com.google.gson.JsonObject
 import com.notesandroid.codex.notesandroid.note.structure.blocks.DelimiterBlock
 import com.notesandroid.codex.notesandroid.note.structure.blocks.HeaderBlock
@@ -16,7 +18,6 @@ const val HEADER_BLOCK = "header"
 const val DELIMITER_BLOCK = "delimiter"
 const val IMAGE_BLOCK = "image"
 
-
 object NoteBlockFactory {
     fun createBlock(
         context: Context,
@@ -24,15 +25,15 @@ object NoteBlockFactory {
     ): NoteBlock {
         if (obj.has("type")) {
             var block: NoteBlock? = null
-            when (obj["type"].asString.toLowerCase()) {
+            block = when (obj["type"].asString.toLowerCase()) {
                 PARAGRAPH_BLOCK -> {
-                    block = ParagraphBlock(
+                    ParagraphBlock(
                         context,
                         NoteDescription(obj["data"].asJsonObject["text"].asString)
                     )
                 }
                 HEADER_BLOCK -> {
-                    block = HeaderBlock(
+                    HeaderBlock(
                         context, NoteDescription(
                             obj["data"].asJsonObject["text"].asString,
                             "H" + obj["data"].asJsonObject["level"]
@@ -40,16 +41,25 @@ object NoteBlockFactory {
                     )
                 }
                 DELIMITER_BLOCK -> {
-                    block = DelimiterBlock(context)
+                    DelimiterBlock(context)
                 }
                 IMAGE_BLOCK -> {
-                    block = ImageBlock(
+                    ImageBlock(
                         context,
                         ImageDescription.createFrom(obj)
                     )
                 }
+                else -> {
+                    object : NoteBlock(context) {
+                        override fun getView(): View {
+                            val textView = TextView(context)
+                            textView.setText("not supported")
+                            return textView
+                        }
+                    }
+                }
             }
-            return block!!
+            return block
         } else throw Throwable("Json object is not corrected. Don't found a member with name \"type\"")
     }
 }
