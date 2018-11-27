@@ -24,10 +24,10 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.notesandroid.codex.notesandroid.Activities.MainActivity
 import com.notesandroid.codex.notesandroid.Essences.Note
-import com.notesandroid.codex.notesandroid.NoteStructure.NoteBlockFactory
 import com.notesandroid.codex.notesandroid.R
 import com.notesandroid.codex.notesandroid.Utilities.DateFormatter
 import com.notesandroid.codex.notesandroid.Utilities.Utilities
+import com.notesandroid.codex.notesandroid.note.structure.NoteBlockFactory
 import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -151,11 +151,6 @@ class NoteFragment : Fragment() {
             addTitleToLayout(view, note!!.title!!)
 
             for (el in jsonArray) {
-
-                val blockType = el.asJsonObject["type"].asString
-                val dataText = el.asJsonObject["data"].asJsonObject["text"].asString
-
-                val dataType = el.asJsonObject["data"].asJsonObject["heading-styles"]
 
                 // val block = NoteBlock(context!!, blockType, NoteDescription(dataText, dataType?.asString ?: ""))
                 val block = NoteBlockFactory.createBlock(context!!, el.asJsonObject)
