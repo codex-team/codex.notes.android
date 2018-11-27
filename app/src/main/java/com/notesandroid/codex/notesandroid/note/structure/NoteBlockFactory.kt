@@ -4,20 +4,18 @@ import android.content.Context
 import com.google.gson.JsonObject
 import com.notesandroid.codex.notesandroid.note.structure.blocks.DelimiterBlock
 import com.notesandroid.codex.notesandroid.note.structure.blocks.HeaderBlock
+import com.notesandroid.codex.notesandroid.note.structure.blocks.ImageBlock
 import com.notesandroid.codex.notesandroid.note.structure.blocks.NoteBlock
 import com.notesandroid.codex.notesandroid.note.structure.blocks.ParagraphBlock
 
 /**
  * Note block types
  */
-val PARAGRAPH_BLOCK = "paragraph"
-val HEADER_BLOCK = "header"
-val DELIMITER_BLOCK = "delimiter"
+const val PARAGRAPH_BLOCK = "paragraph"
+const val HEADER_BLOCK = "header"
+const val DELIMITER_BLOCK = "delimiter"
+const val IMAGE_BLOCK = "image"
 
-/**
- * @param text - current block content
- * @param type - content type. For example it can be [H1] for [HEADER_BLOCK]
- */
 
 object NoteBlockFactory {
     fun createBlock(
@@ -43,6 +41,12 @@ object NoteBlockFactory {
                 }
                 DELIMITER_BLOCK -> {
                     block = DelimiterBlock(context)
+                }
+                IMAGE_BLOCK -> {
+                    block = ImageBlock(
+                        context,
+                        ImageDescription.createFrom(obj)
+                    )
                 }
             }
             return block!!
