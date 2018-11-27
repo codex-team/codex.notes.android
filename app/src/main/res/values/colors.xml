@@ -9,4 +9,6 @@
     <color name="noteTextColorPrimary">#000000</color>
     <color name="inlineCodeColorBackground">#c7fbf1f1</color>
     <color name="inlineCodeColorForeground">#c44545</color>
+    <color name="linkColor">#2969b9</color>
+    <color name="markerColor">#4af5eb6f</color>
 </resources>

@@ -10,6 +10,8 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import com.notesandroid.codex.notesandroid.R
+import com.notesandroid.codex.notesandroid.spans.CodeXMarker
+import com.notesandroid.codex.notesandroid.spans.CodeXURLSpan
 import com.notesandroid.codex.notesandroid.spans.InlineStyleSpan
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -41,6 +43,8 @@ class TextFormatter private constructor() {
         ): TextFormatter {
             mapColor["inlineCode"] = getColor(context, R.color.inlineCodeColorBackground)
             mapColor["inlineCodeForeground"] = getColor(context, R.color.inlineCodeColorForeground)
+            mapColor["linkColor"] = getColor(context, R.color.linkColor)
+            mapColor["markerColor"] = getColor(context, R.color.markerColor)
             return TextFormatter()
         }
 
@@ -155,6 +159,7 @@ class TextFormatter private constructor() {
         return when (tagName) {
             "b" -> StyleSpan(Typeface.BOLD)
             "i" -> StyleSpan(Typeface.ITALIC)
+            "a" -> CodeXURLSpan(element.attr("href"), mapColor["linkColor"]!!)//URLSpan(element.attr("href"))
             "span" -> getSpanStyle(element)
             else -> listOf(StyleSpan(Typeface.NORMAL), ForegroundColorSpan(Color.BLUE))
         }
@@ -178,6 +183,9 @@ class TextFormatter private constructor() {
                             mapColor["inlineCode"]!!,
                             mapColor["inlineCodeForeground"]!!
                         )
+                    )
+                    "cdx-marker" -> listOf(
+                        CodeXMarker(mapColor["markerColor"]!!)
                     )
                     else -> listOf(null)
                 }
