@@ -23,12 +23,26 @@ import io.reactivex.schedulers.Schedulers
  * Created by Shiplayer on 27.11.18.
  */
 
+/**
+ * Block to display images and captions
+ * @param context - need to create LinearLayout and add to it
+ * FrameLayout(need to display image or progressbar) and TextView(need to caption for image)
+ * @param description - instance that contains all information about this block
+ */
 class ImageBlock(
     context: Context,
     val description: ImageDescription
 ) : NoteBlock(context) {
+
     private var view = getImage()
+
+    /**
+     * field image need to display image
+     */
     private lateinit var image: ImageView
+    /**
+     * displayed in while loading image
+     */
     private lateinit var progressLoader: ProgressBar
 
     @SuppressLint("CheckResult")
@@ -99,11 +113,17 @@ class ImageBlock(
         return layout
     }
 
+    /**
+     * invoke before loading image
+     */
     private fun show() {
         image.visibility = View.INVISIBLE
         progressLoader.visibility = View.VISIBLE
     }
 
+    /**
+     * invoke after loading image or occur error in while loading
+     */
     private fun hidden() {
         image.visibility = View.VISIBLE
         progressLoader.visibility = View.GONE
