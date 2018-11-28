@@ -46,7 +46,7 @@ object NoteBlockFactory {
                 IMAGE_BLOCK -> {
                     ImageBlock(
                         context,
-                        ImageDescription.createFrom(obj)
+                        ImageBlockData.createFrom(obj)
                     )
                 }
                 else -> {

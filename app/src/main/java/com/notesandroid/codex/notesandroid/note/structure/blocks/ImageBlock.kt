@@ -14,7 +14,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.notesandroid.codex.notesandroid.R
 import com.notesandroid.codex.notesandroid.Utilities.Utilities
-import com.notesandroid.codex.notesandroid.note.structure.ImageDescription
+import com.notesandroid.codex.notesandroid.note.structure.ImageBlockData
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -27,11 +27,11 @@ import io.reactivex.schedulers.Schedulers
  * Block to display images and captions
  * @param context - need to create LinearLayout and add to it
  * FrameLayout(need to display image or progressbar) and TextView(need to caption for image)
- * @param description - instance that contains all information about this block
+ * @param blockData - instance that contains all information about this block
  */
 class ImageBlock(
     context: Context,
-    val description: ImageDescription
+    private val blockData: ImageBlockData
 ) : NoteBlock(context) {
 
     private var view = getImage()
@@ -69,9 +69,9 @@ class ImageBlock(
         frame.addView(image)
         show()
 
-        Observable.just(description.image.url)
+        Observable.just(blockData.image.url)
             .subscribeOn(Schedulers.io())
-            .map { Utilities.getDrawableByUrl(description.image.url) }
+            .map { Utilities.getDrawableByUrl(blockData.image.url) }
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally {
                 hidden()
@@ -89,7 +89,7 @@ class ImageBlock(
         paramsContent.setMargins(dpToPx(19).toInt(), dpToPx(5).toInt(), dpToPx(19).toInt(), dpToPx(5).toInt())
         content.layoutParams = paramsContent
 
-        content.text = description.content
+        content.text = blockData.content
 
         val borders = ShapeDrawable()
         borders.shape = RectShape()

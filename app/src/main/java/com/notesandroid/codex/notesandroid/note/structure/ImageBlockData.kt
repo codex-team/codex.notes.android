@@ -6,7 +6,7 @@ import com.google.gson.JsonElement
  * Created by Shiplayer on 27.11.18.
  */
 
-data class ImageDescription(
+data class ImageBlockData(
     val type: String,
     val image: ImageParams,
     val content: String,
@@ -17,7 +17,7 @@ data class ImageDescription(
     companion object {
         fun createFrom(
             originElement: JsonElement
-        ): ImageDescription {
+        ): ImageBlockData {
             var element = originElement.asJsonObject
             val type = element["type"].asString
             element = element["data"].asJsonObject
@@ -32,7 +32,7 @@ data class ImageDescription(
                     element["url"].asString
                 )
             }
-            return ImageDescription(
+            return ImageBlockData(
                 type,
                 imageParams,
                 element["caption"].asString,
