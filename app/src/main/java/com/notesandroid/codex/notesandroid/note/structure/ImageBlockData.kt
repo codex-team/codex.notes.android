@@ -23,7 +23,7 @@ data class ImageBlockData(
             element = element["data"].asJsonObject
             val imageParams = if (element.has("file")) {
                 ImageParams(
-                    element["url"].asString,
+                    element["file"].asJsonObject["url"].asString,
                     element["file"].asJsonObject["width"].asInt,
                     element["file"].asJsonObject["height"].asInt
                 )
