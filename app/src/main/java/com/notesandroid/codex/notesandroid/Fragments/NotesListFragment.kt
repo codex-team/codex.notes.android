@@ -38,16 +38,21 @@ class NotesListFragment : Fragment() {
         if (arguments != null) {
             val folder = arguments!!["folder"] as Folder
             view.root_notes.layoutManager = LinearLayoutManager(activity)
-            if (folder.notes != null)
-                view.root_notes.adapter = NotesAdapter(folder.notes!!) { note ->
+            if (folder.notes != null) {
+                folder.notes = folder.notes!!.filter {
+                    !it.title!!.isEmpty()
+                }.sortedByDescending{ it.dtModify!!.toInt() }.toMutableList()
+                if (folder.notes != null)
+                    view.root_notes.adapter = NotesAdapter(folder.notes!!) { note ->
 
-                    val bundle = Bundle()
-                    bundle.putSerializable("note", note as Serializable)
-                    val fragment = NoteFragment()
-                    fragment.arguments = bundle
+                        val bundle = Bundle()
+                        bundle.putSerializable("note", note as Serializable)
+                        val fragment = NoteFragment()
+                        fragment.arguments = bundle
 
-                    (context as MainActivity).navigationToFragment(fragment, R.id.main_activity_constraint_layout, true)
-                }
+                        (context as MainActivity).navigationToFragment(fragment, R.id.main_activity_constraint_layout, true)
+                    }
+            }
         }
 
         return view
