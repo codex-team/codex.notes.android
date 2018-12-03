@@ -313,8 +313,11 @@ class MainActivity : AppCompatActivity() {
         toggle!!.syncState()
 
         // work with auth button if current user is empty
-        if (user == User())
+        if (user == User()) {
             appointSignInAction()
+            nav_view_logout.visibility = View.GONE
+        } else
+            nav_view_logout.visibility = View.VISIBLE
 
         nav_view_logout.setOnClickListener {
             logout()
@@ -343,8 +346,8 @@ class MainActivity : AppCompatActivity() {
                 showNotesFragment(content.rootFolder!!, true)
         }
 
-        nav_view_add_folder.setOnClickListener {
-        }
+/*        nav_view_add_folder.setOnClickListener {
+        }*/
 
         // init start folder fragment. Use root
         if (content.rootFolder != null)
@@ -444,6 +447,7 @@ class MainActivity : AppCompatActivity() {
                     Log.i("MainActivityObserver", Thread.currentThread().id.toString() + " " + Thread.currentThread().name)
                     user = ControlUserData(db, this).initUserInformation(jwt)
                     runOnUiThread {
+                        nav_view_logout.visibility = View.VISIBLE
                         loadContent()
                     }
                 }, { error ->
