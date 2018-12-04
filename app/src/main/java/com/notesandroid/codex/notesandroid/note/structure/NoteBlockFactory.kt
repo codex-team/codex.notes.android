@@ -4,11 +4,7 @@ import android.content.Context
 import android.view.View
 import android.widget.TextView
 import com.google.gson.JsonObject
-import com.notesandroid.codex.notesandroid.note.structure.blocks.DelimiterBlock
-import com.notesandroid.codex.notesandroid.note.structure.blocks.HeaderBlock
-import com.notesandroid.codex.notesandroid.note.structure.blocks.ImageBlock
-import com.notesandroid.codex.notesandroid.note.structure.blocks.NoteBlock
-import com.notesandroid.codex.notesandroid.note.structure.blocks.ParagraphBlock
+import com.notesandroid.codex.notesandroid.note.structure.blocks.*
 
 /**
  * Note block types
@@ -17,6 +13,7 @@ const val PARAGRAPH_BLOCK = "paragraph"
 const val HEADER_BLOCK = "header"
 const val DELIMITER_BLOCK = "delimiter"
 const val IMAGE_BLOCK = "image"
+const val LIST_BLOCK = "list"
 
 object NoteBlockFactory {
     fun createBlock(
@@ -47,6 +44,12 @@ object NoteBlockFactory {
                     ImageBlock(
                         context,
                         ImageBlockData.createFrom(obj)
+                    )
+                }
+                LIST_BLOCK -> {
+                    ListBlock(
+                        context,
+                        obj["data"]
                     )
                 }
                 else -> {
