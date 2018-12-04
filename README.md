@@ -7,15 +7,15 @@ Already supporting next plugins:
 * Inline code
 * Paragraph block
 * Header block
-
-Not supporting next plugins:
 * link
 * delimiter
 * image
-* lists
-* embed
 * marker
+* lists
+
+Not supporting next plugins:
 * simple image
+* embed
 * code
 * quote 
 
