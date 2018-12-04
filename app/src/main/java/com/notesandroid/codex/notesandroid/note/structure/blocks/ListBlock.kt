@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid.note.structure
+package com.notesandroid.codex.notesandroid.note.structure.blocks
 
 import android.content.Context
 import android.graphics.Color
@@ -11,16 +11,25 @@ import android.widget.TextView
 import com.google.gson.JsonElement
 import com.notesandroid.codex.notesandroid.R
 import com.notesandroid.codex.notesandroid.Utilities.TextFormatter
-import com.notesandroid.codex.notesandroid.note.structure.blocks.NoteBlock
 import com.notesandroid.codex.notesandroid.spans.HeightSpan
 import com.notesandroid.codex.notesandroid.spans.OrderedListSpan
 
+
+/**
+ * Block that contain list of items
+ * @param context - Need for creating [TextView]
+ * @param data - json element that contain information about item of list
+ */
 class ListBlock(
     context: Context,
     val data:JsonElement
 ) : NoteBlock(context){
     override fun getView(): View = getListView()
 
+
+    /**
+     * Method for getting [TextView] like list
+     */
     private fun getListView(): View {
         val textView = TextView(context)
         textView.setTextColor(Color.BLACK)
