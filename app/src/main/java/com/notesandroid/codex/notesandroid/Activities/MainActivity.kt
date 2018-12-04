@@ -42,7 +42,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_view_menu.*
-import kotlinx.coroutines.experimental.Job
 import retrofit2.HttpException
 import java.io.Serializable
 import java.net.UnknownHostException
@@ -111,7 +110,7 @@ class MainActivity : AppCompatActivity() {
      * This coroutine exemplar need to cancel background loading process for certain user.
      * You must cancel it when user logout [logout].
      */
-    private lateinit var currentCoroutine: Job
+    /*private lateinit var currentCoroutine: Job*/
 
     override fun onCreate(
       savedInstanceState: Bundle?
