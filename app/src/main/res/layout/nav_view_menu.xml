@@ -9,177 +9,144 @@
     android:overScrollMode="always">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:measureWithLargestChild="false"
         android:orientation="vertical"
         android:theme="@style/NavigationViewMenuMainStyle">
 
+
         <FrameLayout
             android:id="@+id/header_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </FrameLayout>
+            android:layout_height="wrap_content"></FrameLayout>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout_editor_absoluteY="44dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/nav_view_my_notes"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
-                android:layout_marginTop="8dp"
+                android:layout_height="50dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center_vertical"
+                android:paddingLeft="@dimen/main_padding_nav_view_header_left"
                 android:text="@string/my_notes"
                 android:theme="@style/NavigationViewMenuButtonStyle"
                 app:layout_constraintEnd_toStartOf="@+id/notes_counter"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/delim"
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:alpha="0.11"
-                android:background="#DEE6FC"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nav_view_my_notes" />
-
             <TextView
                 android:id="@+id/notes_counter"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:alpha="0.35"
                 android:text="0"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:theme="@style/NavigationViewMenuTextCounterStyle"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/nav_view_my_notes"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/nav_view_my_notes" />
-        </android.support.constraint.ConstraintLayout>
 
+            <View
+                android:id="@+id/delim"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#a9acb4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nav_view_my_notes" />
+
+        </android.support.constraint.ConstraintLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/folders_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/delim"
+            android:layout_alignEnd="@+id/nav_view_my_notes"
+            android:layout_alignRight="@+id/nav_view_my_notes"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
 
-            android:layout_marginTop="8dp"
             android:fadingEdgeLength="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/delim"
-            app:layout_constraintVertical_chainStyle="spread_inside">
+            android:nestedScrollingEnabled="false">
 
         </android.support.v7.widget.RecyclerView>
 
-
         <LinearLayout
-            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/folders_rv">
+            android:layout_height="match_parent"
+            android:layout_below="@+id/folders_rv"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
+            android:orientation="vertical">
 
             <View
-                android:id="@+id/add_folder_delim"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:alpha="0.11"
-                android:background="#DEE6FC"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/nav_view_logout"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_height="0.5dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/nav_view_my_notes"
+                android:background="#a9acb4" />
 
             <Button
-                android:id="@+id/nav_view_add_folder"
+                android:id="@+id/nav_view_logout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:layout_toLeftOf="@+id/notes_counter"
+                android:layout_toStartOf="@+id/notes_counter"
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/main_padding_nav_view_header_left"
-                android:text="Add folder"
-                android:theme="@style/NavigationViewMenuBottomButtonStyle"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/folders_rv" />
+                android:text="@string/logout"
+                android:theme="@style/NavigationViewMenuBottomButtonStyle" />
 
             <View
-                android:id="@+id/settings_delim"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:alpha="0.11"
-                android:background="#DEE6FC"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/nav_view_logout"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/nav_view_my_notes"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:background="#a9acb4"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/nav_view_settings"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:layout_toStartOf="@+id/notes_counter"
+                android:layout_toLeftOf="@+id/notes_counter"
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/main_padding_nav_view_header_left"
                 android:text="@string/settings"
                 android:theme="@style/NavigationViewMenuBottomButtonStyle"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/folders_rv" />
+                android:visibility="gone" />
 
             <View
-                android:id="@+id/logout_delim"
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:alpha="0.11"
-                android:background="#DEE6FC"
-                app:layout_constraintBottom_toTopOf="@+id/nav_view_logout"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/nav_view_my_notes"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:background="#a9acb4"
+                android:visibility="gone" />
 
             <Button
-                android:id="@+id/nav_view_logout"
+                android:id="@+id/nav_view_help"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
+                android:layout_height="50dp"
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/main_padding_nav_view_header_left"
-                android:text="@string/logout"
+                android:text="@string/help"
                 android:theme="@style/NavigationViewMenuBottomButtonStyle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/folders_rv" />
+                android:visibility="gone" />
         </LinearLayout>
 
 
