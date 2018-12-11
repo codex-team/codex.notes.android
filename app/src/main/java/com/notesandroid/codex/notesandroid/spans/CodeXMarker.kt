@@ -32,7 +32,8 @@ class CodeXMarker(
         paint: Paint?
     ) {
 
-        paint!!.typeface = Typeface.MONOSPACE
+        val style = paint!!.style
+        paint.typeface = Typeface.MONOSPACE
         rectF.set(
             x,
             y + paint.ascent() - PADDING / 4,
@@ -45,5 +46,6 @@ class CodeXMarker(
         val xPos = (x)
         val yPos = y.toFloat() // (canvas.height / 2 + (paint.descent() + paint.ascent()) / 2)
         canvas.drawText(text, start, end, xPos, yPos, paint)
+        paint.style = style
     }
 }
