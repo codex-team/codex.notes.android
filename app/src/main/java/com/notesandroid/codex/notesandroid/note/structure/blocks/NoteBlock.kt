@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.os.Build
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 import android.util.DisplayMetrics
 import android.view.View
 

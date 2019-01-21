@@ -15,7 +15,7 @@
     android:paddingTop="@dimen/main_padding_nav_view_header"
     android:theme="@style/NavigationViewHeaderMainStyle">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/relativeLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,6 +68,6 @@
             app:layout_constraintTop_toTopOf="@+id/circleImageView" />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

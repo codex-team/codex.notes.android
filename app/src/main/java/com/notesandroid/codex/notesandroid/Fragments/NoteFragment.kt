@@ -6,8 +6,6 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.ActionBar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -19,6 +17,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.ActionBar
+import androidx.fragment.app.Fragment
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -48,10 +48,10 @@ class NoteFragment : Fragment() {
     var note: Note? = null
 
     override fun onCreateOptionsMenu(
-      menu: Menu?,
-      inflater: MenuInflater?
+      menu: Menu,
+      inflater: MenuInflater
     ) {
-        menu?.clear()
+        menu.clear()
         val actionBar = (activity as MainActivity).supportActionBar
         if (actionBar != null)
             initActionBar(actionBar)
@@ -114,9 +114,9 @@ class NoteFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(
-      item: MenuItem?
+      item: MenuItem
     ): Boolean {
-        Log.i("NoteFragment", item!!.title.toString() + " " + item.itemId)
+        Log.i("NoteFragment", item.title.toString() + " " + item.itemId)
         return super.onOptionsItemSelected(item)
     }
 
