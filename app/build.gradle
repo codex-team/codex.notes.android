@@ -6,6 +6,10 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'org.jetbrains.dokka-android'
 
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'com.google.gms.google-services'
+
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -29,6 +33,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.debug_key
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -43,7 +48,7 @@ android {
     }
     sourceSets {
         main.kotlin.srcDirs += 'src/main/java'
-        test.kotlin.srcDirs += 'src/test/java '
+        test.kotlin.srcDirs += 'src/test/java'
     }
     productFlavors {
     }
@@ -53,34 +58,53 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation 'com.android.support:design:27.1.0'
-    implementation 'com.android.support:cardview-v7:27.1.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-    implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1'
+    // Support library
+    implementation "com.android.support:appcompat-v7:$support_version"
+    implementation "com.android.support:design:$support_version"
+    implementation "com.android.support:cardview-v7:$support_version"
+    implementation "com.android.support:recyclerview-v7:$support_version"
+    implementation "com.android.support.constraint:constraint-layout:1.1.3"
+
+    // Net library
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    implementation "com.google.code.gson:gson:$gson_version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_version"
+
+    // RxJava
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+
+    // Firebase
+    implementation "com.google.firebase:firebase-core:16.0.0"
+    implementation "com.google.firebase:firebase-auth:16.0.1"
+    implementation "com.google.android.gms:play-services-auth:15.0.1"
+
+    // Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
+
+    // HAWK
+    implementation "com.github.codex-team:hawk.kotlin:v1.0.4"
+
+    //Dagger 2
+    implementation "com.google.dagger:dagger:$dagger_version"
+    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version" // if you use the support libraries
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+
+    // Other
     implementation "org.jetbrains.anko:anko-sqlite:$anko_version"
-    implementation 'com.android.support:recyclerview-v7:27.1.0'
-    implementation 'com.google.firebase:firebase-core:16.0.0'
-    implementation 'com.google.firebase:firebase-auth:16.0.1'
-    implementation 'com.google.android.gms:play-services-auth:15.0.1'
-    implementation 'com.auth0.android:jwtdecode:1.1.1'
-    implementation 'com.neovisionaries:nv-websocket-client:2.3'
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
-    implementation 'com.github.codex-team:hawk.kotlin:v1.0.4'
-    implementation 'org.jsoup:jsoup:1.11.3'
-    //implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation "com.auth0.android:jwtdecode:1.1.1"
+    implementation "com.neovisionaries:nv-websocket-client:2.3"
+    implementation "de.hdodenhof:circleimageview:2.2.0"
+    implementation "org.jsoup:jsoup:1.11.3"
+    //implementation "com.squareup.picasso:picasso:2.71828"
+
+    // For test
+    testImplementation "junit:junit:4.12"
+    androidTestImplementation "com.android.support.test:runner:1.0.1"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.1"
 }
-
-
-apply plugin: 'com.google.gms.google-services'
