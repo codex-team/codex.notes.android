@@ -6,16 +6,16 @@ import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.notesandroid.codex.notesandroid.ANDROID_CLIENT_ID
@@ -431,7 +431,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(
       requestCode: Int,
       resultCode: Int,
-      data: Intent
+      data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -466,9 +466,9 @@ class MainActivity : AppCompatActivity() {
      */
 
     public fun navigationToFragment(
-      fragment: Fragment,
-      resource: Int,
-      addToBackStack: Boolean = false
+        fragment: Fragment,
+        resource: Int,
+        addToBackStack: Boolean = false
     ) {
         val transaction = supportFragmentManager.beginTransaction()
             .replace(resource, fragment)
