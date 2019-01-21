@@ -1,10 +1,10 @@
-package com.notesandroid.codex.notesandroid.Database
+package com.notesandroid.codex.notesandroid.database
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import com.notesandroid.codex.notesandroid.Database.Tables.Folders
-import com.notesandroid.codex.notesandroid.Database.Tables.Notes
-import com.notesandroid.codex.notesandroid.Database.Tables.Persons
+import com.notesandroid.codex.notesandroid.database.tables.Folders
+import com.notesandroid.codex.notesandroid.database.tables.Notes
+import com.notesandroid.codex.notesandroid.database.tables.Persons
 import org.jetbrains.anko.db.AUTOINCREMENT
 import org.jetbrains.anko.db.INTEGER
 import org.jetbrains.anko.db.ManagedSQLiteOpenHelper

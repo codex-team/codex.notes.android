@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid.Database.Tables
+package com.notesandroid.codex.notesandroid.database.tables
 
 /**
  * Created by AksCorp on 01.02.2018.

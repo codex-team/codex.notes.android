@@ -13,7 +13,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.notesandroid.codex.notesandroid.R
-import com.notesandroid.codex.notesandroid.Utilities.Utilities
+import com.notesandroid.codex.notesandroid.utilities.Utilities
 import com.notesandroid.codex.notesandroid.note.structure.ImageBlockData
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

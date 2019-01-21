@@ -1,6 +1,6 @@
 package com.notesandroid.codex.notesandroid.dagger.modules
 
-import com.notesandroid.codex.notesandroid.Essences.User
+import com.notesandroid.codex.notesandroid.data.User
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid.Fragments
+package com.notesandroid.codex.notesandroid.ui.drawer
 
 import android.os.Bundle
 import android.util.Log

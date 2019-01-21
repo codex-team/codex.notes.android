@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid.SharedPreferenceDatabase
+package com.notesandroid.codex.notesandroid.database.share
 
 /**
  * Created by AksCorp on 04.02.2018.

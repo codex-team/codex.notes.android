@@ -4,8 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
-import com.notesandroid.codex.notesandroid.Essences.Content
-import com.notesandroid.codex.notesandroid.NotesAPI.Queries
+import com.notesandroid.codex.notesandroid.data.Content
 import io.reactivex.Notification
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers

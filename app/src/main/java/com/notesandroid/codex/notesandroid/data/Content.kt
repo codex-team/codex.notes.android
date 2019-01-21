@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid.Essences
+package com.notesandroid.codex.notesandroid.data
 
 /**
  * Created by AksCorp on 31.01.2018.

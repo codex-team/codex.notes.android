@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid.NotesAPI
+package com.notesandroid.codex.notesandroid.retrofit
 
 import okhttp3.Callback
 import okhttp3.MediaType

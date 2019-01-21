@@ -1,15 +1,15 @@
-package com.notesandroid.codex.notesandroid.Database
+package com.notesandroid.codex.notesandroid.database
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteException
-import com.notesandroid.codex.notesandroid.Database.Tables.Folders
-import com.notesandroid.codex.notesandroid.Database.Tables.Notes
-import com.notesandroid.codex.notesandroid.Database.Tables.Persons
-import com.notesandroid.codex.notesandroid.Essences.Folder
-import com.notesandroid.codex.notesandroid.Essences.Note
-import com.notesandroid.codex.notesandroid.Essences.Person
+import com.notesandroid.codex.notesandroid.database.tables.Folders
+import com.notesandroid.codex.notesandroid.database.tables.Notes
+import com.notesandroid.codex.notesandroid.database.tables.Persons
+import com.notesandroid.codex.notesandroid.data.Folder
+import com.notesandroid.codex.notesandroid.data.Note
+import com.notesandroid.codex.notesandroid.data.Person
 import org.jetbrains.anko.db.insertOrThrow
 
 /**

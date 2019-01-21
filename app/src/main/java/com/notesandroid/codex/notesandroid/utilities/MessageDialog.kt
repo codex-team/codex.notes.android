@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid.Utilities
+package com.notesandroid.codex.notesandroid.utilities
 
 import android.content.Context
 import android.content.DialogInterface
