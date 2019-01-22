@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid.Fragments
+package com.notesandroid.codex.notesandroid.ui.drawer
 
 import android.os.Bundle
 import android.util.Log
@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.notesandroid.codex.notesandroid.Activities.MainActivity
-import com.notesandroid.codex.notesandroid.Essences.Folder
+import com.notesandroid.codex.notesandroid.ui.MainActivity
+import com.notesandroid.codex.notesandroid.data.Folder
+import com.notesandroid.codex.notesandroid.ui.NoteFragment
 import com.notesandroid.codex.notesandroid.R
-import com.notesandroid.codex.notesandroid.RVAdapters.NotesAdapter
+import com.notesandroid.codex.notesandroid.adapters.NotesAdapter
 import kotlinx.android.synthetic.main.root_fragment.view.*
 import java.io.Serializable
 

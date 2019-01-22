@@ -2,11 +2,11 @@ package com.notesandroid.codex.notesandroid.interactor
 
 import android.content.Context
 import android.util.Log
-import com.notesandroid.codex.notesandroid.Database.LocalDatabaseAPI
-import com.notesandroid.codex.notesandroid.Essences.Content
-import com.notesandroid.codex.notesandroid.Essences.Folder
-import com.notesandroid.codex.notesandroid.Essences.Note
-import com.notesandroid.codex.notesandroid.Essences.Person
+import com.notesandroid.codex.notesandroid.database.LocalDatabaseAPI
+import com.notesandroid.codex.notesandroid.data.Content
+import com.notesandroid.codex.notesandroid.data.Folder
+import com.notesandroid.codex.notesandroid.data.Note
+import com.notesandroid.codex.notesandroid.data.Person
 import com.notesandroid.codex.notesandroid.retrofit.CodeXNotesApi
 import io.reactivex.Notification
 import io.reactivex.Observable

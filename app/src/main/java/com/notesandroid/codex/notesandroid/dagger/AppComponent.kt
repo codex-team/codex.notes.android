@@ -1,6 +1,6 @@
 package com.notesandroid.codex.notesandroid.dagger
 
-import com.notesandroid.codex.notesandroid.Activities.MainActivity
+import com.notesandroid.codex.notesandroid.ui.MainActivity
 import com.notesandroid.codex.notesandroid.dagger.modules.ApplicationModule
 import com.notesandroid.codex.notesandroid.dagger.modules.UserModule
 import dagger.Component

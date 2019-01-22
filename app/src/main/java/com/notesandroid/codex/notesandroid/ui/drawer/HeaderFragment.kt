@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid.Fragments
+package com.notesandroid.codex.notesandroid.ui.drawer
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.notesandroid.codex.notesandroid.Activities.MainActivity
-import com.notesandroid.codex.notesandroid.Essences.User
+import com.notesandroid.codex.notesandroid.ui.MainActivity
+import com.notesandroid.codex.notesandroid.data.User
 import com.notesandroid.codex.notesandroid.IMAGES_DIRECTORY
 import com.notesandroid.codex.notesandroid.R
-import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
+import com.notesandroid.codex.notesandroid.database.share.UserData
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 /**

@@ -1,10 +1,10 @@
-package com.notesandroid.codex.notesandroid.RVAdapters
+package com.notesandroid.codex.notesandroid.adapters
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.notesandroid.codex.notesandroid.Essences.Folder
+import com.notesandroid.codex.notesandroid.data.Folder
 import com.notesandroid.codex.notesandroid.R
 import kotlinx.android.synthetic.main.folder.view.*
 

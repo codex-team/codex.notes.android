@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.JsonElement
 import com.notesandroid.codex.notesandroid.R
-import com.notesandroid.codex.notesandroid.Utilities.TextFormatter
+import com.notesandroid.codex.notesandroid.utilities.TextFormatter
 import com.notesandroid.codex.notesandroid.spans.HeightSpan
 import com.notesandroid.codex.notesandroid.spans.ListSpan
 

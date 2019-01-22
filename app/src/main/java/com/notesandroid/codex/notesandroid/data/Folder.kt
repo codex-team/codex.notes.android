@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid.Essences
+package com.notesandroid.codex.notesandroid.data
 
 import java.io.Serializable
 

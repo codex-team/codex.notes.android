@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid.Fragments
+package com.notesandroid.codex.notesandroid.ui
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -22,11 +22,10 @@ import androidx.fragment.app.Fragment
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.notesandroid.codex.notesandroid.Activities.MainActivity
-import com.notesandroid.codex.notesandroid.Essences.Note
 import com.notesandroid.codex.notesandroid.R
-import com.notesandroid.codex.notesandroid.Utilities.DateFormatter
-import com.notesandroid.codex.notesandroid.Utilities.Utilities
+import com.notesandroid.codex.notesandroid.utilities.DateFormatter
+import com.notesandroid.codex.notesandroid.utilities.Utilities
+import com.notesandroid.codex.notesandroid.data.Note
 import com.notesandroid.codex.notesandroid.note.structure.NoteBlockFactory
 import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.Single

@@ -2,13 +2,13 @@ package com.notesandroid.codex.notesandroid
 
 import android.content.Context
 import com.auth0.android.jwt.JWT
-import com.notesandroid.codex.notesandroid.Database.LocalDatabaseAPI
-import com.notesandroid.codex.notesandroid.Essences.Content
-import com.notesandroid.codex.notesandroid.Essences.Person
-import com.notesandroid.codex.notesandroid.Essences.User
-import com.notesandroid.codex.notesandroid.SharedPreferenceDatabase.UserData
-import com.notesandroid.codex.notesandroid.Utilities.Utilities.Companion.saveImageByURL
+import com.notesandroid.codex.notesandroid.data.Content
+import com.notesandroid.codex.notesandroid.data.Person
+import com.notesandroid.codex.notesandroid.data.User
+import com.notesandroid.codex.notesandroid.database.LocalDatabaseAPI
+import com.notesandroid.codex.notesandroid.database.share.UserData
 import com.notesandroid.codex.notesandroid.retrofit.ServerAuthorizationResponse
+import com.notesandroid.codex.notesandroid.utilities.Utilities.Companion.saveImageByURL
 import java.io.File
 
 /**
