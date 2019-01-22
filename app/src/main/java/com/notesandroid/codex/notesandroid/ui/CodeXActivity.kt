@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 /**
  * Activity created on MVP architecture with loader that can provide presenter even if the configuration changes
  */
-class CodeXActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<NoteDatabasePresenter>{
+class CodeXActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<NoteDatabasePresenter> {
     /**
      * Скорее всего, буду использовать один презентер, а все остальные пойдут как провайдеры, для пердоставления данных
      */
@@ -49,7 +49,7 @@ class CodeXActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<NoteDat
      * After loading we can get instance of presenter (if configuration was changed, we can still old instance)
      */
     override fun onLoadFinished(loader: Loader<NoteDatabasePresenter>, data: NoteDatabasePresenter?) {
-        if(data != null) {
+        if (data != null) {
             presenter = data
         }
     }
@@ -68,7 +68,7 @@ class CodeXActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<NoteDat
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeButtonEnabled(true)
 
-        toggle = ActionBarDrawerToggle(this, main_activity_drawer_layout, toolbar,R.string.drawer_open, R.string.drawer_close)
+        toggle = ActionBarDrawerToggle(this, main_activity_drawer_layout, toolbar, R.string.drawer_open, R.string.drawer_close)
         toggle.isDrawerIndicatorEnabled = true
         main_activity_drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
@@ -86,11 +86,12 @@ class CodeXActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<NoteDat
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if(item!!.itemId == R.id.refresh_toolbar_icon){
+        if (item!!.itemId == R.id.refresh_toolbar_icon) {
             mainPresenter.refresh()
         }
-        if(toggle.onOptionsItemSelected(item))
+        if (toggle.onOptionsItemSelected(item)) {
             return true
+        }
         return super.onOptionsItemSelected(item)
     }
 }

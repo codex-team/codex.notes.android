@@ -13,7 +13,7 @@ import javax.inject.Singleton
  */
 @Component(modules = [ApplicationModule::class, UserModule::class])
 @Singleton
-interface AppComponent{
+interface AppComponent {
     fun inject(mainActivity: MainActivity)
     fun inject(noteDatabasePresenter: NoteDatabasePresenter)
     fun inject(localDatabaseAPI: LocalDatabaseAPI)

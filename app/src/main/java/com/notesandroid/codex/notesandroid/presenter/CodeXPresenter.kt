@@ -1,6 +1,6 @@
 package com.notesandroid.codex.notesandroid.presenter
 
-class CodeXPresenter{
+class CodeXPresenter {
     /**
      * if user press refresh button, we loading data from REST API, save it on database and update ui
      */

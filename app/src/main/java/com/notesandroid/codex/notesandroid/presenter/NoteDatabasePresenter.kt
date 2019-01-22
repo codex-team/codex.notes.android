@@ -12,7 +12,7 @@ class NoteDatabasePresenter {
     @Inject
     lateinit var noteDatabase: CodexNotesDatabase
 
-    init{
+    init {
         ApplicationState.appComponent.inject(this)
     }
 

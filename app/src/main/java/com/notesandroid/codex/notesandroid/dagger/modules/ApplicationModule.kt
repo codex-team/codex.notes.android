@@ -10,7 +10,7 @@ import javax.inject.Singleton
  * Class with implemented a function that return instance of class that should be injected
  */
 @Module
-class ApplicationModule(private val applicationContext: Context){
+class ApplicationModule(private val applicationContext: Context) {
 
 
     /**

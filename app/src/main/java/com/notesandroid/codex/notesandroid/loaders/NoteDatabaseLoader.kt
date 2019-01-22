@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.loader.content.Loader
 import com.notesandroid.codex.notesandroid.presenter.NoteDatabasePresenter
 
-class NoteDatabaseLoader(context: Context) : Loader<NoteDatabasePresenter>(context){
+class NoteDatabaseLoader(context: Context) : Loader<NoteDatabasePresenter>(context) {
     var presenter: NoteDatabasePresenter? = null
     override fun onStartLoading() {
         super.onStartLoading()
-        if(presenter == null){
+        if (presenter == null) {
             forceLoad()
-        } else{
+        } else {
             deliverResult(presenter)
         }
     }
