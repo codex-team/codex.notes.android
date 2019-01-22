@@ -33,9 +33,12 @@ class InlineStyleSpan(
         end: Int,
         fm: Paint.FontMetricsInt?
     ): Int {
+        val style = paint?.style
         Log.i("InlineStyleSpan", "Is paint monospace? " + paint?.typeface?.equals(Typeface.MONOSPACE))
         paint!!.typeface = Typeface.MONOSPACE
-        return Math.round(paint.measureText(text, start, end) + PADDING * 2)
+        val measure = Math.round(paint.measureText(text, start, end) + PADDING * 2)
+        paint.style = style
+        return measure
     }
 
     /**
@@ -52,8 +55,8 @@ class InlineStyleSpan(
         bottom: Int,
         paint: Paint?
     ) {
-
-        paint!!.typeface = Typeface.MONOSPACE
+        val style = paint!!.style
+        paint.typeface = Typeface.MONOSPACE
         rectF.set(
             x + PADDING / 4,
             y + paint.ascent() - PADDING / 2,
@@ -68,5 +71,7 @@ class InlineStyleSpan(
         val xPos = (x + PADDING / 2)
         val yPos = y.toFloat() // (canvas.height / 2 + (paint.descent() + paint.ascent()) / 2)
         canvas.drawText(text, start, end, xPos, yPos, paint)
+
+        paint.style = style
     }
 }

@@ -42,10 +42,20 @@ data class ImageBlockData(
             )
         }
     }
+
+    override fun toString(): String {
+        return "ImageBlockData(type='$type', image=$image, content='$content', withBorder=$withBorder, stretched=$stretched, withBackground=$withBackground)"
+    }
+
+
 }
 
 data class ImageParams(
     val url: String,
     val width: Int? = null,
     val height: Int? = null
-)
+) {
+    override fun toString(): String {
+        return "ImageParams(url='$url', width=$width, height=$height)"
+    }
+}

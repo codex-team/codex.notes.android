@@ -2,10 +2,12 @@ package com.notesandroid.codex.notesandroid.note.structure.blocks
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -52,6 +54,7 @@ class ImageBlock(
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         layout.orientation = LinearLayout.VERTICAL
         layout.layoutParams = params
+        layout.setBackgroundColor(Color.YELLOW)
 
         val frame = FrameLayout(context)
         frame.layoutParams =
@@ -59,7 +62,9 @@ class ImageBlock(
 
         var paramsContent =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        paramsContent.setMargins(dpToPx(19).toInt(), dpToPx(5).toInt(), dpToPx(19).toInt(), dpToPx(5).toInt())
+        Log.i("ImageBlock", blockData.toString())
+        val (left, right) = if(blockData.stretched) Pair(0,0) else Pair(19,19)
+        paramsContent.setMargins(dpToPx(left).toInt(), dpToPx(5).toInt(), dpToPx(right).toInt(), dpToPx(5).toInt())
 
         progressLoader = ProgressBar(context)
         image = ImageView(context)
@@ -82,33 +87,35 @@ class ImageBlock(
 
         layout.addView(frame)
 
-        val content = TextView(context)
+        if(blockData.content.isNotEmpty()) {
+            val content = TextView(context)
 
-        paramsContent =
-            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        paramsContent.setMargins(dpToPx(19).toInt(), dpToPx(5).toInt(), dpToPx(19).toInt(), dpToPx(5).toInt())
-        content.layoutParams = paramsContent
+            paramsContent =
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            paramsContent.setMargins(dpToPx(19).toInt(), dpToPx(5).toInt(), dpToPx(19).toInt(), dpToPx(5).toInt())
+            content.layoutParams = paramsContent
 
-        content.text = blockData.content
+            content.text = blockData.content
 
-        val borders = ShapeDrawable()
-        borders.shape = RectShape()
-        borders.paint.color = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            context.getColor(R.color.imageContentBorder)
-        } else {
-            context.resources.getColor(R.color.imageContentBorder)
+            val borders = ShapeDrawable()
+            borders.shape = RectShape()
+            borders.paint.color = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                context.getColor(R.color.imageContentBorder)
+            } else {
+                context.resources.getColor(R.color.imageContentBorder)
+            }
+            borders.paint.strokeWidth = 4f
+
+            borders.paint.style = Paint.Style.STROKE
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                content.background = borders
+            } else {
+                content.setBackgroundDrawable(borders)
+            }
+
+            layout.addView(content)
         }
-        borders.paint.strokeWidth = 4f
-
-        borders.paint.style = Paint.Style.STROKE
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            content.background = borders
-        } else {
-            content.setBackgroundDrawable(borders)
-        }
-
-        layout.addView(content)
 
         return layout
     }
