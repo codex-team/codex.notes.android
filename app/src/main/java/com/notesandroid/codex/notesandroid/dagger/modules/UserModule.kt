@@ -9,7 +9,7 @@ import javax.inject.Singleton
  * Class for inject that need for User like as User
  */
 @Module
-class UserModule{
+class UserModule {
 
     /**
      * function that provide us only one instance of User that contain jwt, information about user and etc.

@@ -4,6 +4,9 @@
     <string name="try_again" translatable="false">Please try again</string>
     <string name="sync_error" translatable="false">Synchronization content error</string>
     <string name="sync_successful">Notes are synchronized</string>
+    <string name="drawer_open" translatable="false">Open</string>
+    <string name="drawer_close" translatable="false">Close</string>
+
 
     <string name="offline_mod" translatable="false">Waiting for the network...</string>
     <string name="unexpected_error">Unexpected error</string>

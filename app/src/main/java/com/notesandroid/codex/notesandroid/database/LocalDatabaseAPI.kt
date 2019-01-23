@@ -4,13 +4,15 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteException
-import com.notesandroid.codex.notesandroid.database.tables.Folders
-import com.notesandroid.codex.notesandroid.database.tables.Notes
-import com.notesandroid.codex.notesandroid.database.tables.Persons
+import com.notesandroid.codex.notesandroid.ApplicationState
 import com.notesandroid.codex.notesandroid.data.Folder
 import com.notesandroid.codex.notesandroid.data.Note
 import com.notesandroid.codex.notesandroid.data.Person
+import com.notesandroid.codex.notesandroid.database.tables.Folders
+import com.notesandroid.codex.notesandroid.database.tables.Notes
+import com.notesandroid.codex.notesandroid.database.tables.Persons
 import org.jetbrains.anko.db.insertOrThrow
+import javax.inject.Inject
 
 /**
  * Created by AksCorp on 01.02.2018.
@@ -22,6 +24,11 @@ import org.jetbrains.anko.db.insertOrThrow
 public class LocalDatabaseAPI(
   private val context: Context
 ) {
+    @Inject
+    lateinit var database: CodexNotesDatabase
+    init{
+        ApplicationState.appComponent.inject(this)
+    }
 
     /**
      * Insert essence if it's not exist in database
@@ -51,7 +58,7 @@ public class LocalDatabaseAPI(
     fun getPersonFromDatabase(
       personId: String
     ): Person {
-        return CodexNotesDatabase.getInstance(context).use {
+        return database.use {
             val cursor: Cursor
             try {
                 cursor = query(Persons.NAME, null, "${Persons.FIELDS.PERSON_ID} = \"$personId\"", null, null, null, null)
@@ -90,7 +97,7 @@ public class LocalDatabaseAPI(
     fun getNotesFromDatabase(
       folderId: String
     ): MutableList<Note> {
-        return CodexNotesDatabase.getInstance(context).use {
+        return database.use {
             var cursor: Cursor
             try {
 
@@ -135,7 +142,7 @@ public class LocalDatabaseAPI(
      * @return list folders essence
      */
     fun getFoldersFromDatabase(): MutableList<Folder> {
-        return CodexNotesDatabase.getInstance(context).use {
+        return database.use {
             var cursor: Cursor
             try {
 
@@ -178,7 +185,7 @@ public class LocalDatabaseAPI(
     fun insertNoteInDatabase(
       note: Note
     ) {
-        CodexNotesDatabase.getInstance(context).use {
+        database.use {
             if (note.author != null && !isPersonExistInDatabase(note.author!!))
                 insertPersonInDatabase(note.author!!)
             insertOrThrow(Notes.NAME,
@@ -201,7 +208,7 @@ public class LocalDatabaseAPI(
     fun updateNoteInDatabase(
       note: Note
     ) {
-        CodexNotesDatabase.getInstance(context).use {
+        database.use {
             val noteValues = ContentValues()
             noteValues.put(Notes.FIELDS.FOLDER_ID, note.folderId)
             noteValues.put(Notes.FIELDS.TITLE, note.title)
@@ -221,7 +228,7 @@ public class LocalDatabaseAPI(
     fun isNoteExistInDatabase(
       note: Note
     ): Boolean {
-        return CodexNotesDatabase.getInstance(context).use {
+        return database.use {
             val cursor: Cursor
             try {
                 cursor = query(Notes.NAME, arrayOf(Notes.FIELDS.ID), "${Notes.FIELDS.ID} = \"${note.id}\"", null, null, null, null)
@@ -242,7 +249,7 @@ public class LocalDatabaseAPI(
     fun insertPersonInDatabase(
       person: Person
     ) {
-        CodexNotesDatabase.getInstance(context).use {
+        database.use {
             insertOrThrow(Persons.NAME,
                     Persons.FIELDS.PERSON_ID to person.id,
                     Persons.FIELDS.NAME to person.name,
@@ -259,7 +266,7 @@ public class LocalDatabaseAPI(
     fun updatePersonInDatabase(
       person: Person
     ) {
-        CodexNotesDatabase.getInstance(context).use {
+        database.use {
             val personValues = ContentValues()
             personValues.put(Persons.FIELDS.PERSON_ID, person.id)
             personValues.put(Persons.FIELDS.NAME, person.name)
@@ -275,7 +282,7 @@ public class LocalDatabaseAPI(
     fun isPersonExistInDatabase(
       person: Person
     ): Boolean {
-        return CodexNotesDatabase.getInstance(context).use {
+        return database.use {
             val cursor: Cursor
             try {
 
@@ -297,7 +304,7 @@ public class LocalDatabaseAPI(
     fun insertFolderInDatabase(
       folder: Folder
     ) {
-        CodexNotesDatabase.getInstance(context).use {
+        database.use {
             insertOrThrow(Folders.NAME,
                     Folders.FIELDS.ID to folder.id,
                     Folders.FIELDS.TITLE to folder.title,
@@ -315,7 +322,7 @@ public class LocalDatabaseAPI(
     fun updateFolderInDatabase(
       folder: Folder
     ) {
-        CodexNotesDatabase.getInstance(context).use {
+        database.use {
             val folderValue = ContentValues()
             folderValue.put(Folders.FIELDS.ID, folder.id)
             folderValue.put(Folders.FIELDS.TITLE, folder.title)
@@ -331,7 +338,7 @@ public class LocalDatabaseAPI(
     fun isFolderExistInDatabase(
       folder: Folder
     ): Boolean {
-        return CodexNotesDatabase.getInstance(context).use {
+        return database.use {
             val cursor: Cursor
             try {
                 cursor = query(Folders.NAME, arrayOf(Folders.FIELDS.ID), "${Folders.FIELDS.ID} = \"${folder.id}\"", null, null, null, null)
