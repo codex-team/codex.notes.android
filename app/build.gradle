@@ -1,14 +1,10 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'org.jetbrains.dokka-android'
-
 apply plugin: 'kotlin-kapt'
-
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.apollographql.android'
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
@@ -25,7 +21,7 @@ android {
     }
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.notesandroid.codex.notesandroid"
+        applicationId "codex.notesandroid"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
@@ -72,6 +68,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_version"
+    implementation "com.apollographql.apollo:apollo-runtime:$apollo_version"
 
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"

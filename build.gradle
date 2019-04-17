@@ -12,6 +12,7 @@ buildscript {
         rxjava_version = '2.2.2'
         rxandroid_version ='2.1.0'
         dagger_version = '2.16'
+        apollo_version = '1.0.0-alpha5'
     }
 
         repositories {
@@ -27,6 +28,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:${dokka_version}"
         classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:6.0.0"
+        classpath "com.apollographql.apollo:apollo-gradle-plugin:$apollo_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

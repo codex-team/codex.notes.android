@@ -8,6 +8,59 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1077384071053:android:97fd458b0aa4b324",
+        "android_client_info": {
+          "package_name": "codex.notesandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1077384071053-r41s679aklvuu4ko62o7f0grtkgcl4h5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "codex.notesandroid",
+            "certificate_hash": "405685d00f83dc07a5a541941a072ece14d7c398"
+          }
+        },
+        {
+          "client_id": "1077384071053-qkd2er95166qlk7ueglvtvepv7h6rmbc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "codex.notesandroid",
+            "certificate_hash": "19f876fae186939c22d60770dc64ddc1b0b3acd0"
+          }
+        },
+        {
+          "client_id": "1077384071053-g5bf8ivl0aej3budunej17k4t7c63h50.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "codex.notesandroid",
+            "certificate_hash": "6d7f0a7a2914d4504f08b23d4b0583892220e90a"
+          }
+        },
+        {
+          "client_id": "1077384071053-lsb4rjto4ss19lmev13d1spgeasehu7b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3aPlQz1cw-ytodKSXO_kD7AYuO4PfHRQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1077384071053-lsb4rjto4ss19lmev13d1spgeasehu7b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1077384071053:android:bdce313dc5c176ff",
         "android_client_info": {
           "package_name": "com.notesandroid.codex.notesandroid"
@@ -15,28 +68,12 @@
       },
       "oauth_client": [
         {
-          "client_id": "1077384071053-9lipptu0ub1en1mneekhs9qpe4u9iu19.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "1077384071053-apioq14bfleviggq3hofme0s5mar1usi.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "1077384071053-ss8devi8ibofc6jtodtb0djohiffb3ld.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "1077384071053-hgm6ed3avgpgblla26vj9rhisctjmfo3.apps.googleusercontent.com",
+          "client_id": "1077384071053-5k5ob784fsn9hotil9qf2f9f1dv8k2ac.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.notesandroid.codex.notesandroid",
-            "certificate_hash": "6d7f0a7a2914d4504f08b23d4b0583892220e90a"
+            "certificate_hash": "405685d00f83dc07a5a541941a072ece14d7c398"
           }
-        },
-        {
-          "client_id": "1077384071053-megl4qg2i3fpdkmt92inkj3jjea6vpkc.apps.googleusercontent.com",
-          "client_type": 3
         },
         {
           "client_id": "1077384071053-ghmh1e6u07ev5ses6rs66cc2np76erfh.apps.googleusercontent.com",
@@ -47,30 +84,31 @@
           }
         },
         {
-          "client_id": "1077384071053-9lipptu0ub1en1mneekhs9qpe4u9iu19.apps.googleusercontent.com",
+          "client_id": "1077384071053-hgm6ed3avgpgblla26vj9rhisctjmfo3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.notesandroid.codex.notesandroid",
+            "certificate_hash": "6d7f0a7a2914d4504f08b23d4b0583892220e90a"
+          }
+        },
+        {
+          "client_id": "1077384071053-lsb4rjto4ss19lmev13d1spgeasehu7b.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAueePEey7Fu3LG3Gwvk279qzWQ3AVemIQ"
+          "current_key": "AIzaSyB3aPlQz1cw-ytodKSXO_kD7AYuO4PfHRQ"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "1077384071053-9lipptu0ub1en1mneekhs9qpe4u9iu19.apps.googleusercontent.com",
+              "client_id": "1077384071053-lsb4rjto4ss19lmev13d1spgeasehu7b.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

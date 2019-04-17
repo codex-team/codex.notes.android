@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid
+package codex.notesandroid
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.notesandroid.codex.notesandroid">
+    package="codex.notesandroid">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,7 +14,7 @@
         android:icon="@mipmap/ic_launcher_codex"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_codex_round"
-        android:theme="@style/AppThemeCustom">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".ui.MainActivity">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />

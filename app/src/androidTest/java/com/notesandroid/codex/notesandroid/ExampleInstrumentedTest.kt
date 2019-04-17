@@ -1,4 +1,4 @@
-package com.notesandroid.codex.notesandroid
+package codex.notesandroid
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
@@ -18,6 +18,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.notesandroid.codex.notesandroid", appContext.packageName)
+        assertEquals("codex.notesandroid", appContext.packageName)
     }
 }
