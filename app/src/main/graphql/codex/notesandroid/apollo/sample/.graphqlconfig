@@ -1,0 +1,19 @@
+{
+  "projects": {
+    "Codex": {
+      "schemaPath": "schema.graphql",
+      "extensions": {
+        "endpoints": {
+          "default": {
+            "url": "https://api.notes.ifmo.su/graphql",
+            "headers": {
+              "user-agent": "JS GraphQL",
+              "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJDb2RlWCBOb3RlcyBBUEkgU2VydmVyIiwiYXVkIjoiQ29kZVggTm90ZXMgQXBwbGljYXRpb24iLCJpYXQiOjE1NDM4NTYwNzcsInVzZXJfaWQiOiI1YmM0Zjc3M2NhNWZhODJjYjIxZTNkYTYiLCJnb29nbGVJZCI6IjExNTEyNjE3OTcwMjY3NTk5OTA5NSIsImVtYWlsIjoibGxseXRlcEBnbWFpbC5jb20ifQ.FEbkyjB59L_W5ccsgB07HJB7oZFE-DiBRZ9M5W9HBYk"
+            },
+            "introspect": false
+          }
+        }
+      }
+    }
+  }
+}

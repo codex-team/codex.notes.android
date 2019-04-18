@@ -69,6 +69,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_version"
     implementation "com.apollographql.apollo:apollo-runtime:$apollo_version"
+    implementation "com.apollographql.apollo:apollo-android-support:$apollo_version"
 
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
