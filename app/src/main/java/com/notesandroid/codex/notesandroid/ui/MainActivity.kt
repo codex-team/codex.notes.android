@@ -1,6 +1,7 @@
 package com.notesandroid.codex.notesandroid.ui
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
@@ -20,24 +21,26 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.notesandroid.codex.notesandroid.ANDROID_CLIENT_ID
 import com.notesandroid.codex.notesandroid.ControlUserData
-import com.notesandroid.codex.notesandroid.database.LocalDatabaseAPI
+import com.notesandroid.codex.notesandroid.R
+import com.notesandroid.codex.notesandroid.R.string.*
+import com.notesandroid.codex.notesandroid.SYNC_TIME_FORMAT
+import com.notesandroid.codex.notesandroid.adapters.FoldersAdapter
+import com.notesandroid.codex.notesandroid.base.HeaderActionCallback
 import com.notesandroid.codex.notesandroid.data.Content
 import com.notesandroid.codex.notesandroid.data.Folder
 import com.notesandroid.codex.notesandroid.data.User
+import com.notesandroid.codex.notesandroid.database.LocalDatabaseAPI
+import com.notesandroid.codex.notesandroid.database.share.UserData
+import com.notesandroid.codex.notesandroid.interactor.NoteInteractor
+import com.notesandroid.codex.notesandroid.retrofit.CodeXNotesApi
 import com.notesandroid.codex.notesandroid.ui.drawer.DefaultHeaderFragment
 import com.notesandroid.codex.notesandroid.ui.drawer.HeaderFragment
 import com.notesandroid.codex.notesandroid.ui.drawer.NotesListFragment
-import com.notesandroid.codex.notesandroid.R
-import com.notesandroid.codex.notesandroid.R.string.logout
-import com.notesandroid.codex.notesandroid.R.string.navigation_drawer_close
-import com.notesandroid.codex.notesandroid.R.string.navigation_drawer_open
-import com.notesandroid.codex.notesandroid.adapters.FoldersAdapter
-import com.notesandroid.codex.notesandroid.SYNC_TIME_FORMAT
-import com.notesandroid.codex.notesandroid.database.share.UserData
+import com.notesandroid.codex.notesandroid.ui.header.HeaderDelegation
+import com.notesandroid.codex.notesandroid.ui.header.HeaderPresenter
+import com.notesandroid.codex.notesandroid.ui.header.HeaderView
 import com.notesandroid.codex.notesandroid.utilities.MessageSnackbar
 import com.notesandroid.codex.notesandroid.utilities.Utilities
-import com.notesandroid.codex.notesandroid.interactor.NoteInteractor
-import com.notesandroid.codex.notesandroid.retrofit.CodeXNotesApi
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -46,7 +49,7 @@ import retrofit2.HttpException
 import java.io.Serializable
 import java.net.UnknownHostException
 import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.util.*
 
 /**
  * Request code after starting google sign-in activity and handling response in method onActivityResult.
@@ -58,7 +61,7 @@ const val AUTHORIZATION_ATTEMPT = 1488
  * Main activity with nav. View
  *
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), HeaderActionCallback {
 
     /**
      * Current user content for display.
@@ -74,6 +77,13 @@ class MainActivity : AppCompatActivity() {
      * Local database api.
      */
     private val db = LocalDatabaseAPI(this)
+
+    private val headerFragment by object : HeaderDelegation<HeaderView, HeaderPresenter>() {
+        override fun getPresenter(): HeaderPresenter {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+    }
 
     /**
      * For dispose operation if the activity is paused.
@@ -112,6 +122,8 @@ class MainActivity : AppCompatActivity() {
      */
     /*private lateinit var currentCoroutine: Job*/
 
+
+
     override fun onCreate(
       savedInstanceState: Bundle?
     ) {
@@ -121,6 +133,10 @@ class MainActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences(UserData.NAME, 0)
 
         startInit()
+    }
+
+    override fun action(call: (Activity) -> Unit) {
+        call.invoke(this)
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
