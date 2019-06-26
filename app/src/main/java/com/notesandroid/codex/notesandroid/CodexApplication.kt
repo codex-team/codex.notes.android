@@ -4,15 +4,14 @@ import android.app.Application
 import com.hawkcatcherkotlin.akscorp.hawkcatcherkotlin.HawkExceptionCatcher
 import com.notesandroid.codex.notesandroid.dagger.AppComponent
 import com.notesandroid.codex.notesandroid.dagger.DaggerAppComponent
-import com.notesandroid.codex.notesandroid.dagger.modules.ApplicationModule
-import com.notesandroid.codex.notesandroid.dagger.modules.UserModule
+import com.notesandroid.codex.notesandroid.dagger.modules.AppModule
 
 /**
  * Created by AksCorp on 02.02.2018.
  *
  * Application entire point
  */
-class ApplicationState : Application() {
+class CodexApplication : Application() {
 
     companion object {
         /**
@@ -28,7 +27,7 @@ class ApplicationState : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = getComponent()
+        appComponent = buildComponent()
         exceptionCatcher = HawkExceptionCatcher(this, HAWK_TOKEN)
         try {
             exceptionCatcher.start()
@@ -39,5 +38,5 @@ class ApplicationState : Application() {
         }
     }
 
-    public fun getComponent() = DaggerAppComponent.builder().applicationModule(ApplicationModule(this)).userModule(UserModule()).build()!!
+    private fun buildComponent() = DaggerAppComponent.builder().appModule(AppModule(applicationContext)).build()
 }

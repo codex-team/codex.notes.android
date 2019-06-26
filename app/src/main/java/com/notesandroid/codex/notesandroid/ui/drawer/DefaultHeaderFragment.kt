@@ -5,14 +5,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.notesandroid.codex.notesandroid.R
+import com.notesandroid.codex.notesandroid.base.BaseHeaderFragment
 
 /**
  *
  * Created by AksCorp on 11.03.2018.
  */
-class DefaultHeaderFragment : Fragment() {
+class DefaultHeaderFragment : BaseHeaderFragment() {
+    override fun action() {
+
+    }
+
+    companion object{
+        fun getInstance() = DefaultHeaderFragment()
+    }
 
     override fun onCreateView(
       inflater: LayoutInflater,

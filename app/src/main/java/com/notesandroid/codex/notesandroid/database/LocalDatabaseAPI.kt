@@ -4,12 +4,12 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteException
-import com.notesandroid.codex.notesandroid.database.tables.Folders
-import com.notesandroid.codex.notesandroid.database.tables.Notes
-import com.notesandroid.codex.notesandroid.database.tables.Persons
 import com.notesandroid.codex.notesandroid.data.Folder
 import com.notesandroid.codex.notesandroid.data.Note
 import com.notesandroid.codex.notesandroid.data.Person
+import com.notesandroid.codex.notesandroid.database.tables.Folders
+import com.notesandroid.codex.notesandroid.database.tables.Notes
+import com.notesandroid.codex.notesandroid.database.tables.Persons
 import org.jetbrains.anko.db.insertOrThrow
 
 /**
@@ -19,9 +19,7 @@ import org.jetbrains.anko.db.insertOrThrow
  *
  * @param context parent context
  */
-public class LocalDatabaseAPI(
-  private val context: Context
-) {
+public class LocalDatabaseAPI(private val context: Context) {
 
     /**
      * Insert essence if it's not exist in database

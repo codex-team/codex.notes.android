@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.notesandroid.codex.notesandroid.ui.MainActivity
-import com.notesandroid.codex.notesandroid.data.User
 import com.notesandroid.codex.notesandroid.IMAGES_DIRECTORY
 import com.notesandroid.codex.notesandroid.R
+import com.notesandroid.codex.notesandroid.data.User
 import com.notesandroid.codex.notesandroid.database.share.UserData
+import com.notesandroid.codex.notesandroid.ui.MainActivity
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 /**
@@ -19,6 +19,16 @@ import kotlinx.android.synthetic.main.nav_header_main.view.*
  * Created by AksCorp on 11.03.2018.
  */
 class HeaderFragment : Fragment() {
+
+    companion object{
+        private const val USER_ARGUMENT_KEY = "user"
+
+        fun getInstance(user: User) = Fragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(USER_ARGUMENT_KEY, user)
+            }
+        }
+    }
 
     override fun onCreateView(
       inflater: LayoutInflater,
@@ -28,7 +38,7 @@ class HeaderFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.nav_header_main, container, false)
 
-        val user = arguments!!["user"] as User
+        val user = arguments!!.getParcelable<User>(USER_ARGUMENT_KEY)
 
         val profileIcon =
             Drawable.createFromPath(

@@ -38,7 +38,6 @@ import com.notesandroid.codex.notesandroid.ui.drawer.HeaderFragment
 import com.notesandroid.codex.notesandroid.ui.drawer.NotesListFragment
 import com.notesandroid.codex.notesandroid.ui.header.HeaderDelegation
 import com.notesandroid.codex.notesandroid.ui.header.HeaderPresenter
-import com.notesandroid.codex.notesandroid.ui.header.HeaderView
 import com.notesandroid.codex.notesandroid.utilities.MessageSnackbar
 import com.notesandroid.codex.notesandroid.utilities.Utilities
 import io.reactivex.disposables.Disposable
@@ -78,7 +77,7 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
      */
     private val db = LocalDatabaseAPI(this)
 
-    private val headerFragment by object : HeaderDelegation<HeaderView, HeaderPresenter>() {
+    private val headerFragment by object : HeaderDelegation() {
         override fun getPresenter(): HeaderPresenter {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }

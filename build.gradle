@@ -12,7 +12,8 @@ buildscript {
         retrofit2_version = '2.4.0'
         rxjava_version = '2.2.2'
         rxandroid_version ='2.1.0'
-        dagger_version = '2.16'
+        dagger_version = '2.15'
+        koin_version = '2.0.1'
     }
 
         repositories {

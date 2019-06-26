@@ -46,6 +46,10 @@ android {
             minifyEnabled false
         }
     }
+
+    androidExtensions {
+        experimental = true
+    }
     sourceSets {
         main.kotlin.srcDirs += 'src/main/java'
         test.kotlin.srcDirs += 'src/test/java'
@@ -102,6 +106,13 @@ dependencies {
     // if you use the support libraries
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+
+    // Koin AndroidX Scope features
+//    implementation "org.koin:koin-androidx-scope:$koin_version"
+//// Koin AndroidX ViewModel features
+//    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+//// Koin AndroidX Experimental features
+//    implementation "org.koin:koin-androidx-ext:$koin_version"
 
     // Other
     implementation "org.jetbrains.anko:anko-sqlite:$anko_version"

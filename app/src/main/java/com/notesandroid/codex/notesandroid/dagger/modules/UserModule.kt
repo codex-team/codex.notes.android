@@ -1,6 +1,7 @@
 package com.notesandroid.codex.notesandroid.dagger.modules
 
 import com.notesandroid.codex.notesandroid.data.User
+import com.notesandroid.codex.notesandroid.utilities.UserPreferences
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -18,4 +19,8 @@ class UserModule{
     @Provides
     @Singleton
     fun getUserAccount() = User()
+
+    @Provides
+    @Singleton
+    fun getUserPreferences() = UserPreferences()
 }
