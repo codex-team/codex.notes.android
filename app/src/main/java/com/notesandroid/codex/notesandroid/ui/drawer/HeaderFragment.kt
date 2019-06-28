@@ -30,6 +30,10 @@ class HeaderFragment : Fragment() {
         }
     }
 
+    val user by lazy {
+        arguments!!.getParcelable<User>(USER_ARGUMENT_KEY)!!
+    }
+
     override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
@@ -37,8 +41,6 @@ class HeaderFragment : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.nav_header_main, container, false)
-
-        val user = arguments!!.getParcelable<User>(USER_ARGUMENT_KEY)
 
         val profileIcon =
             Drawable.createFromPath(

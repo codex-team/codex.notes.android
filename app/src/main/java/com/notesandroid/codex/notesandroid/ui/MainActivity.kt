@@ -1,7 +1,6 @@
 package com.notesandroid.codex.notesandroid.ui
 
 import android.annotation.TargetApi
-import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
@@ -31,13 +30,10 @@ import com.notesandroid.codex.notesandroid.data.Folder
 import com.notesandroid.codex.notesandroid.data.User
 import com.notesandroid.codex.notesandroid.database.LocalDatabaseAPI
 import com.notesandroid.codex.notesandroid.database.share.UserData
+import com.notesandroid.codex.notesandroid.delegate.HeaderDelegate
 import com.notesandroid.codex.notesandroid.interactor.NoteInteractor
 import com.notesandroid.codex.notesandroid.retrofit.CodeXNotesApi
-import com.notesandroid.codex.notesandroid.ui.drawer.DefaultHeaderFragment
-import com.notesandroid.codex.notesandroid.ui.drawer.HeaderFragment
 import com.notesandroid.codex.notesandroid.ui.drawer.NotesListFragment
-import com.notesandroid.codex.notesandroid.ui.header.HeaderDelegation
-import com.notesandroid.codex.notesandroid.ui.header.HeaderPresenter
 import com.notesandroid.codex.notesandroid.utilities.MessageSnackbar
 import com.notesandroid.codex.notesandroid.utilities.Utilities
 import io.reactivex.disposables.Disposable
@@ -77,12 +73,7 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
      */
     private val db = LocalDatabaseAPI(this)
 
-    private val headerFragment by object : HeaderDelegation() {
-        override fun getPresenter(): HeaderPresenter {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-    }
+    private val headerFragment by HeaderDelegate(this)
 
     /**
      * For dispose operation if the activity is paused.
@@ -124,7 +115,7 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
 
 
     override fun onCreate(
-      savedInstanceState: Bundle?
+        savedInstanceState: Bundle?
     ) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -134,8 +125,8 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
         startInit()
     }
 
-    override fun action(call: (Activity) -> Unit) {
-        call.invoke(this)
+    override fun update() {
+        navigationToHeaderFragment(headerFragment, R.id.header_layout)
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -146,7 +137,7 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
     }
 
     override fun onCreateOptionsMenu(
-      menu: Menu
+        menu: Menu
     ): Boolean {
         menu.clear()
         menuInflater.inflate(R.menu.toolbar_menu, menu)
@@ -154,7 +145,7 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
     }
 
     override fun onOptionsItemSelected(
-      item: MenuItem
+        item: MenuItem
     ): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -189,7 +180,7 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
         snackbar = MessageSnackbar(this, main_activity_coordinator_layout)
         interactor.attachSQL(this)
 
-        loadCurrentUser()
+        //loadCurrentUser()
 
         initFields()
 
@@ -234,22 +225,22 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
             .doAfterNext { runOnUiThread { progress_loader.visibility = View.GONE } }
             .doAfterTerminate { runOnUiThread { progress_loader.visibility = View.GONE } }
             .subscribeOn(Schedulers.io()).subscribe({
-            if (it.isOnNext) {
-                handleContent(it.value!!)
-            } else if (it.isOnError) {
-                notificationAboutError(it.error!!)
-            }
-        }, { error ->
-            when (error) {
-                is HttpException -> Log.i(MainActivity::class.java.simpleName + "Error", error.code().toString())
-                else -> Log.i(MainActivity::class.java.simpleName + "Error", error.message)
-            }
-            error.printStackTrace()
-            runOnUiThread {
-                // progress_loader.visibility = View.GONE
-                snackbar.show(error.message!!)
-            }
-        }, { Log.i(MainActivity::class.java.simpleName, "Complete") })
+                if (it.isOnNext) {
+                    handleContent(it.value!!)
+                } else if (it.isOnError) {
+                    notificationAboutError(it.error!!)
+                }
+            }, { error ->
+                when (error) {
+                    is HttpException -> Log.i(MainActivity::class.java.simpleName + "Error", error.code().toString())
+                    else -> Log.i(MainActivity::class.java.simpleName + "Error", error.message)
+                }
+                error.printStackTrace()
+                runOnUiThread {
+                    // progress_loader.visibility = View.GONE
+                    snackbar.show(error.message!!)
+                }
+            }, { Log.i(MainActivity::class.java.simpleName, "Complete") })
     }
 
     /**
@@ -257,7 +248,7 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
      */
 
     private fun handleContent(
-      cont: Content
+        cont: Content
     ) {
         cont.folders.forEach {
             Log.i(MainActivity::class.java.simpleName, it.toString())
@@ -277,7 +268,7 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
      */
 
     private fun notificationAboutError(
-      error: Throwable
+        error: Throwable
     ) {
         header_layout.isClickable = true
         Log.i("MainActivity", "error log ${error.message}")
@@ -345,7 +336,7 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
      */
     private fun displayContent() {
 
-        setHeaderFragment()
+//        setHeaderFragment()
 
         // init nav view folder RV
 
@@ -380,8 +371,8 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
      * @param folder folder essence data for display
      */
     private fun showNotesFragment(
-      folder: Folder,
-      backStack: Boolean = false
+        folder: Folder,
+        backStack: Boolean = false
     ) {
         val bundle = Bundle()
         bundle.putSerializable("folder", folder as Serializable)
@@ -391,10 +382,9 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
         main_activity_drawer_layout.closeDrawer(GravityCompat.START)
     }
 
-    private fun setHeaderFragment() {
+    /*private fun setHeaderFragment() {
 
-        fun getFragment(): Fragment
-        {
+        fun getFragment(): Fragment {
             return when (user) {
                 User() ->
                     DefaultHeaderFragment()
@@ -409,7 +399,7 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
         fragment.arguments = bundle
 
         navigationToFragment(fragment, R.id.header_layout)
-    }
+    }*/
 
     /**
      * Clear all current user data
@@ -444,9 +434,9 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
     }
 
     override fun onActivityResult(
-      requestCode: Int,
-      resultCode: Int,
-      data: Intent?
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -480,6 +470,16 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
      * Common method for changing all fragments
      */
 
+    public fun navigationToHeaderFragment(
+        fragment: Fragment,
+        resource: Int
+    ) {
+        val transaction = supportFragmentManager.beginTransaction()
+            .replace(resource, fragment, "Header")
+            .addToBackStack(null)
+            .commit()
+    }
+
     public fun navigationToFragment(
         fragment: Fragment,
         resource: Int,
@@ -494,7 +494,7 @@ class MainActivity : AppCompatActivity(), HeaderActionCallback {
     }
 
     override fun onPrepareOptionsMenu(
-      menu: Menu?
+        menu: Menu?
     ): Boolean {
         // menu?.clear()
         return true

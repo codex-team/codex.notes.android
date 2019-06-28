@@ -1,27 +1,32 @@
 package com.notesandroid.codex.notesandroid.interactor
 
 import com.notesandroid.codex.notesandroid.CodexApplication
+import com.notesandroid.codex.notesandroid.NotFoundUserException
 import com.notesandroid.codex.notesandroid.data.User
 import com.notesandroid.codex.notesandroid.database.LocalDatabaseAPI
 import com.notesandroid.codex.notesandroid.interactor.interfaces.UserInteractor
 import com.notesandroid.codex.notesandroid.utilities.UserPreferences
+import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
-class UserInteractorImpl : UserInteractor{
-
+class UserInteractorImpl : UserInteractor {
     @Inject
-    lateinit var db:LocalDatabaseAPI
+    lateinit var db: LocalDatabaseAPI
 
     @Inject
     lateinit var userPreferences: UserPreferences
 
+    val userObservable = BehaviorSubject.create<User>()
+
     init {
         CodexApplication.appComponent.inject(this)
+
     }
 
     override fun getUser(): User? {
         val userId = userPreferences.userId
-        if(userId == ""){
+        if (userId == "") {
             return null
         }
         val token = userPreferences.token
@@ -29,12 +34,20 @@ class UserInteractorImpl : UserInteractor{
         return User(db.getPersonFromDatabase(userId), token, profileIcon)
     }
 
-    override fun saveUser(user: User){
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun saveUser(user: User) {
+        userPreferences.userId = user.info!!.id!!
+        userPreferences.token = user.jwt!!
+        userPreferences.profileIcon = user.profileIconName!!
+        userObservable.onNext(user)
     }
 
     override fun logout() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        userPreferences.clean()
+        userObservable.onError(NotFoundUserException())
+    }
+
+    override fun getUserObservable(): Observable<User> {
+        return userObservable
     }
 
 }
